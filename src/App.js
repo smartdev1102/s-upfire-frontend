@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import Footer from './components/common/Footer';
-import Farms from './components/Farms';
+import Farms from './components/farms/Farms';
 import Tokens from './components/Tokens';
 import Pools from './components/Pools';
 import Banner from './components/common/Banner';

@@ -13,7 +13,7 @@ export const theme = {
     },
     text: {
       primary: '#ffffff',
-      secondary: '#dedede'
+      secondary: '#9e9e9e'
     }
   },
   typography: {

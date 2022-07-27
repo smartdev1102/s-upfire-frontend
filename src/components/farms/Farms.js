@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
-import RoundButton from './common/RoundButton';
+import RoundButton from '../common/RoundButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Card } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 
-import dnxcIcon from '../assets/tokenIcons/dnxc.svg';
-import farmIcon from '../assets/icons/farm.svg';
-import airdropIcon from '../assets/icons/airdrop.svg';
-import accountIcon from '../assets/icons/account.svg';
+import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
+import farmIcon from '../../assets/icons/farm.svg';
+import airdropIcon from '../../assets/icons/airdrop.svg';
+import accountIcon from '../../assets/icons/account.svg';
+import CreateFarm from './CreateFarm';
 const farmArray = [
   {
     icon: dnxcIcon,
@@ -58,13 +59,16 @@ const farmArray = [
   },
 ]
 const Farms = () => {
-  const [totalLiquidity, setTotalLiquidity] = useState('2.98M')
+  const [totalLiquidity, setTotalLiquidity] = useState('2.98M');
+  const [openCreateFarm, setOpenCreateFarm] = useState();
   return (
     <Box
       sx={{
         p: '20px'
       }}
     >
+      {/* create farm */}
+      <CreateFarm open={openCreateFarm} onClose={() => setOpenCreateFarm()}/>
       {/* total farming liquidity */}
       <Box
         sx={{
@@ -97,6 +101,7 @@ const Farms = () => {
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
             <RoundButton
+              onClick={()=>setOpenCreateFarm(true)}
               sx={{
                 color: 'text.primary',
                 border: '1px solid white',
@@ -143,6 +148,7 @@ const Farms = () => {
                   display: 'flex',
                   alignItems: 'center'
                 }}
+                key={i}
               >
                 <Box>
                   <img src={dnxcIcon} />
