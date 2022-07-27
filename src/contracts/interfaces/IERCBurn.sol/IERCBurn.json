@@ -1,17 +1,46 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "IFactory",
-  "sourceName": "contracts/IFactory.sol",
+  "contractName": "IERCBurn",
+  "sourceName": "contracts/interfaces/IERCBurn.sol",
   "abi": [
     {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_farm",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "spender",
           "type": "address"
         }
       ],
-      "name": "farmIsRegistered",
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
       "outputs": [
         {
           "internalType": "bool",
@@ -19,50 +48,18 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_index",
+          "name": "_amount",
           "type": "uint256"
         }
       ],
-      "name": "farmsAtIndex",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "farmsLength",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_farm",
-          "type": "address"
-        }
-      ],
-      "name": "registerFarm",
+      "name": "burn",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
