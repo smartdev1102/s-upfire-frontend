@@ -12,8 +12,17 @@ import Farms from './components/Farms';
 import Tokens from './components/Tokens';
 import Pools from './components/Pools';
 import Banner from './components/common/Banner';
+import { useState } from 'react';
 
 function App() {
+  const [walletAddress, setWalletAddress] = useState();
+  
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });  // connect wallet
+      setWalletAddress(account);
+    }
+  }
   return (
     <Box
       sx={{
@@ -24,7 +33,7 @@ function App() {
     >
       <BrowserRouter>
         <Box>
-          <Header />
+          <Header walletAddress={walletAddress} connectWallet={connectWallet} />
         </Box>
         <Box
           sx={{
