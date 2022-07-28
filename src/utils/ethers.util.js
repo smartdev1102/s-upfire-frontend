@@ -3,11 +3,18 @@ import { network } from "./network.util"
 import Factory from '../contracts/Factory.sol/Factory.json';
 import Generator from '../contracts/FarmGenerator.sol/FarmGenerator.json';
 import Farm from '../contracts/Farm.sol/Farm.json';
+import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.json';
 
 export const address = {
   factory: "0x4c76D37379Ca538597208904b2f876d7099C7E77",
   generator: "0xB0777e406B72Ac8c585616F288672d3E6Fb89A90",
   rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
+}
+
+export const swapFactories = {
+  97: {
+    uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4"
+  }
 }
 // providers
 const provider = new ethers.providers.JsonRpcProvider(network.rpcUrls[0]);
@@ -20,6 +27,10 @@ export const factoryWeb3 = new ethers.Contract(address['factory'], Factory.abi, 
 
 export const generator = new ethers.Contract(address['generator'], Generator.abi, provider);
 export const generatorWeb3 = new ethers.Contract(address['generator'], Generator.abi, signer);
+
+
+export const swapFactory = new ethers.Contract(swapFactories[97]['uniswap'], SwapFactory.abi, provider);
+
 
 export const farm = (farmAddress) => {
   const contract = new ethers.Contract(farmAddress, Farm.abi, provider);

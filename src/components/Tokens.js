@@ -1,45 +1,37 @@
 import { Box, Card, IconButton, InputAdornment, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
 import pkgIcon from '../assets/tokenIcons/pkg.svg';
 import RoundButton from './common/RoundButton';
 import Pagination from '@mui/material/Pagination';
-
-const tokensArray = [
-  {
-    icon: pkgIcon,
-    name: 'PKG Token',
-    symbol: 'PKG',
-    price: 0,
-    address: '0xc2Ff05DAAEFf404Cf1aA216b46C50001785aC16c'
-  },
-  {
-    icon: pkgIcon,
-    name: 'PKG Token',
-    symbol: 'PKG',
-    price: 0,
-    address: '0xc2Ff05DAAEFf404Cf1aA216b46C50001785aC16c'
-  },
-  {
-    icon: pkgIcon,
-    name: 'PKG Token',
-    symbol: 'PKG',
-    price: 0,
-    address: '0xc2Ff05DAAEFf404Cf1aA216b46C50001785aC16c'
-  },
-  {
-    icon: pkgIcon,
-    name: 'PKG Token',
-    symbol: 'PKG',
-    price: 0,
-    address: '0xc2Ff05DAAEFf404Cf1aA216b46C50001785aC16c'
-  },
-
-]
+import { factory, tokenContract, farm } from '../utils/ethers.util';
 
 const Tokens = () => {
-
+  const [tokens, setTokens] = useState([]);
+  // tokens
+  useEffect(() => {
+    async function getFarms () {
+      const farmsLength = await factory.farmsLength();
+      let tempTokens = [];
+      for (let i = 0; i < Number(farmsLength); i++) {
+        const farmAddress = await factory.farmAtIndex(i);
+        const farmInfo = await farm(farmAddress).farmInfo();
+        const lptoken = farmInfo.lpToken;
+        const name = await tokenContract(lptoken).name();
+        const symbol = await tokenContract(lptoken).symbol();
+        tempTokens = [...tokens];
+        tempTokens.push({
+          name: name,
+          symbol: symbol,
+          price: 0,
+          address: lptoken
+        });
+        setTokens(tempTokens);
+      }
+    }
+    getFarms();
+  }, []);
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -96,7 +88,7 @@ const Tokens = () => {
           {/* token list */}
           <Box sx={{ mt: '30px' }}>
             {
-              tokensArray.map((token, i) => (
+              tokens.map((token, i) => (
                 <Card
                   key={i}
                   sx={{

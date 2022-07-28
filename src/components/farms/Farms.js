@@ -7,13 +7,12 @@ import { Card } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 
 import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
-import farmIcon from '../../assets/icons/farm.svg';
-import airdropIcon from '../../assets/icons/airdrop.svg';
-import accountIcon from '../../assets/icons/account.svg';
+
 import CreateFarm from './CreateFarm';
 import { address, erc20Abi, factory, farm, generator, generatorWeb3, signer, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
+import FarmCard from '../common/FarmCard';
 
 const Farms = ({walletAddress}) => {
   const [totalLiquidity, setTotalLiquidity] = useState(0);
@@ -42,14 +41,17 @@ const Farms = ({walletAddress}) => {
         const lpSymbol = await tokenContract(lptoken).symbol();
         tempFarms = [...farms];
         tempFarms.push({
-          icon: dnxcIcon,
+          icon: '',
           name: lpSymbol,
           baseToken: rewardSymbol,
           symbol: lpSymbol,
           start: start,
           end: end,
           numFarmers: numFarmers.toString(),
-          supply: formatEther(farmSupply)
+          supply: formatEther(farmSupply),
+          address: farmAddress,
+          lptoken: lptoken,
+          rewardToken: rewardToken
         });
         setFarms(tempFarms);
       }
@@ -165,77 +167,7 @@ const Farms = ({walletAddress}) => {
         >
           {
             farms.map((farm, i) => (
-              <Card
-                sx={{
-                  p: '10px',
-                  my: '10px',
-                  borderRadius: '20px',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-                key={i}
-              >
-                <Box>
-                  <img src={dnxcIcon} />
-                </Box>
-                <Box
-                  sx={{
-                    mx: '50px'
-                  }}
-                >
-                  <Box>
-                    <Typography variant="h4" gutterBottom component="h4">
-                      {`Farm ${farm.name.toUpperCase()}`}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    {`${farm.symbol} / ${farm.baseToken}`}
-                  </Box>
-                  <Box>
-                    {
-                      farm.start >  new Date() && (
-                        <Box sx={{ color: 'skyBlue' }}>
-                          Farming is not started.
-                        </Box>
-                      )
-                    }
-                    {
-                      (farm.start < new Date() && farm.end > new Date()) && (
-                        <Box sx={{ color: 'skyBlue' }}>
-                          Farming is active.
-                        </Box>
-                      )
-                    }
-                    {
-                      farm.bonusEndBlock <  new Date() && (
-                        <Box sx={{ color: 'skyBlue' }}>
-                          Farming has finished.
-                        </Box>
-                      )
-                    }
-                  </Box>
-                </Box>
-                <Box sx={{ flexGrow: 1 }}></Box>
-                <Box sx={{ mx: '30px' }}>
-                  <img src={farmIcon} />
-                </Box>
-                <Box sx={{ mx: '30px', display: 'flex' }}>
-                  <Box sx={{ mx: '10px' }}>
-                    <img src={airdropIcon} />
-                  </Box>
-                  <Box>
-                    {Math.trunc(farm.supply)}
-                  </Box>
-                </Box>
-                <Box sx={{ mx: '30px', display: 'flex' }}>
-                  <Box sx={{ mx: '10px' }}>
-                    <img style={{height: '20px'}} src={accountIcon} />
-                  </Box>
-                  <Box>
-                    {farm.numFarmers}
-                  </Box>
-                </Box>
-              </Card>
+              <FarmCard key={i} farmInfo={farm}/>
             ))
           }
         </Box>
