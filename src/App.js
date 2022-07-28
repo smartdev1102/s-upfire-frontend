@@ -49,7 +49,7 @@ function App() {
         >
           <Routes>
             <Route path='/' element={<Navigate to="/farms" />} />
-            <Route path="/farms" element={<Farms />} />
+            <Route path="/farms" element={<Farms walletAddress={walletAddress} />} />
             <Route path="/tokens" element={<Tokens />} />
             <Route path="/pools" element={<Pools />} />
           </Routes>

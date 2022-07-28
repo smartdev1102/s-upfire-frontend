@@ -11,6 +11,9 @@ import farmIcon from '../../assets/icons/farm.svg';
 import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
 import CreateFarm from './CreateFarm';
+import { address, erc20Abi, generator, generatorWeb3, signer } from '../../utils/ethers.util';
+import { formatEther, parseEther } from 'ethers/lib/utils';
+import { ethers } from 'ethers';
 const farmArray = [
   {
     icon: dnxcIcon,
@@ -58,9 +61,40 @@ const farmArray = [
     holders: 42
   },
 ]
-const Farms = () => {
+const Farms = ({walletAddress}) => {
   const [totalLiquidity, setTotalLiquidity] = useState('2.98M');
-  const [openCreateFarm, setOpenCreateFarm] = useState();
+  const [openCreateFarm, setOpenCreateFarm] = useState(false);
+
+
+  const createFarm = async (
+    farmToken,
+    amountIn,
+    lptoken,
+    blockReward,
+    startBlock,
+    bonusEndBlock,
+    bonus,
+    withReferral
+  ) => {
+    const contract = new ethers.Contract(farmToken, erc20Abi, signer);
+    const balance = await contract.balanceOf(walletAddress)
+    await contract.approve(address['generator'], balance);
+    contract.once("Approval", async() => {
+      const tx = await generatorWeb3.createFarm(
+        farmToken,
+        parseEther(amountIn),
+        lptoken,
+        blockReward,
+        startBlock,
+        bonusEndBlock,
+        bonus,
+        withReferral
+      );
+      await tx.wait();
+      setOpenCreateFarm(false);
+    });
+  }
+
   return (
     <Box
       sx={{
@@ -68,7 +102,7 @@ const Farms = () => {
       }}
     >
       {/* create farm */}
-      <CreateFarm open={openCreateFarm} onClose={() => setOpenCreateFarm()}/>
+      <CreateFarm open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
       {/* total farming liquidity */}
       <Box
         sx={{
