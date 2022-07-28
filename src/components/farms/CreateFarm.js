@@ -56,7 +56,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress }) => {
         const [blockReward, requiredAmount, fee] = await generator.determineBlockReward(
           parseEther(amountIn),
           startBlock,
-          bonusEndBlock,
+          Number(bonusEndBlock),
           multiplier,
           endBlock
         );

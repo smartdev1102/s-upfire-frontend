@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
@@ -11,59 +11,51 @@ import farmIcon from '../../assets/icons/farm.svg';
 import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
 import CreateFarm from './CreateFarm';
-import { address, erc20Abi, generator, generatorWeb3, signer } from '../../utils/ethers.util';
+import { address, erc20Abi, factory, farm, generator, generatorWeb3, signer, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
-const farmArray = [
-  {
-    icon: dnxcIcon,
-    name: 'dnxc',
-    baseToken: 'USDC',
-    symbol: 'DERC',
-    status: 'end',
-    liquidity: '1.12M',
-    holders: 42
-  },
-  {
-    icon: dnxcIcon,
-    name: 'dnxc',
-    baseToken: 'USDC',
-    symbol: 'DERC',
-    status: 'end',
-    liquidity: '1.12M',
-    holders: 42
-  },
-  {
-    icon: dnxcIcon,
-    name: 'dnxc',
-    baseToken: 'USDC',
-    symbol: 'DERC',
-    status: 'end',
-    liquidity: '1.12M',
-    holders: 42
-  },
-  {
-    icon: dnxcIcon,
-    name: 'dnxc',
-    baseToken: 'USDC',
-    symbol: 'DERC',
-    status: 'end',
-    liquidity: '1.12M',
-    holders: 42
-  },
-  {
-    icon: dnxcIcon,
-    name: 'dnxc',
-    baseToken: 'USDC',
-    symbol: 'DERC',
-    status: 'end',
-    liquidity: '1.12M',
-    holders: 42
-  },
-]
+
 const Farms = ({walletAddress}) => {
-  const [totalLiquidity, setTotalLiquidity] = useState('2.98M');
+  const [totalLiquidity, setTotalLiquidity] = useState(0);
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
+  const [farms, setFarms] = useState([]);
+
+
+  // get farms
+  useEffect(() => {
+    async function getFarms () {
+      const farmsLength = await factory.farmsLength();
+      let tempFarms = [];
+      for (let i = 0; i < Number(farmsLength); i++) {
+        const farmAddress = await factory.farmAtIndex(i);
+        const farmInfo = await farm(farmAddress).farmInfo();
+        const farmSupply = farmInfo.farmableSupply;
+        setTotalLiquidity(totalLiquidity + Number(formatEther(farmSupply)));
+        const rewardToken = farmInfo.rewardToken;
+        const lptoken = farmInfo.lpToken;
+        const startBlock = farmInfo.startBlock;
+        const endBlock = farmInfo.endBlock;
+        const start = new Date(startBlock * 1000);
+        const end = new Date(endBlock * 1000);
+        const numFarmers = farmInfo.numFarmers;
+        const rewardSymbol = await tokenContract(rewardToken).symbol();
+        const lpSymbol = await tokenContract(lptoken).symbol();
+        tempFarms = [...farms];
+        tempFarms.push({
+          icon: dnxcIcon,
+          name: lpSymbol,
+          baseToken: rewardSymbol,
+          symbol: lpSymbol,
+          start: start,
+          end: end,
+          numFarmers: numFarmers.toString(),
+          supply: formatEther(farmSupply)
+        });
+        setFarms(tempFarms);
+      }
+    }
+    getFarms();
+  }, []);
 
 
   const createFarm = async (
@@ -77,8 +69,7 @@ const Farms = ({walletAddress}) => {
     withReferral
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
-    const balance = await contract.balanceOf(walletAddress)
-    await contract.approve(address['generator'], balance);
+    await contract.approve(address['generator'], parseEther(amountIn));
     contract.once("Approval", async() => {
       const tx = await generatorWeb3.createFarm(
         farmToken,
@@ -124,7 +115,7 @@ const Farms = ({walletAddress}) => {
         >
           <Box>
             <Typography variant="h2" gutterBottom component="h2">
-              {`$${totalLiquidity}`}
+              {`$${Math.trunc(totalLiquidity)}`}
             </Typography>
             <Box>
               <Typography variant="h6" gutterBottom component="h6">
@@ -173,7 +164,7 @@ const Farms = ({walletAddress}) => {
           }}
         >
           {
-            farmArray.map((farm, i) => (
+            farms.map((farm, i) => (
               <Card
                 sx={{
                   p: '10px',
@@ -202,9 +193,23 @@ const Farms = ({walletAddress}) => {
                   </Box>
                   <Box>
                     {
-                      farm.status === 'end' && (
+                      farm.start >  new Date() && (
                         <Box sx={{ color: 'skyBlue' }}>
-                          Farming has ended
+                          Farming is not started.
+                        </Box>
+                      )
+                    }
+                    {
+                      (farm.start < new Date() && farm.end > new Date()) && (
+                        <Box sx={{ color: 'skyBlue' }}>
+                          Farming is active.
+                        </Box>
+                      )
+                    }
+                    {
+                      farm.bonusEndBlock <  new Date() && (
+                        <Box sx={{ color: 'skyBlue' }}>
+                          Farming has finished.
                         </Box>
                       )
                     }
@@ -219,7 +224,7 @@ const Farms = ({walletAddress}) => {
                     <img src={airdropIcon} />
                   </Box>
                   <Box>
-                    {farm.liquidity}
+                    {Math.trunc(farm.supply)}
                   </Box>
                 </Box>
                 <Box sx={{ mx: '30px', display: 'flex' }}>
@@ -227,7 +232,7 @@ const Farms = ({walletAddress}) => {
                     <img style={{height: '20px'}} src={accountIcon} />
                   </Box>
                   <Box>
-                    {farm.holders}
+                    {farm.numFarmers}
                   </Box>
                 </Box>
               </Card>

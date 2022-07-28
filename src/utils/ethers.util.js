@@ -2,10 +2,11 @@ import { ethers } from "ethers"
 import { network } from "./network.util"
 import Factory from '../contracts/Factory.sol/Factory.json';
 import Generator from '../contracts/FarmGenerator.sol/FarmGenerator.json';
+import Farm from '../contracts/Farm.sol/Farm.json';
 
 export const address = {
-  factory: "0x025345Cd7637866516B7C71d7FCD08B7E9c60372",
-  generator: "0x3E47Cd39b302B52c88d43DFdb6c8d8ebA3975B2E",
+  factory: "0x4c76D37379Ca538597208904b2f876d7099C7E77",
+  generator: "0xB0777e406B72Ac8c585616F288672d3E6Fb89A90",
   rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
 }
 // providers
@@ -20,15 +21,25 @@ export const factoryWeb3 = new ethers.Contract(address['factory'], Factory.abi, 
 export const generator = new ethers.Contract(address['generator'], Generator.abi, provider);
 export const generatorWeb3 = new ethers.Contract(address['generator'], Generator.abi, signer);
 
-// export const tokenContract = (tokenAddress) => {
-//   const contract = new ethers.Contract(tokenAddress, erc20Abi, provider);
-//   return contract;
-// }
+export const farm = (farmAddress) => {
+  const contract = new ethers.Contract(farmAddress, Farm.abi, provider);
+  return contract;
+}
 
-// export const tokenWeb3 = (tokenAddress) => {
-//   const contract = new ethers.Contract(tokenAddress, erc20Abi, signer);
-//   return contract;
-// }
+export const farmWeb3 = (farmAddress) => {
+  const contract = new ethers.Contract(farmAddress, Farm.abi, signer);
+  return contract;
+}
+
+export const tokenContract = (tokenAddress) => {
+  const contract = new ethers.Contract(tokenAddress, erc20Abi, provider);
+  return contract;
+}
+
+export const tokenWeb3 = (tokenAddress) => {
+  const contract = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  return contract;
+}
 
 
 export const erc20Abi = [
