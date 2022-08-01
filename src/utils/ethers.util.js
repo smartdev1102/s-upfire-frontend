@@ -6,8 +6,8 @@ import Farm from '../contracts/Farm.sol/Farm.json';
 import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.json';
 
 export const address = {
-  factory: "0x4c76D37379Ca538597208904b2f876d7099C7E77",
-  generator: "0xB0777e406B72Ac8c585616F288672d3E6Fb89A90",
+  factory: "0x9b5bA1Ff5b3238A2822c665B2E5129bF0308C584",
+  generator: "0x54c5926Ccb210D65C37B8AeDA654F40b72Ee8C0A",
   rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
 }
 

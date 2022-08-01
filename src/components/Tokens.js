@@ -94,14 +94,15 @@ const Tokens = () => {
                   sx={{
                     width: '100%',
                     borderRadius: '20px',
-                    p: '5px',
+                    py: '5px',
+                    px: '30px',
                     display: 'flex',
                     alignItems: 'center',
                     my: '10px'
                   }}
                 >
                   <Box>
-                    <img src={pkgIcon} />
+                    {/* <img src={pkgIcon} /> */}
                   </Box>
                   <Box>
                     <Box sx={{ display: 'flex' }}>

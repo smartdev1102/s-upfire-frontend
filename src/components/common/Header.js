@@ -6,8 +6,9 @@ import RoundButton from './RoundButton';
 import SearchIcon from '@mui/icons-material/Search';
 import ethereumIcon from '../../assets/icons/ethereum.svg';
 import appIcon from '../../assets/icons/app.svg';
+import { Link } from 'react-router-dom';
 
-const Header = ({walletAddress, connectWallet}) => {
+const Header = ({ walletAddress, connectWallet }) => {
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -30,7 +31,9 @@ const Header = ({walletAddress, connectWallet}) => {
           mx: '10px'
         }}
       >
-        <RoundButton size='large' variant='outlined'>Create referral link</RoundButton>
+        <Link to="/referral" style={{textDecoration: 'none'}}>
+          <RoundButton size='large' variant='outlined'>Create referral link</RoundButton>
+        </Link>
       </Box>
       <Box
         sx={{
@@ -39,13 +42,13 @@ const Header = ({walletAddress, connectWallet}) => {
       >
         <RoundButton size='large' variant='outlined'>Create pool</RoundButton>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           mx: '10px'
         }}
       >
         <RoundButton size='large' variant='outlined'>Create referral link</RoundButton>
-      </Box>
+      </Box> */}
       {/* connect wallet button */}
       <Box
         sx={{

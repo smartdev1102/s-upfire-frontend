@@ -51,10 +51,10 @@ const Banner = () => {
             farms
           </RoundTabButton>
         </Link>
-        <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
+        {/* <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
           <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
           bridges
-        </RoundTabButton>
+        </RoundTabButton> */}
         <Box>
           <RoundTabButton
             id="basic-button"

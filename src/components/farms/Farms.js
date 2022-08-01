@@ -11,7 +11,7 @@ import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
 import CreateFarm from './CreateFarm';
 import { address, erc20Abi, factory, farm, generator, generatorWeb3, signer, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 
 const Farms = ({walletAddress}) => {
@@ -25,11 +25,13 @@ const Farms = ({walletAddress}) => {
     async function getFarms () {
       const farmsLength = await factory.farmsLength();
       let tempFarms = [];
+      let tempTotal = 0;
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory.farmAtIndex(i);
         const farmInfo = await farm(farmAddress).farmInfo();
         const farmSupply = farmInfo.farmableSupply;
-        setTotalLiquidity(totalLiquidity + Number(formatEther(farmSupply)));
+        tempTotal += Number(formatEther(farmSupply));
+        setTotalLiquidity(tempTotal);
         const rewardToken = farmInfo.rewardToken;
         const lptoken = farmInfo.lpToken;
         const startBlock = farmInfo.startBlock;
@@ -39,7 +41,6 @@ const Farms = ({walletAddress}) => {
         const numFarmers = farmInfo.numFarmers;
         const rewardSymbol = await tokenContract(rewardToken).symbol();
         const lpSymbol = await tokenContract(lptoken).symbol();
-        tempFarms = [...farms];
         tempFarms.push({
           icon: '',
           name: lpSymbol,

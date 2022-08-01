@@ -13,6 +13,7 @@ import Tokens from './components/Tokens';
 import Pools from './components/Pools';
 import Banner from './components/common/Banner';
 import { useState } from 'react';
+import Referral from './components/Referral';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -52,6 +53,7 @@ function App() {
             <Route path="/farms" element={<Farms walletAddress={walletAddress} />} />
             <Route path="/tokens" element={<Tokens />} />
             <Route path="/pools" element={<Pools />} />
+            <Route path="/referral" element={<Referral walletAddress={walletAddress} />} />
           </Routes>
         </Box>
         <Footer />
