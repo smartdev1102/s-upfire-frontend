@@ -8,7 +8,7 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-const CreateFarm = ({ open, onClose, create, walletAddress }) => {
+const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [startDate, setstartDate] = useState(new Date());
   const [bonusEndDate, setBonusEndDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -53,7 +53,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress }) => {
         const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
         const endBlock = Math.floor(new Date(endDate).getTime() / 1000);
         const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
-        const [blockReward, requiredAmount, fee] = await generator.determineBlockReward(
+        const [blockReward, requiredAmount, fee] = await generator(chain).determineBlockReward(
           parseEther(amountIn),
           startBlock,
           Number(bonusEndBlock),

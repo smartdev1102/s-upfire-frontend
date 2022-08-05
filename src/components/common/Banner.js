@@ -11,10 +11,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
+import { networks } from '../../utils/network.util';
 
-const Banner = () => {
+const Banner = ({ setChain, chain }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [chain, setChain] = useState('avalanche');
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const handleClick = (event) => {
@@ -23,10 +23,30 @@ const Banner = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleChain = (chainName) => {
-    setChain(chainName);
+  const handleChain = async (chainId) => {
+    if (chainId !== 4) {
+      await window.ethereum.request(
+        {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "method": "wallet_addEthereumChain",
+          "params": [networks[chainId]]
+        }
+      );
+    }
+    await window.ethereum.request(
+      {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "wallet_switchEthereumChain",
+        "params": [{
+          chainId: networks[chainId].chainId
+        }]
+      }
+    );
+    setChain(chainId);
     setAnchorEl(null);
-    navigate(`/pools?chain=${chainName}`);
+    // navigate(`/pools?chain=${chainId}`);
   }
 
 
@@ -67,7 +87,7 @@ const Banner = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <img style={{ marginRight: '20px' }} src={stakeIcon} />
               <Box sx={{ flexGrow: 1 }}></Box>
-              {chain}
+              {networks[chain].chainName}
               <Box sx={{ flexGrow: 1 }}></Box>
               <ExpandMoreIcon />
             </Box>
@@ -81,8 +101,9 @@ const Banner = () => {
               'aria-labelledby': 'basic-button',
             }}
           >
-            <MenuItem onClick={() => handleChain('Avalanche')}>Avalanche</MenuItem>
-            <MenuItem onClick={() => handleChain('BSC')}>BSC</MenuItem>
+            <MenuItem onClick={() => handleChain(4)}>Ethereum</MenuItem>
+            <MenuItem onClick={() => handleChain(43113)}>Avalanche</MenuItem>
+            <MenuItem onClick={() => handleChain(97)}>BSC</MenuItem>
           </Menu>
         </Box>
         <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>

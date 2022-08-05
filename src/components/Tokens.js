@@ -7,16 +7,17 @@ import RoundButton from './common/RoundButton';
 import Pagination from '@mui/material/Pagination';
 import { factory, tokenContract, farm } from '../utils/ethers.util';
 
-const Tokens = () => {
+const Tokens = ({chain}) => {
   const [tokens, setTokens] = useState([]);
   // tokens
   useEffect(() => {
     async function getFarms () {
+      if(!chain) return;
       const farmsLength = await factory.farmsLength();
       let tempTokens = [];
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory.farmAtIndex(i);
-        const farmInfo = await farm(farmAddress).farmInfo();
+        const farmInfo = await farm(chain, farmAddress).farmInfo();
         const lptoken = farmInfo.lpToken;
         const name = await tokenContract(lptoken).name();
         const symbol = await tokenContract(lptoken).symbol();
@@ -31,7 +32,7 @@ const Tokens = () => {
       }
     }
     getFarms();
-  }, []);
+  }, [chain]);
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }

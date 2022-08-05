@@ -17,6 +17,7 @@ import Referral from './components/Referral';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
+  const [chain, setChain] = useState(97);
   
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -41,7 +42,7 @@ function App() {
             mt: '20px'
           }}
         >
-          <Banner />
+          <Banner chain={chain} setChain={setChain} />
         </Box>
         <Box
           sx={{
@@ -50,8 +51,8 @@ function App() {
         >
           <Routes>
             <Route path='/' element={<Navigate to="/farms" />} />
-            <Route path="/farms" element={<Farms walletAddress={walletAddress} />} />
-            <Route path="/tokens" element={<Tokens />} />
+            <Route path="/farms" element={<Farms walletAddress={walletAddress} chain={chain} />} />
+            <Route path="/tokens" element={<Tokens chain={chain} />} />
             <Route path="/pools" element={<Pools />} />
             <Route path="/referral" element={<Referral walletAddress={walletAddress} />} />
           </Routes>

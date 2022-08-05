@@ -14,7 +14,7 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import { BigNumber, ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 
-const Farms = ({walletAddress}) => {
+const Farms = ({walletAddress, chain}) => {
   const [totalLiquidity, setTotalLiquidity] = useState(0);
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [farms, setFarms] = useState([]);
@@ -23,12 +23,14 @@ const Farms = ({walletAddress}) => {
   // get farms
   useEffect(() => {
     async function getFarms () {
-      const farmsLength = await factory.farmsLength();
+      if(!chain) return;
+      console.log(chain)
+      const farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
       for (let i = 0; i < Number(farmsLength); i++) {
-        const farmAddress = await factory.farmAtIndex(i);
-        const farmInfo = await farm(farmAddress).farmInfo();
+        const farmAddress = await factory(chain).farmAtIndex(i);
+        const farmInfo = await farm(chain, farmAddress).farmInfo();
         const farmSupply = farmInfo.farmableSupply;
         tempTotal += Number(formatEther(farmSupply));
         setTotalLiquidity(tempTotal);
@@ -58,7 +60,7 @@ const Farms = ({walletAddress}) => {
       }
     }
     getFarms();
-  }, []);
+  }, [chain]);
 
 
   const createFarm = async (
@@ -96,7 +98,7 @@ const Farms = ({walletAddress}) => {
       }}
     >
       {/* create farm */}
-      <CreateFarm open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
+      <CreateFarm chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
       {/* total farming liquidity */}
       <Box
         sx={{

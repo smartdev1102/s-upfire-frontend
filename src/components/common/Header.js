@@ -35,13 +35,13 @@ const Header = ({ walletAddress, connectWallet }) => {
           <RoundButton size='large' variant='outlined'>Create referral link</RoundButton>
         </Link>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           mx: '10px'
         }}
       >
         <RoundButton size='large' variant='outlined'>Create pool</RoundButton>
-      </Box>
+      </Box> */}
       {/* <Box
         sx={{
           mx: '10px'

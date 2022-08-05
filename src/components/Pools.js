@@ -41,7 +41,7 @@ const Pools = () => {
   // get chain
   useEffect(() => {
     const chainName = new URLSearchParams(search).get('chain');
-    if (chainName === 'BSC') {
+    if (chainName === 97) {
       setStakePools(bscPools);
     } else {
       setStakePools([]);

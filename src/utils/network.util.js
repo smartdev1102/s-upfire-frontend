@@ -1,4 +1,15 @@
-const networkSettings = {
+export const networks = {
+  4: {
+    chainId: `0x${parseInt(4, 10).toString(16)}`,
+    chainName: 'Rinkeby',
+    nativeCurrency: {
+      name: 'Ethereum Coin',
+      symbol: 'Ether',
+      decimals: 18,
+    },
+    rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: [''],
+  },
   56: {
     chainId: `0x${parseInt(56, 10).toString(16)}`,
     chainName: 'BSC Mainnet',
@@ -31,6 +42,17 @@ const networkSettings = {
     },
     rpcUrls: ['https://http-mainnet.hecochain.com'],
     blockExplorerUrls: ['https://hecoinfo.com/'],
+  },
+  43113: {
+    chainId: `0x${parseInt(43113, 10).toString(16)}`,
+    chainName: 'Avalanche Fuji Testnet',
+    nativeCurrency: {
+      name: 'AVAX',
+      symbol: 'AVAX',
+      decimals: 18,
+    },
+    rpcUrls: ['https://api.avax-test.network/ext/bc/C/rpc'],
+    blockExplorerUrls: ['https://cchain.explorer.avax.network/'],
   },
   43114: {
     chainId: `0x${parseInt(43114, 10).toString(16)}`,
@@ -85,9 +107,9 @@ export const scanSites = {
 }
 let currentNetwork = null;
 if (process.env.NODE_ENV === 'development') {
-  currentNetwork = networkSettings[97];
+  currentNetwork = networks[97];
 } else {
-  currentNetwork = networkSettings[97];
+  currentNetwork = networks[97];
 }
 
 
@@ -106,6 +128,3 @@ export const switchNet = {
   }]
 }
 
-export const network = {
-  ...currentNetwork
-}
