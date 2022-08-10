@@ -142,7 +142,7 @@ const Tokens = ({chain}) => {
                 justifyContent: 'center'
               }}
             >
-              <Pagination count={10} variant='outlined' />
+              {/* <Pagination count={10} variant='outlined' /> */}
             </Box>
           </Box>
         </Box>
