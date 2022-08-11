@@ -41,8 +41,8 @@ const Farms = ({walletAddress, chain}) => {
         const start = new Date(startBlock * 1000);
         const end = new Date(endBlock * 1000);
         const numFarmers = farmInfo.numFarmers;
-        const rewardSymbol = await tokenContract(rewardToken).symbol();
-        const lpSymbol = await tokenContract(lptoken).symbol();
+        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+        const lpSymbol = await tokenContract(chain, lptoken).symbol();
         tempFarms.push({
           icon: '',
           name: lpSymbol,
@@ -74,9 +74,9 @@ const Farms = ({walletAddress, chain}) => {
     withReferral
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
-    await contract.approve(address['generator'], parseEther(amountIn));
+    await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async() => {
-      const tx = await generatorWeb3.createFarm(
+      const tx = await generatorWeb3(chain).createFarm(
         farmToken,
         parseEther(amountIn),
         lptoken,

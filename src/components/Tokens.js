@@ -13,14 +13,14 @@ const Tokens = ({chain}) => {
   useEffect(() => {
     async function getFarms () {
       if(!chain) return;
-      const farmsLength = await factory.farmsLength();
+      const farmsLength = await factory(chain).farmsLength();
       let tempTokens = [];
       for (let i = 0; i < Number(farmsLength); i++) {
-        const farmAddress = await factory.farmAtIndex(i);
+        const farmAddress = await factory(chain).farmAtIndex(i);
         const farmInfo = await farm(chain, farmAddress).farmInfo();
         const lptoken = farmInfo.lpToken;
-        const name = await tokenContract(lptoken).name();
-        const symbol = await tokenContract(lptoken).symbol();
+        const name = await tokenContract(chain, lptoken).name();
+        const symbol = await tokenContract(chain, lptoken).symbol();
         tempTokens = [...tokens];
         tempTokens.push({
           name: name,
