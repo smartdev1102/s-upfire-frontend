@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import pkgIcon from '../assets/tokenIcons/pkg.svg';
 import RoundButton from './common/RoundButton';
 import Pagination from '@mui/material/Pagination';
-import { factory, tokenContract, farm } from '../utils/ethers.util';
+import { factory, tokenContract, farm, pair } from '../utils/ethers.util';
 
 const Tokens = ({chain}) => {
   const [tokens, setTokens] = useState([]);
@@ -20,11 +20,15 @@ const Tokens = ({chain}) => {
         const farmInfo = await farm(chain, farmAddress).farmInfo();
         const lptoken = farmInfo.lpToken;
         const name = await tokenContract(chain, lptoken).name();
-        const symbol = await tokenContract(chain, lptoken).symbol();
+        const token0 = await pair(chain, lptoken).token0();
+        const token1 = await pair(chain, lptoken).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        const lpSymbol = `${symbol1}/${symbol2}`;
         tempTokens = [...tokens];
         tempTokens.push({
           name: name,
-          symbol: symbol,
+          symbol: lpSymbol,
           price: 0,
           address: lptoken
         });
