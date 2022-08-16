@@ -7,10 +7,16 @@ import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
 import { farm, farmWeb3, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
 import { parseEther } from 'ethers/lib/utils';
-const FarmCard = ({ farmInfo }) => {
+
+const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
+  
+
+  const handleSelectedFarm = () => {
+    setSelectedFarm(farmInfo);
+  }
 
   const stake = async () => {
     await tokenWeb3(farmInfo.lptoken).approve(farmInfo.address, parseEther(amountIn));
@@ -121,12 +127,15 @@ const FarmCard = ({ farmInfo }) => {
                 alignItems: 'center'
               }}
             >
-              <Box>
+              <Box sx={{ mx: '20px' }}>
+                <Button onClick={handleSelectedFarm} variant='contained'>add liquidity and stake</Button>
+              </Box>
+              {/* <Box>
                 <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
               <Box sx={{ mx: '20px' }}>
                 <Button onClick={stake} variant='contained'>stake</Button>
-              </Box>
+              </Box> */}
               <Box>
                 <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>

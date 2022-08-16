@@ -1,15 +1,18 @@
 import { ethers } from "ethers"
-import { network, networks } from "./network.util"
+import { networks } from "./network.util"
 import Factory from '../contracts/Factory.sol/Factory.json';
 import Generator from '../contracts/FarmGenerator.sol/FarmGenerator.json';
 import Farm from '../contracts/Farm.sol/Farm.json';
 import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.json';
+import Pair from '../contracts/Pair.sol/Pair.json';
+import Router from '../contracts/Router.sol/Router.json';
 
 export const address = {
   97: {
     factory: "0x9b5bA1Ff5b3238A2822c665B2E5129bF0308C584",
     generator: "0x54c5926Ccb210D65C37B8AeDA654F40b72Ee8C0A",
     rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
+    wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
   },
   43113: {
     factory: "0x1CA19537511171B4ce1f3d5Bd2785F7277BC4616",
@@ -23,15 +26,24 @@ export const address = {
   }
 }
 
+export const coinSymbols = {
+  97: 'BNB',
+  43113: 'AVAX',
+  4: 'ETHER'
+}
+
 export const swapFactories = {
   97: {
-    uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4"
+    uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+    router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
   },
   43113: {
-    uniswap: "0x1005fffFE0E4154512FaDa53a68d75D15cE82120"
+    uniswap: "0x1005fffFE0E4154512FaDa53a68d75D15cE82120",
+    router: ''
   },
   4: {
-    uniswap: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+    uniswap: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+    router: ''
   },
 }
 // providers
@@ -60,6 +72,16 @@ export const generatorWeb3 = (chain) => {
 export const swapFactory = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
   return new ethers.Contract(swapFactories[chain]['uniswap'], SwapFactory.abi, provider);
+}
+
+export const pair = (chain, pairAddress) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  return new ethers.Contract(pairAddress, Pair.abi, provider);
+}
+
+export const routerWeb3 = (chain) => {
+  const contract = new ethers.Contract(swapFactories[chain]['router'], Router.abi, signer);
+  return contract;
 }
 
 

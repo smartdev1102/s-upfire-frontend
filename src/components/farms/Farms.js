@@ -9,22 +9,24 @@ import Pagination from '@mui/material/Pagination';
 import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
 
 import CreateFarm from './CreateFarm';
-import { address, erc20Abi, factory, farm, generator, generatorWeb3, signer, tokenContract } from '../../utils/ethers.util';
+import { address, erc20Abi, factory, farm, generator, generatorWeb3, pair, signer, swapFactory, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { BigNumber, ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
+import StakeDlg from '../common/StakeDlg';
 
 const Farms = ({walletAddress, chain}) => {
   const [totalLiquidity, setTotalLiquidity] = useState(0);
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [farms, setFarms] = useState([]);
+  const [pairs, setPairs] = useState([]);
+  const [selectedFarm, setSelectedFarm] = useState();
 
 
   // get farms
   useEffect(() => {
     async function getFarms () {
       if(!chain) return;
-      console.log(chain)
       const farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
@@ -41,8 +43,12 @@ const Farms = ({walletAddress, chain}) => {
         const start = new Date(startBlock * 1000);
         const end = new Date(endBlock * 1000);
         const numFarmers = farmInfo.numFarmers;
-        const rewardSymbol = await tokenContract(rewardToken).symbol();
-        const lpSymbol = await tokenContract(lptoken).symbol();
+        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+        const token0 = await pair(chain, lptoken).token0();
+        const token1 = await pair(chain, lptoken).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        const lpSymbol = `${symbol1}-${symbol2}`;
         tempFarms.push({
           icon: '',
           name: lpSymbol,
@@ -54,9 +60,26 @@ const Farms = ({walletAddress, chain}) => {
           supply: formatEther(farmSupply),
           address: farmAddress,
           lptoken: lptoken,
-          rewardToken: rewardToken
+          rewardToken: rewardToken,
+          token0: token0,
+          token1: token1
         });
         setFarms(tempFarms);
+      }
+      const pairsLength = await swapFactory(chain).allPairsLength();
+      let tempPair = [];
+      for(let i = 0; i < Number(pairsLength); i++) {
+        const pairAddress = await swapFactory(chain).allPairs(i);
+        const token0 = await pair(chain, pairAddress).token0();
+        const token1 = await pair(chain, pairAddress).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        tempPair.push({
+          address: pairAddress,
+          symbol1: symbol1,
+          symbol2: symbol2
+        });
+        setPairs(tempPair);
       }
     }
     getFarms();
@@ -74,9 +97,9 @@ const Farms = ({walletAddress, chain}) => {
     withReferral
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
-    await contract.approve(address['generator'], parseEther(amountIn));
+    await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async() => {
-      const tx = await generatorWeb3.createFarm(
+      const tx = await generatorWeb3(chain).createFarm(
         farmToken,
         parseEther(amountIn),
         lptoken,
@@ -97,8 +120,9 @@ const Farms = ({walletAddress, chain}) => {
         p: '20px'
       }}
     >
+      <StakeDlg onClose={()=>setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
       {/* create farm */}
-      <CreateFarm chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
+      <CreateFarm pairs={pairs} chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
       {/* total farming liquidity */}
       <Box
         sx={{
@@ -170,7 +194,7 @@ const Farms = ({walletAddress, chain}) => {
         >
           {
             farms.map((farm, i) => (
-              <FarmCard key={i} farmInfo={farm}/>
+              <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm}/>
             ))
           }
         </Box>

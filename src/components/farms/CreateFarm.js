@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, TextField, Box, Typography, Button } from '@mui/material';
+import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -8,7 +8,7 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
+const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   const [startDate, setstartDate] = useState(new Date());
   const [bonusEndDate, setBonusEndDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -95,8 +95,24 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             Paste uniswap v2 pair address that farmers can farm the yield token on
           </Box>
           <Box>
-            <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
+            <FormControl fullWidth>
+              <Select
+                value={lpToken}
+                onChange={e=>setLpToken(e.target.value)}
+              >
+                {
+                  pairs.map((pair, i) => (
+                    <MenuItem key={i} value={pair.address}>
+                      { pair.symbol1 }/{ pair.symbol2 }
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
           </Box>
+          {/* <Box>
+            <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
+          </Box> */}
           <Box sx={{ color: 'text.secondary' }}>
             This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
           </Box>
