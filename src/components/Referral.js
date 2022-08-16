@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { address, generator, generatorWeb3, signer } from '../utils/ethers.util';
 
 
-const Referral = ({ walletAddress }) => {
+const Referral = ({ walletAddress, chain }) => {
   const [referralFund, setReferralFund] = useState(0);
   const [referralIn, setReferralIn] = useState('');
   const [referralOut, setReferralOut] = useState('');
@@ -15,13 +15,14 @@ const Referral = ({ walletAddress }) => {
 
 
   const signReferral = async() => {
-    const hash = await generator.getMessageHash(
+    console.log(walletAddress, referralIn)
+    const hash = await generator(chain).getMessageHash(
       walletAddress,
       parseEther(amount),
       referralIn
     );
     const sig = await signer.signMessage(utils.arrayify(hash));
-    const tx = await generatorWeb3.storeReferralInfo(
+    const tx = await generatorWeb3(chain).storeReferralInfo(
       sig,
       parseEther(amount),
       referralToken
@@ -31,9 +32,9 @@ const Referral = ({ walletAddress }) => {
   }
 
   const claimReferral = async () => {
-    const tx = await generatorWeb3.claimReferral(
+    const tx = await generatorWeb3(chain).claimReferral(
       signerAddr,
-      referralToken
+      referralOut
     );
     await tx.wait();
     window.alert("claimed.");
@@ -41,7 +42,7 @@ const Referral = ({ walletAddress }) => {
 
   useEffect(() => {
     async function getFund() {
-      const fund = await generator.referralFund(walletAddress, address['rewardToken']);
+      const fund = await generator(chain).referralFund(walletAddress, address[chain]['rewardToken']);
       setReferralFund(formatEther(fund));
     }
     if (!!walletAddress) {

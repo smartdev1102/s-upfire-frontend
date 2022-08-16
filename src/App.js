@@ -54,7 +54,7 @@ function App() {
             <Route path="/farms" element={<Farms walletAddress={walletAddress} chain={chain} />} />
             <Route path="/tokens" element={<Tokens chain={chain} />} />
             <Route path="/pools" element={<Pools />} />
-            <Route path="/referral" element={<Referral walletAddress={walletAddress} />} />
+            <Route path="/referral" element={<Referral chain={chain} walletAddress={walletAddress} />} />
           </Routes>
         </Box>
         <Footer />
