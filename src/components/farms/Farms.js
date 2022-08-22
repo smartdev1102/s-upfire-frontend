@@ -189,7 +189,8 @@ const Farms = ({walletAddress, chain}) => {
       >
         <Box
           sx={{
-            width: '1366px'
+            width: '1366px',
+            minHeight: '400px'
           }}
         >
           {

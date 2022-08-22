@@ -82,7 +82,7 @@ const Banner = ({ setChain, chain }) => {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}
-            color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'
+            color={'secondary'} sx={{ mx: '20px', width: '300px' }} variant='contained' size='large'
           >
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <img style={{ marginRight: '20px' }} src={stakeIcon} />
@@ -100,16 +100,57 @@ const Banner = ({ setChain, chain }) => {
             MenuListProps={{
               'aria-labelledby': 'basic-button',
             }}
+            PaperProps={{
+              sx: {
+                width: '300px',
+                background: '#030927',
+              }
+            }}
           >
-            <MenuItem onClick={() => handleChain(4)}>Ethereum</MenuItem>
-            <MenuItem onClick={() => handleChain(43113)}>Avalanche</MenuItem>
-            <MenuItem onClick={() => handleChain(97)}>BSC</MenuItem>
+            <MenuItem
+              sx={{
+                background: 'skyBlue',
+                m: '5px',
+                borderRadius: '10px',
+                justifyContent: 'center',
+                ":hover": {
+                  background: 'lightBlue'
+                }
+              }}
+              onClick={() => handleChain(4)}
+            >
+              Ethereum
+            </MenuItem>
+            <MenuItem 
+              sx={{
+                background: 'pink',
+                m: '5px',
+                borderRadius: '10px',
+                justifyContent: 'center',
+                ":hover": {
+                  background: 'hotPink'
+                }
+              }}
+              onClick={() => handleChain(43113)}
+            >Avalanche</MenuItem>
+            <MenuItem 
+              sx={{
+                background: 'orange',
+                m: '5px',
+                borderRadius: '10px',
+                justifyContent: 'center',
+                ":hover": {
+                  background: 'darkOrange'
+                }
+              }}
+              onClick={() => handleChain(97)}
+            >Binance Smart Chain</MenuItem>
           </Menu>
         </Box>
-        <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
+        {/* <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
           <img style={{ marginRight: '20px' }} src={accountIcon} />
           account
-        </RoundTabButton>
+        </RoundTabButton> */}
       </Box>
     </Box>
   )
