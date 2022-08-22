@@ -1,10 +1,10 @@
-import { Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button, FormControl, Select, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
-import { generator } from '../utils/ethers.util';
+import { generator, swapFactory, pair, tokenContract } from '../utils/ethers.util';
 import { useParams } from 'react-router-dom';
 
 const CreatePool = ({ walletAddress, chain, create }) => {
@@ -16,10 +16,37 @@ const CreatePool = ({ walletAddress, chain, create }) => {
   const [multiplier, setMultiplier] = useState(1);
   const [amountIn, setAmountIn] = useState('');
   const [rewardBlock, setRewardBlock] = useState('0');
-  const [withReferral, setWithReferral] = useState(false);
-  const [apy, setApy] = useState('0');
+  const [pairs, setPairs] = useState([]);
+  const [isBonus, setIsBonus] = useState(false);
 
   const { referralAddress } = useParams();
+
+  useEffect(() => {
+    async function getPairs () {
+      let tempPairs = [];
+      const pairsLength = await swapFactory(chain).allPairsLength();
+      for(let i = 0; i < Number(pairsLength); i++) {
+        const pairAddress = await swapFactory(chain).allPairs(i);
+        const token0 = await pair(chain, pairAddress).token0();
+        const token1 = await pair(chain, pairAddress).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        tempPairs.push({
+          address: pairAddress,
+          symbol1: symbol1,
+          symbol2: symbol2
+        });
+        setPairs(tempPairs);
+      }
+    }
+    getPairs();
+  }, [chain]);
+
+  useEffect(() => {
+    if(!isBonus) {
+      setBonusEndDate(startDate);
+    }
+  }, [startDate, isBonus]);
 
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
@@ -80,13 +107,26 @@ const CreatePool = ({ walletAddress, chain, create }) => {
             Pair
           </Box>
           <Box>
-            <TextField value={farmToken} onChange={e => setFarmToken(e.target.value)} fullWidth />
+            <FormControl fullWidth>
+              <Select
+                value={lpToken}
+                onChange={e=>setLpToken(e.target.value)}
+              >
+                {
+                  pairs.map((pair, i) => (
+                    <MenuItem key={i} value={pair.address}>
+                      { pair.symbol1 }/{ pair.symbol2 }
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
           </Box>
           <Box>
             Token for Reward
           </Box>
           <Box>
-            <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} fullWidth />
+            <TextField value={farmToken} onChange={e => setFarmToken(e.target.value)} fullWidth />
           </Box>
           <Box>
             Token Amount
@@ -116,11 +156,15 @@ const CreatePool = ({ walletAddress, chain, create }) => {
             Bonus end date
           </Box>
           <Box>
+            <FormControlLabel control={<Checkbox checked={isBonus} onChange={()=>setIsBonus(!isBonus)} />} label="Bonus end date" />
+          </Box>
+          <Box>
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DateTimePicker
                 value={bonusEndDate}
                 onChange={newValue => setBonusEndDate(newValue)}
                 renderInput={params => <TextField {...params} />}
+                disabled={!isBonus}
               />
             </LocalizationProvider>
           </Box>

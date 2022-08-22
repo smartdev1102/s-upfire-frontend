@@ -18,9 +18,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   const [multiplier, setMultiplier] = useState(1);
   const [amountIn, setAmountIn] = useState('');
   const [rewardBlock, setRewardBlock] = useState('0');
-  const [withReferral, setWithReferral] = useState(false);
-  const [apy, setApy] = useState('0');
-
+  const [isBonus, setIsBonus] = useState(false);
+  
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
@@ -35,17 +34,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
       constants.AddressZero
     );
   }
-
-  // // get token balance
-  // useEffect(() => {
-  //   async function getFarmTokenBalance() {
-  //     const balance = await tokenContract(farmToken).balanceOf(walletAddress);
-  //     setAmountIn(formatEther(balance));
-  //   }
-  //   if (!!farmToken && !!walletAddress) {
-  //     getFarmTokenBalance();
-  //   }
-  // }, [farmToken, walletAddress]);
 
   // determine reward per block
   useEffect(() => {
@@ -70,6 +58,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
     }
   }, [amountIn, startDate, bonusEndDate, multiplier, endDate, walletAddress])
 
+  useEffect(() => {
+    if(!isBonus) {
+      setBonusEndDate(startDate);
+    }
+  }, [startDate, isBonus]);
 
   return (
     <Dialog onClose={onClose} open={open}>
@@ -92,9 +85,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
               Select uniswap pair
             </Typography>
           </Box>
-          <Box sx={{ color: 'text.secondary' }}>
-            Paste uniswap v2 pair address that farmers can farm the yield token on
-          </Box>
           <Box>
             <FormControl fullWidth>
               <Select
@@ -111,9 +101,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
               </Select>
             </FormControl>
           </Box>
-          {/* <Box>
-            <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
-          </Box> */}
           <Box sx={{ color: 'text.secondary' }}>
             This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
           </Box>
@@ -149,11 +136,15 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
             Bonus end date
           </Box>
           <Box>
+          <FormControlLabel control={<Checkbox checked={isBonus} onChange={()=>setIsBonus(!isBonus)} />} label="Bonus end date" />
+          </Box>
+          <Box>
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DateTimePicker
                 value={bonusEndDate}
                 onChange={(newValue) => { setBonusEndDate(newValue) }}
                 renderInput={(params) => <TextField {...params} />}
+                disabled={!isBonus}
               />
             </LocalizationProvider>
           </Box>
