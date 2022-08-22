@@ -118,11 +118,13 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
       sx={{
         position: 'absolute',
         left: '50%',
+        top: '50%',
         background: 'rgb(0,36,48)',
         padding: '30px',
         transform: 'translate(-50%, -50%)',
         width: '650px',
-        borderRadius: '20px'
+        borderRadius: '20px',
+        zIndex: '1000'
       }}
     >
       <Box

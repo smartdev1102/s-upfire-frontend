@@ -4,11 +4,19 @@ import React from 'react';
 import logo from '../../assets/logo.svg';
 import RoundButton from './RoundButton';
 import SearchIcon from '@mui/icons-material/Search';
-import ethereumIcon from '../../assets/icons/ethereum.svg';
 import appIcon from '../../assets/icons/app.svg';
 import { Link } from 'react-router-dom';
+import ethereumIcon from '../../assets/tokenIcons/ethereum-ether-logo.png';
+import bnbIcon from '../../assets/tokenIcons/bsc-bnb-logo.png';
+import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
 
-const Header = ({ walletAddress, connectWallet, handleReferral }) => {
+const chainLogos = {
+  97: bnbIcon,
+  43113: avaxIcon,
+  4: ethereumIcon
+}
+
+const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -72,10 +80,10 @@ const Header = ({ walletAddress, connectWallet, handleReferral }) => {
         }}
       >
         <IconButton>
-          <img src={ethereumIcon} />
+          <img style={{width: '50px'}} src={chainLogos[chain]} />
         </IconButton>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           mx: '10px'
         }}
@@ -83,7 +91,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral }) => {
         <IconButton>
           <img src={appIcon} />
         </IconButton>
-      </Box>
+      </Box> */}
     </Box>
   )
 }

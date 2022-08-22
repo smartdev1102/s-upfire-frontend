@@ -73,7 +73,7 @@ function App() {
     >
       <BrowserRouter>
         <Box>
-          <Header handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
+          <Header chain={chain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
         </Box>
         <ReferralDlg referral={referral} onClose={() => setReferral()} />
         <Box

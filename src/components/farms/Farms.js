@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Card } from '@mui/material';
+import { Card, Menu, MenuItem } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 
 import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
@@ -15,24 +15,58 @@ import { BigNumber, ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 
-const Farms = ({walletAddress, chain}) => {
+const Farms = ({ walletAddress, chain }) => {
   const [totalLiquidity, setTotalLiquidity] = useState(0);
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [farms, setFarms] = useState([]);
   const [pairs, setPairs] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [filter, setFilter] = useState();
+  const open = Boolean(anchorEl);
+
+  const handleFilter = (filterValue) => {
+    setFilter(filterValue);
+    setAnchorEl(null);
+  }
+
+  // sort 
+  useEffect(() => {
+    if (filter === 'apr') {
+      farms.sort((a, b) => {
+        if (a.blockReward > b.blockReward) { return -1; }
+        if (a.blockReward < b.blockReward) { return 1; }
+        return 0;
+      })
+    }
+    if (filter === 'liq') {
+      farms.sort((a, b) => {
+        if (a.supply > b.supply) { return -1; }
+        if (a.supply < b.supply) { return 1; }
+        return 0;
+      });
+    }
+    if (filter === 'alpha') {
+      farms.sort((a, b) => {
+        if(a.symbol < b.symbol) { return -1;}
+        if(a.symbol > b.symbol) { return 1;}
+        return 0;
+      })
+    }
+  }, [filter]);
 
 
   // get farms
   useEffect(() => {
-    async function getFarms () {
-      if(!chain) return;
+    async function getFarms() {
+      if (!chain) return;
       const farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory(chain).farmAtIndex(i);
         const farmInfo = await farm(chain, farmAddress).farmInfo();
+        const blockReward = farmInfo.blockReward;
         const farmSupply = farmInfo.farmableSupply;
         tempTotal += Number(formatEther(farmSupply));
         setTotalLiquidity(tempTotal);
@@ -58,6 +92,7 @@ const Farms = ({walletAddress, chain}) => {
           end: end,
           numFarmers: numFarmers.toString(),
           supply: formatEther(farmSupply),
+          blockReward: blockReward.toNumber(),
           address: farmAddress,
           lptoken: lptoken,
           rewardToken: rewardToken,
@@ -68,7 +103,7 @@ const Farms = ({walletAddress, chain}) => {
       }
       const pairsLength = await swapFactory(chain).allPairsLength();
       let tempPair = [];
-      for(let i = 0; i < Number(pairsLength); i++) {
+      for (let i = 0; i < Number(pairsLength); i++) {
         const pairAddress = await swapFactory(chain).allPairs(i);
         const token0 = await pair(chain, pairAddress).token0();
         const token1 = await pair(chain, pairAddress).token1();
@@ -98,7 +133,7 @@ const Farms = ({walletAddress, chain}) => {
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
-    contract.once("Approval", async() => {
+    contract.once("Approval", async () => {
       const tx = await generatorWeb3(chain).createFarm(
         farmToken,
         parseEther(amountIn),
@@ -120,9 +155,9 @@ const Farms = ({walletAddress, chain}) => {
         p: '20px'
       }}
     >
-      <StakeDlg onClose={()=>setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
+      <StakeDlg onClose={() => setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
       {/* create farm */}
-      <CreateFarm pairs={pairs} chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress}/>
+      <CreateFarm pairs={pairs} chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress} />
       {/* total farming liquidity */}
       <Box
         sx={{
@@ -143,9 +178,11 @@ const Farms = ({walletAddress, chain}) => {
           }}
         >
           <Box>
-            <Typography variant="h2" gutterBottom component="h2">
-              {`$${Math.trunc(totalLiquidity)}`}
-            </Typography>
+            <Box>
+              <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
+                {`$${Math.trunc(totalLiquidity)}`}
+              </Typography>
+            </Box>
             <Box>
               <Typography variant="h6" gutterBottom component="h6">
                 Total farming liquidity
@@ -155,7 +192,7 @@ const Farms = ({walletAddress, chain}) => {
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
             <RoundButton
-              onClick={()=>setOpenCreateFarm(true)}
+              onClick={() => setOpenCreateFarm(true)}
               sx={{
                 color: 'text.primary',
                 border: '1px solid white',
@@ -174,9 +211,38 @@ const Farms = ({walletAddress, chain}) => {
                 mx: '10px'
               }}
               variant='outlined'
+              id="filter-button"
+              aria-controls={open ? 'filter-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={e => setAnchorEl(e.currentTarget)}
             >
               <FilterAltIcon />
             </RoundButton>
+            <Menu
+              id="filter-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={() => setAnchorEl(null)}
+              MenuListProps={{
+                'aria-labelledby': 'filter-button',
+              }}
+              PaperProps={{
+                sx: {
+
+                }
+              }}
+            >
+              <MenuItem onClick={() => handleFilter('apr')}>
+                APR
+              </MenuItem>
+              <MenuItem onClick={() => handleFilter('liq')}>
+                Liquidity
+              </MenuItem>
+              <MenuItem onClick={() => handleFilter('alpha')}>
+                Alphabetic
+              </MenuItem>
+            </Menu>
           </Box>
         </Box>
       </Box>
@@ -195,7 +261,7 @@ const Farms = ({walletAddress, chain}) => {
         >
           {
             farms.map((farm, i) => (
-              <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm}/>
+              <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
             ))
           }
         </Box>
