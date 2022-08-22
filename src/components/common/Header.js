@@ -8,7 +8,7 @@ import ethereumIcon from '../../assets/icons/ethereum.svg';
 import appIcon from '../../assets/icons/app.svg';
 import { Link } from 'react-router-dom';
 
-const Header = ({ walletAddress, connectWallet }) => {
+const Header = ({ walletAddress, connectWallet, handleReferral }) => {
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -31,9 +31,7 @@ const Header = ({ walletAddress, connectWallet }) => {
           mx: '10px'
         }}
       >
-        <Link to="/referral" style={{textDecoration: 'none'}}>
-          <RoundButton size='large' variant='outlined'>Create referral link</RoundButton>
-        </Link>
+        <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
       </Box>
       {/* <Box
         sx={{

@@ -9,8 +9,8 @@ import Router from '../contracts/Router.sol/Router.json';
 
 export const address = {
   97: {
-    factory: "0x9b5bA1Ff5b3238A2822c665B2E5129bF0308C584",
-    generator: "0x54c5926Ccb210D65C37B8AeDA654F40b72Ee8C0A",
+    factory: "0xDb9ADc1D6ED67B3f599c7706478342bCF2577411",
+    generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
     rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
     wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
   },

@@ -7,6 +7,7 @@ import { generator, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { constants } from 'ethers';
 
 const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   const [startDate, setstartDate] = useState(new Date());
@@ -31,7 +32,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
       startBlock,
       bonusEndBlock,
       multiplier,
-      withReferral
+      constants.AddressZero
     );
   }
 
@@ -190,9 +191,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
           {/* <Box sx={{my: '10px'}}>
             APY: {}
           </Box> */}
-          <Box>
+          {/* <Box>
             <FormControlLabel control={<Checkbox checked={withReferral} onChange={()=>setWithReferral(!withReferral)} />} label="Referral" />
-          </Box>
+          </Box> */}
         </Box>
       </Box>
 
