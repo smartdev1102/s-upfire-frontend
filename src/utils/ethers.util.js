@@ -18,11 +18,13 @@ export const address = {
     factory: "0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7",
     generator: "0xd5649a4a5AdbcD6a0b25972DD907761d5f4648e4",
     rewardToken: "0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846",
+    wether: ''
   },
   4: {
-    factory: "0xca1d2a55663d523ccA5EfF676DF77c2678feDae8",
-    generator: "0xd20612Fb104949a44618253f03C6eebA9c8D154c",
+    factory: "0xd1FDf8F8aB2B0D89b4f71435D2BC274F4D2Cd374",
+    generator: "0x2D23d44d1bD7566186F72A200bBFC4a22B20539A",
     rewardToken: "0xBd83855cfADe70EDA1f93080c32387d93Dc39BE1",
+    wether: '0xc778417E063141139Fce010982780140Aa0cD5Ab'
   }
 }
 
@@ -43,7 +45,7 @@ export const swapFactories = {
   },
   4: {
     uniswap: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
-    router: ''
+    router: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
   },
 }
 // providers
