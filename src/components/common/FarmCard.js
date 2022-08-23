@@ -7,6 +7,7 @@ import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
 import { farm, farmWeb3, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
 import { parseEther } from 'ethers/lib/utils';
+import moment from 'moment';
 
 const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
@@ -38,6 +39,8 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
       sx={{
         my: '10px',
         borderRadius: '20px',
+        border: '1px solid #2494F3',
+        fontFamily: 'Exo'
       }}
     >
       <Box
@@ -58,7 +61,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
           }}
         >
           <Box>
-            <Typography variant="h4" gutterBottom component="h4">
+            <Typography sx={{mb: 0}} variant="h5" gutterBottom component="h5">
               {`Farm ${farmInfo.name.toUpperCase()}`}
             </Typography>
           </Box>
@@ -93,7 +96,21 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
         <Box sx={{ mx: '30px' }}>
           <img src={farmIcon} />
         </Box>
-        <Box sx={{ mx: '30px', display: 'flex' }}>
+        <Box
+          sx={{
+            width: '150px'
+          }}
+        >
+          ~{moment(farmInfo.start).format('MMM DD YYYY')}
+        </Box>
+        <Box
+          sx={{
+            width: '150px'
+          }}
+        >
+          ~{moment(farmInfo.end).format('MMM DD YYYY')}
+        </Box>
+        <Box sx={{ mx: '30px', display: 'flex', width: '80px' }}>
           <Box sx={{ mx: '10px' }}>
             <img src={airdropIcon} />
           </Box>
@@ -101,7 +118,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
             {Math.trunc(farmInfo.supply)}
           </Box>
         </Box>
-        <Box sx={{ mx: '30px', display: 'flex' }}>
+        <Box sx={{ mx: '30px', display: 'flex', width: '80px' }}>
           <Box sx={{ mx: '10px' }}>
             <img style={{ height: '20px' }} src={accountIcon} />
           </Box>

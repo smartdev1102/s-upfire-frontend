@@ -17,7 +17,7 @@ export const theme = {
     }
   },
   typography: {
-    fontFamily: "Roboto"
+    fontFamily: "Exo"
   },
   spacing: [0, 4, 8, 16, 32, 64],
 };

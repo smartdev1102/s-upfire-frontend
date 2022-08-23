@@ -26,7 +26,8 @@ const ReferralDlg = ({referral, onClose}) => {
       <Box>
         <Box
           sx={{
-            display: 'flex'
+            display: 'flex',
+            mb: '20px'
           }}
         >
           <Typography variant='h5' component='h6' color='orange'>
@@ -47,10 +48,7 @@ const ReferralDlg = ({referral, onClose}) => {
             mt: '20px'
           }}
         >
-          Creating a referral code allows you to earn profits on ETH, BSC, MATIC, and AVAX. When a pool is created using your referral link, you are instantly given 20% of the Tokena team's profits in tokens as a reward for your referral.
-          Pools can be made to last months or even years, featuring large sums of crypto. A single good referral could be enough to make you a ton- multiple good referrals and you'll be rolling in it. So in a way, Tokena allows you to be your own boss.
-          You can also refer projects that you currently hold in your portfolio to list here as it's free and would make you quite a bit per year if the price of the coin holds.
-          *Note: Tokena aims to be 100% decentralized and not responsible for any users funds. If your funds get lost because you send them to the wrong address, there is likely nothing we can do about it. Make sure you know what you're doing before using our platform.
+          When a pool is created using your referral link, of the CoinCove team's profits, you receive 10% and the pool creator receives 10% back as a reward for the referral, so you both profit!
         </Box>
         <Box
           sx={{

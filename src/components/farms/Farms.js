@@ -15,7 +15,7 @@ import { BigNumber, ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 
-const Farms = ({ walletAddress, chain }) => {
+const Farms = ({ walletAddress, chain, openWalletAlert }) => {
   const [totalLiquidity, setTotalLiquidity] = useState(0);
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [farms, setFarms] = useState([]);
@@ -24,6 +24,15 @@ const Farms = ({ walletAddress, chain }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState();
   const open = Boolean(anchorEl);
+
+
+  const handleOpenCreateFarm = () => {
+    if(!walletAddress) {
+      openWalletAlert();
+    } else {
+      setOpenCreateFarm(true);
+    }
+  }
 
   const handleFilter = (filterValue) => {
     setFilter(filterValue);
@@ -34,15 +43,15 @@ const Farms = ({ walletAddress, chain }) => {
   useEffect(() => {
     if (filter === 'apr') {
       farms.sort((a, b) => {
-        if (a.blockReward > b.blockReward) { return -1; }
-        if (a.blockReward < b.blockReward) { return 1; }
+        if (a.blockReward < b.blockReward) { return -1; }
+        if (a.blockReward > b.blockReward) { return 1; }
         return 0;
       })
     }
     if (filter === 'liq') {
       farms.sort((a, b) => {
-        if (a.supply > b.supply) { return -1; }
-        if (a.supply < b.supply) { return 1; }
+        if (a.supply < b.supply) { return -1; }
+        if (a.supply > b.supply) { return 1; }
         return 0;
       });
     }
@@ -59,7 +68,7 @@ const Farms = ({ walletAddress, chain }) => {
   // get farms
   useEffect(() => {
     async function getFarms() {
-      if (!chain) return;
+      if (!chain || !walletAddress) return;
       const farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
@@ -192,7 +201,7 @@ const Farms = ({ walletAddress, chain }) => {
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
             <RoundButton
-              onClick={() => setOpenCreateFarm(true)}
+              onClick={handleOpenCreateFarm}
               sx={{
                 color: 'text.primary',
                 border: '1px solid white',

@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
-import { IconButton } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import React from 'react';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 import RoundButton from './RoundButton';
 import SearchIcon from '@mui/icons-material/Search';
 import appIcon from '../../assets/icons/app.svg';
@@ -30,9 +30,10 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
       }}
     >
       <Box
-        sx={{ mr: '80px' }}
+        sx={{ mr: '80px', display: 'flex', alignItems: 'center' }}
       >
         <img src={logo} />
+        <Typography sx={{ml: '10px'}} variant='h2' component='h2'> CoinCove</Typography>
       </Box>
       <Box
         sx={{
