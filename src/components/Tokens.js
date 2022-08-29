@@ -5,11 +5,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import pkgIcon from '../assets/tokenIcons/pkg.svg';
 import RoundButton from './common/RoundButton';
 import Pagination from '@mui/material/Pagination';
-import { factory, tokenContract, farm, pair } from '../utils/ethers.util';
+import { factory, tokenContract, farm, pair, poolFactory, pool } from '../utils/ethers.util';
 
 const Tokens = ({ chain, walletAddress }) => {
   const [tokens, setTokens] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
+  const [stakeTokens, setStakeTokens] = useState([]);
+
   // tokens
   useEffect(() => {
     async function getFarms() {
@@ -36,6 +38,25 @@ const Tokens = ({ chain, walletAddress }) => {
         setTokens(tempTokens);
       }
     }
+    async function getStakeTokens () {
+      if(!chain || !walletAddress) return;
+      const poolsLength = await poolFactory(chain).poolsLength();
+      let tempStakeTokens = [];
+      for(let i = 0; i < Number(poolsLength); i++) {
+        const poolAddress = await poolFactory(chain).poolAtIndex(i);
+        const stakeToken = await pool(chain, poolAddress).token();
+        const symbol = await tokenContract(chain, stakeToken).symbol();
+        const name = await tokenContract(chain, stakeToken).name();
+        tempStakeTokens.push({
+          name: name,
+          symbol: symbol,
+          price: 0,
+          address: stakeToken
+        });
+        setStakeTokens(tempStakeTokens);
+      }
+    }
+    getStakeTokens();
     getFarms();
   }, [chain]);
   const optimizeAddress = (address) => {
@@ -160,8 +181,55 @@ const Tokens = ({ chain, walletAddress }) => {
                 </Box>
               </Box>
             ) : (
-              <Box>
-                
+              <Box sx={{ mt: '30px' }}>
+                {
+                  stakeTokens.map((token, i) => (
+                    <Card
+                      key={i}
+                      sx={{
+                        width: '100%',
+                        borderRadius: '20px',
+                        py: '5px',
+                        px: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        my: '10px'
+                      }}
+                    >
+                      <Box>
+                        {/* <img src={pkgIcon} /> */}
+                      </Box>
+                      <Box>
+                        <Box sx={{ display: 'flex' }}>
+                          <Box sx={{ fontSize: '30px', mr: '10px' }}>
+                            {token.symbol}
+                          </Box>
+                          <Box sx={{ color: 'primary.main' }}>
+                            {`$${token.price}`}
+                          </Box>
+                        </Box>
+                        <Box sx={{ color: 'primary.main' }}>
+                          {token.name}
+                        </Box>
+                      </Box>
+                      <Box sx={{ flexGrow: 1 }}></Box>
+                      <Box sx={{ mx: '20px' }}>
+                        <RoundButton color='secondary' variant='contained'>View farms</RoundButton>
+                      </Box>
+                      <Box sx={{ mx: '20px' }}>
+                        <RoundButton color='secondary' variant='contained'>Uniswap</RoundButton>
+                      </Box>
+                      <Box sx={{ mx: '20px' }}>
+                        <RoundButton color='secondary' variant='contained'>Etherscan</RoundButton>
+                      </Box>
+                      <Box sx={{ mx: '20px' }}>
+                        <RoundButton color='secondary' variant='contained'>
+                          {optimizeAddress(token.address)}
+                        </RoundButton>
+                      </Box>
+                    </Card>
+                  ))
+                }
               </Box>
             )
           }

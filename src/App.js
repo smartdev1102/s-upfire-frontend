@@ -102,7 +102,7 @@ function App() {
             <Route path='/' element={<Navigate to="/farms" />} />
             <Route path="/farms" element={<Farms openWalletAlert={() => setOpenWalletAlert(true)} walletAddress={walletAddress} chain={chain} />} />
             <Route path="/tokens" element={<Tokens chain={chain} walletAddress={walletAddress} />} />
-            <Route path="/pools" element={<Pools />} />
+            <Route path="/pools" element={<Pools chain={chain} walletAddress={walletAddress} />} />
             <Route path="/referral" element={<Referral chain={chain} walletAddress={walletAddress} />} />
             <Route path="/create_pool/:referralAddress" element={<CreatePool chain={chain} create={createFarm} walletAddress={walletAddress} />} />
           </Routes>

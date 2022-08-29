@@ -49,7 +49,6 @@ const Banner = ({ setChain, chain }) => {
     // navigate(`/pools?chain=${chainId}`);
   }
 
-
   return (
     <Box>
       {/* tab buttons */}
@@ -71,10 +70,12 @@ const Banner = ({ setChain, chain }) => {
             farms
           </RoundTabButton>
         </Link>
-        {/* <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
-          <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
-          bridges
-        </RoundTabButton> */}
+        <Link style={{ textDecoration: 'none' }} to="/pools">
+          <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
+            <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
+            pools
+          </RoundTabButton>
+        </Link>
         <Box>
           <RoundTabButton
             id="basic-button"
@@ -121,7 +122,7 @@ const Banner = ({ setChain, chain }) => {
             >
               Ethereum
             </MenuItem>
-            <MenuItem 
+            <MenuItem
               sx={{
                 background: 'pink',
                 m: '5px',
@@ -133,7 +134,7 @@ const Banner = ({ setChain, chain }) => {
               }}
               onClick={() => handleChain(43113)}
             >Avalanche</MenuItem>
-            <MenuItem 
+            <MenuItem
               sx={{
                 background: 'orange',
                 m: '5px',
