@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Switch, IconButton, Grid } from '@mui/material';
+import { Box, Switch, IconButton, Grid, TextField, Button } from '@mui/material';
 import RoundButton from './common/RoundButton';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
 import { useLocation } from 'react-router-dom';
 import deeznutsIcon from '../assets/tokenIcons/deeznuts.svg';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, pool, poolFactory, poolGeneratorWeb3, signer, tokenContract } from '../utils/ethers.util';
+import { address, erc20Abi, pool, poolFactory, poolGeneratorWeb3, poolWeb3, signer, tokenContract } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
 
-const Pools = ({chain, walletAddress}) => {
+const Pools = ({ chain, walletAddress }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [stakePools, setStakePools] = useState([]);
   const [openDlg, setOpenDlg] = useState(false);
+  const [amountIn, setAmountIn] = useState('0');
+  const [amountOut, setAmountOut] = useState('0');
+  const [openIndex, setOpenIndex] = useState([]);
 
   useEffect(() => {
     async function getPools() {
-      if(!walletAddress) return;
+      if (!walletAddress) return;
       const poolsLength = await poolFactory(chain).poolsLength();
       let tempPools = [];
-      for(let i = 0; i < Number(poolsLength); i++) {
+      for (let i = 0; i < Number(poolsLength); i++) {
         const poolAddress = await poolFactory(chain).poolAtIndex(i);
         const rewardToken = await pool(chain, poolAddress).rewardToken();
         const stakeToken = await pool(chain, poolAddress).token();
@@ -36,13 +39,47 @@ const Pools = ({chain, walletAddress}) => {
           owner: owner.toLowerCase(),
           balance: formatEther(balance),
           rewardToken: rewardToken,
-          stakeToken: stakeToken
+          stakeToken: stakeToken,
+          address: poolAddress
         });
         setStakePools(tempPools);
       }
     }
     getPools();
   }, [chain, walletAddress]);
+
+  const stake = async (tokenAddress, poolAddress) => {
+    await tokenContract(chain, tokenAddress).approve(poolAddress, parseEther(amountIn));
+    tokenContract(chain, tokenAddress).once("Approval", async () => {
+      const tx = await poolWeb3(poolAddress).stake(parseEther(amountIn));
+      await tx.wait();
+      window.alert("staked");
+    });
+  }
+
+  const unstake = async (poolAddress) => {
+    const tx = await poolWeb3(poolAddress).unstake(parseEther(amountOut));
+    await tx.wait();
+    window.alert('unstake');
+  }
+
+  const harvest = async (poolAddress) => {
+    const tx = await poolWeb3(poolAddress).harvest();
+    await tx.wait();
+    window.alert('harvest');
+  }
+
+  const handleOpenIndex = (i) => {
+    const index = openIndex.findIndex(ind=>ind===i);
+    let temp = [...openIndex];
+    if(index === -1) {
+      temp.push(i);
+      setOpenIndex(temp);
+    } else {
+      temp.splice(index, 1);
+      setOpenIndex(temp);
+    }
+  }
 
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
     const contract = new ethers.Contract(rewardToken, erc20Abi, signer);
@@ -58,7 +95,7 @@ const Pools = ({chain, walletAddress}) => {
       setOpenDlg(false);
     });
   }
-  
+
   return walletAddress && (
     <Box
       sx={{
@@ -66,9 +103,9 @@ const Pools = ({chain, walletAddress}) => {
         justifyContent: 'center'
       }}
     >
-      <PoolDlg 
+      <PoolDlg
         open={openDlg}
-        onClose={()=>setOpenDlg(false)}
+        onClose={() => setOpenDlg(false)}
         chain={chain}
         walletAddress={walletAddress}
         create={createPool}
@@ -114,7 +151,7 @@ const Pools = ({chain, walletAddress}) => {
               <Box>My Pools</Box>
             </Box>
             <Box>
-              <RoundButton onClick={()=>setOpenDlg(true)} variant='contained'>create pool</RoundButton>
+              <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
             </Box>
             <Box
               sx={{ position: 'relative', width: '300px' }}
@@ -154,30 +191,70 @@ const Pools = ({chain, walletAddress}) => {
               stakePools.map((pool, i) => (
                 <Box
                   key={i}
-                  sx={{
-                    bgcolor: 'background.paper',
-                    my: '10px',
-                    p: '20px',
-                    borderRadius: '20px'
-                  }}
                 >
-                  <Grid container spacing={2}>
-                    <Grid item xs={2}>
-                      {i + 1}
+                  <Box
+                    onClick={()=>handleOpenIndex(i)}
+                    sx={{
+                      bgcolor: 'background.paper',
+                      mt: '10px',
+                      p: '20px',
+                      borderRadius: '20px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Grid container spacing={2}>
+                      <Grid item xs={2}>
+                        {i + 1}
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
+                          {pool.name}
+                        </Box>
+                      </Grid>
+                      <Grid item xs={2}>
+                        {`${pool.apr}%`}
+                      </Grid>
+                      <Grid item xs={4}>
+                        {pool.balance}
+                      </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
-                        {pool.name}
+                  </Box>
+                  {
+                    openIndex.includes(i) && (
+                      <Box
+                        sx={{
+                          background: '#020826',
+                          px: '30px',
+                          py: '10px'
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Box>
+                            <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} label="Stake Amount" />
+                          </Box>
+                          <Box sx={{mx: '20px'}}>
+                            <Button onClick={()=>stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
+                          </Box>
+                          <Box>
+                            <TextField value={amountOut} onChange={e=>setAmountOut(e.target.value)} label="Unstake Amount" />
+                          </Box>
+                          <Box sx={{mx: '20px'}}>
+                            <Button onClick={()=>unstake(pool.address)} variant='contained'>Unstake</Button>
+                          </Box>
+                          <Box sx={{mx: '40px'}}>
+                            <Button onClick={()=>harvest(pool.address)} variant='contained'>Harvest</Button>
+                          </Box>
+                        </Box>
                       </Box>
-                    </Grid>
-                    <Grid item xs={2}>
-                      {`${pool.apr}%`}
-                    </Grid>
-                    <Grid item xs={4}>
-                      {pool.balance}
-                    </Grid>
-                  </Grid>
+                    )
+                  }
                 </Box>
               ))
             }

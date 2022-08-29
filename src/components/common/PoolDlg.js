@@ -45,7 +45,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         <Box
           sx={{
             width: '600px',
-            height: '700px',
             p: '10px',
             background: '#030927'
           }}
