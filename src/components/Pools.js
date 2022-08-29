@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useLocation } from 'react-router-dom';
 import deeznutsIcon from '../assets/tokenIcons/deeznuts.svg';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, pool, poolFactory, poolGeneratorWeb3, poolWeb3, signer, tokenContract } from '../utils/ethers.util';
+import { address, erc20Abi, pool, poolFactory, poolGeneratorWeb3, poolWeb3, signer, tokenContract, tokenWeb3 } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
@@ -49,8 +49,8 @@ const Pools = ({ chain, walletAddress }) => {
   }, [chain, walletAddress]);
 
   const stake = async (tokenAddress, poolAddress) => {
-    await tokenContract(chain, tokenAddress).approve(poolAddress, parseEther(amountIn));
-    tokenContract(chain, tokenAddress).once("Approval", async () => {
+    await tokenWeb3(tokenAddress).approve(poolAddress, parseEther(amountIn));
+    tokenWeb3(tokenAddress).once("Approval", async () => {
       const tx = await poolWeb3(poolAddress).stake(parseEther(amountIn));
       await tx.wait();
       window.alert("staked");
@@ -240,7 +240,7 @@ const Pools = ({ chain, walletAddress }) => {
                             <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} label="Stake Amount" />
                           </Box>
                           <Box sx={{mx: '20px'}}>
-                            <Button onClick={()=>stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
+                            <Button onClick={()=>stake(pool.stakeToken, pool.address)} variant='contained'>Stake</Button>
                           </Box>
                           <Box>
                             <TextField value={amountOut} onChange={e=>setAmountOut(e.target.value)} label="Unstake Amount" />
