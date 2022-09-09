@@ -6,6 +6,7 @@ import Farm from '../contracts/Farm.sol/Farm.json';
 import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.json';
 import Pair from '../contracts/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json';
 import Router from '../contracts/interfaces/IUniswapV2Router01.sol/IUniswapV2Router01.json';
+import Pool from '../contracts/interfaces/pool/IUniswapV3PoolImmutables.sol/IUniswapV3PoolImmutables.json';
 
 
 export const address = {
@@ -22,8 +23,8 @@ export const address = {
     wether: '',
   },
   4: {
-    factory: "0x015C2Bd64B3338b024AC32f99e11C794d19E0374",
-    generator: "0xcD848c4034049ccA50C6B7594A5F974425ab09a2",
+    factory: "0x587a39A679994B9E6BA1F6e29Eb0ebA20Df42abF",
+    generator: "0x40275f985d891cd73E5b594faaEb01f99142F46C",
     rewardToken: "0xBd83855cfADe70EDA1f93080c32387d93Dc39BE1",
     wether: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
   }
@@ -83,6 +84,11 @@ export const swapFactory = (chain) => {
 export const pair = (chain, pairAddress) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
   return new ethers.Contract(pairAddress, Pair.abi, provider);
+}
+
+export const pool = (chain, poolAddress) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  return new ethers.Contract(poolAddress, Pool.abi, provider);
 }
 
 export const routerWeb3 = (chain) => {

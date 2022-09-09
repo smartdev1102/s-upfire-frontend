@@ -59,7 +59,7 @@ const CreatePool = ({ walletAddress, chain, create }) => {
       startBlock,
       bonusEndBlock,
       multiplier,
-      referralAddress
+      true
     );
   }
 

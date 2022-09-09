@@ -143,7 +143,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      const tx = await generatorWeb3(chain).createFarm(
+      const tx = await generatorWeb3(chain).createFarmV2(
         farmToken,
         parseEther(amountIn),
         lptoken,

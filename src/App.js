@@ -23,7 +23,7 @@ import WalletAlert from './components/common/WalletAlert';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
-  const [chain, setChain] = useState(97);
+  const [chain, setChain] = useState(4);
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
 
@@ -43,7 +43,7 @@ function App() {
       const contract = new ethers.Contract(farmToken, erc20Abi, signer);
       await contract.approve(address[chain]['generator'], parseEther(amountIn));
       contract.once("Approval", async () => {
-        const tx = await generatorWeb3(chain).createFarm(
+        const tx = await generatorWeb3(chain).createFarmV2(
           farmToken,
           parseEther(amountIn),
           lptoken,

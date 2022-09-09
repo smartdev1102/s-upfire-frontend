@@ -6,9 +6,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useLocation } from 'react-router-dom';
 import deeznutsIcon from '../assets/tokenIcons/deeznuts.svg';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, signer, tokenContract, tokenWeb3 } from '../utils/ethers.util';
+import { address, erc20Abi, signer, generatorWeb3, factory, pool, farm, tokenContract } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
+import FarmCard from './common/FarmCard';
+import FarmCardV3 from './common/FarmCardV3';
 
 
 const Pools = ({ chain, walletAddress }) => {
@@ -19,13 +21,80 @@ const Pools = ({ chain, walletAddress }) => {
   const [amountOut, setAmountOut] = useState('0');
   const [openIndex, setOpenIndex] = useState([]);
 
+  const [selectedFarm, setSelectedFarm] = useState();
+
   useEffect(() => {
     async function getPools() {
       if (!walletAddress) return;
-      
+      const farmsLength = await factory(chain).farmsLengthV3();
+      let tempFarms = [];
+      for (let i = 0; i < Number(farmsLength); i++) {
+        const farmAddress = await factory(chain).farmAtIndexV3(i);
+        const farmInfo = await farm(chain, farmAddress).farmInfo();
+        const blockReward = farmInfo.blockReward;
+        const farmSupply = farmInfo.farmableSupply;
+        const rewardToken = farmInfo.rewardToken;
+        const lptoken = farmInfo.lpToken;
+        const startBlock = farmInfo.startBlock;
+        const endBlock = farmInfo.endBlock;
+        const start = new Date(startBlock * 1000);
+        const end = new Date(endBlock * 1000);
+        const numFarmers = farmInfo.numFarmers;
+        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+        const token0 = await pool(chain, lptoken).token0();
+        const token1 = await pool(chain, lptoken).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        const lpSymbol = `${symbol1}-${symbol2}`;
+        tempFarms.push({
+          icon: '',
+          name: lpSymbol,
+          baseToken: rewardSymbol,
+          symbol: lpSymbol,
+          start: start,
+          end: end,
+          numFarmers: numFarmers.toString(),
+          supply: formatEther(farmSupply),
+          blockReward: blockReward.toNumber(),
+          address: farmAddress,
+          lptoken: lptoken,
+          rewardToken: rewardToken,
+          token0: token0,
+          token1: token1
+        });
+        setStakePools(tempFarms);
+      }
     }
     getPools();
   }, [chain, walletAddress]);
+
+  const createFarm = async (
+    farmToken,
+    amountIn,
+    lptoken,
+    blockReward,
+    startBlock,
+    bonusEndBlock,
+    bonus,
+    withReferral
+  ) => {
+    const contract = new ethers.Contract(farmToken, erc20Abi, signer);
+    await contract.approve(address[chain]['generator'], parseEther(amountIn));
+    contract.once("Approval", async () => {
+      const tx = await generatorWeb3(chain).createFarmV3(
+        farmToken,
+        parseEther(amountIn),
+        lptoken,
+        blockReward,
+        startBlock,
+        bonusEndBlock,
+        bonus,
+        withReferral
+      );
+      await tx.wait();
+      setOpenDlg(false);
+    });
+  }
 
   
   const handleOpenIndex = (i) => {
@@ -40,10 +109,7 @@ const Pools = ({ chain, walletAddress }) => {
     }
   }
 
-  const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
-    
-  }
-
+ 
   return walletAddress && (
     <Box
       sx={{
@@ -56,7 +122,7 @@ const Pools = ({ chain, walletAddress }) => {
         onClose={() => setOpenDlg(false)}
         chain={chain}
         walletAddress={walletAddress}
-        create={createPool}
+        create={createFarm}
       />
       <Box
         sx={{
@@ -137,73 +203,7 @@ const Pools = ({ chain, walletAddress }) => {
           <Box>
             {
               stakePools.map((pool, i) => (
-                <Box
-                  key={i}
-                >
-                  <Box
-                    onClick={()=>handleOpenIndex(i)}
-                    sx={{
-                      bgcolor: 'background.paper',
-                      mt: '10px',
-                      p: '20px',
-                      borderRadius: '20px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <Grid container spacing={2}>
-                      <Grid item xs={2}>
-                        {i + 1}
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
-                          {pool.name}
-                        </Box>
-                      </Grid>
-                      <Grid item xs={2}>
-                        {`${pool.apr}%`}
-                      </Grid>
-                      <Grid item xs={4}>
-                        {pool.balance}
-                      </Grid>
-                    </Grid>
-                  </Box>
-                  {
-                    openIndex.includes(i) && (
-                      <Box
-                        sx={{
-                          background: '#020826',
-                          px: '30px',
-                          py: '10px'
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <Box>
-                            <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} label="Stake Amount" />
-                          </Box>
-                          <Box sx={{mx: '20px'}}>
-                            <Button variant='contained'>Stake</Button>
-                          </Box>
-                          <Box>
-                            <TextField value={amountOut} onChange={e=>setAmountOut(e.target.value)} label="Unstake Amount" />
-                          </Box>
-                          <Box sx={{mx: '20px'}}>
-                            <Button  variant='contained'>Unstake</Button>
-                          </Box>
-                          <Box sx={{mx: '40px'}}>
-                            <Button variant='contained'>Harvest</Button>
-                          </Box>
-                        </Box>
-                      </Box>
-                    )
-                  }
-                </Box>
+                <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={pool} />
               ))
             }
           </Box>

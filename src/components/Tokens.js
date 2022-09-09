@@ -15,9 +15,11 @@ const Tokens = ({ chain, walletAddress }) => {
   // tokens
   useEffect(() => {
     async function getFarms() {
-      if (!chain || !walletAddress ) return;
+      if (!chain || !walletAddress) return;
       const farmsLength = await factory(chain).farmsLength();
+      const farmsLengthV3 = await factory(chain).farmsLengthV3();
       let tempTokens = [];
+      let tempPools = [];
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory(chain).farmAtIndex(i);
         const farmInfo = await farm(chain, farmAddress).farmInfo();
@@ -37,9 +39,27 @@ const Tokens = ({ chain, walletAddress }) => {
         });
         setTokens(tempTokens);
       }
+      for (let i = 0; i < Number(farmsLengthV3); i++) {
+        const farmAddress = await factory(chain).farmAtIndexV3(i);
+        const farmInfo = await farm(chain, farmAddress).farmInfo();
+        const lptoken = farmInfo.lpToken;
+        const token0 = await pool(chain, lptoken).token0();
+        const token1 = await pool(chain, lptoken).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        const lpSymbol = `${symbol1}/${symbol2}`;
+        tempPools = [...tokens];
+        tempPools.push({
+          name: 'Unswap V3',
+          symbol: lpSymbol,
+          price: 0,
+          address: lptoken
+        });
+        setStakeTokens(tempPools);
+      }
     }
     getFarms();
-  }, [chain]);
+  }, [chain, walletAddress]);
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -211,6 +231,14 @@ const Tokens = ({ chain, walletAddress }) => {
                     </Card>
                   ))
                 }
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {/* <Pagination count={10} variant='outlined' /> */}
+                </Box>
               </Box>
             )
           }

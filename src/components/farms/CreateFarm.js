@@ -34,7 +34,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
       startBlock,
       bonusEndBlock,
       multiplier,
-      constants.AddressZero
+      false
     );
   }
 
