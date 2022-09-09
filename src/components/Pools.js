@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useLocation } from 'react-router-dom';
 import deeznutsIcon from '../assets/tokenIcons/deeznuts.svg';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, pool, poolFactory, poolGeneratorWeb3, poolWeb3, signer, tokenContract, tokenWeb3 } from '../utils/ethers.util';
+import { address, erc20Abi, signer, tokenContract, tokenWeb3 } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
@@ -22,53 +22,12 @@ const Pools = ({ chain, walletAddress }) => {
   useEffect(() => {
     async function getPools() {
       if (!walletAddress) return;
-      const poolsLength = await poolFactory(chain).poolsLength();
-      let tempPools = [];
-      for (let i = 0; i < Number(poolsLength); i++) {
-        const poolAddress = await poolFactory(chain).poolAtIndex(i);
-        const rewardToken = await pool(chain, poolAddress).rewardToken();
-        const stakeToken = await pool(chain, poolAddress).token();
-        const apr = await pool(chain, poolAddress).aprPercent();
-        const owner = await pool(chain, poolAddress).ownAddr();
-        const balance = await pool(chain, poolAddress).balanceOf(walletAddress);
-        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
-        const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
-        tempPools.push({
-          name: `${stakeSymbol}/${rewardSymbol}`,
-          apr: Number(apr),
-          owner: owner.toLowerCase(),
-          balance: formatEther(balance),
-          rewardToken: rewardToken,
-          stakeToken: stakeToken,
-          address: poolAddress
-        });
-        setStakePools(tempPools);
-      }
+      
     }
     getPools();
   }, [chain, walletAddress]);
 
-  const stake = async (tokenAddress, poolAddress) => {
-    await tokenWeb3(tokenAddress).approve(poolAddress, parseEther(amountIn));
-    tokenWeb3(tokenAddress).once("Approval", async () => {
-      const tx = await poolWeb3(poolAddress).stake(parseEther(amountIn));
-      await tx.wait();
-      window.alert("staked");
-    });
-  }
-
-  const unstake = async (poolAddress) => {
-    const tx = await poolWeb3(poolAddress).unstake(parseEther(amountOut));
-    await tx.wait();
-    window.alert('unstake');
-  }
-
-  const harvest = async (poolAddress) => {
-    const tx = await poolWeb3(poolAddress).harvest();
-    await tx.wait();
-    window.alert('harvest');
-  }
-
+  
   const handleOpenIndex = (i) => {
     const index = openIndex.findIndex(ind=>ind===i);
     let temp = [...openIndex];
@@ -82,18 +41,7 @@ const Pools = ({ chain, walletAddress }) => {
   }
 
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
-    const contract = new ethers.Contract(rewardToken, erc20Abi, signer);
-    await contract.approve(address[chain]['poolGenerator'], parseEther(amountIn));
-    contract.once("Approval", async () => {
-      const tx = await poolGeneratorWeb3(chain).createPool(
-        rewardToken,
-        stakeToken,
-        apr,
-        parseEther(amountIn)
-      );
-      await tx.wait();
-      setOpenDlg(false);
-    });
+    
   }
 
   return walletAddress && (
@@ -240,16 +188,16 @@ const Pools = ({ chain, walletAddress }) => {
                             <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} label="Stake Amount" />
                           </Box>
                           <Box sx={{mx: '20px'}}>
-                            <Button onClick={()=>stake(pool.stakeToken, pool.address)} variant='contained'>Stake</Button>
+                            <Button variant='contained'>Stake</Button>
                           </Box>
                           <Box>
                             <TextField value={amountOut} onChange={e=>setAmountOut(e.target.value)} label="Unstake Amount" />
                           </Box>
                           <Box sx={{mx: '20px'}}>
-                            <Button onClick={()=>unstake(pool.address)} variant='contained'>Unstake</Button>
+                            <Button  variant='contained'>Unstake</Button>
                           </Box>
                           <Box sx={{mx: '40px'}}>
-                            <Button onClick={()=>harvest(pool.address)} variant='contained'>Harvest</Button>
+                            <Button variant='contained'>Harvest</Button>
                           </Box>
                         </Box>
                       </Box>

@@ -4,11 +4,9 @@ import Factory from '../contracts/Factory.sol/Factory.json';
 import Generator from '../contracts/FarmGenerator.sol/FarmGenerator.json';
 import Farm from '../contracts/Farm.sol/Farm.json';
 import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.json';
-import Pair from '../contracts/Pair.sol/Pair.json';
-import Router from '../contracts/Router.sol/Router.json';
-import PoolFactory from '../contracts/PoolFactory.sol/PoolFactory.json';
-import PoolGenerator from '../contracts/PoolGenerator.sol/PoolGenerator.json';
-import Pool from '../contracts/Pool.sol/Pool.json';
+import Pair from '../contracts/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json';
+import Router from '../contracts/interfaces/IUniswapV2Router01.sol/IUniswapV2Router01.json';
+
 
 export const address = {
   97: {
@@ -16,24 +14,18 @@ export const address = {
     generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
     rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
     wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
-    poolFactory: '0x13BcEA47E3B4F3Ca1AB540f623B4921b9836b9d4',
-    poolGenerator: '0xF7ab35F09d1b2B565491f93F5e41e78c10c0F325'
   },
   43113: {
     factory: "0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7",
     generator: "0xd5649a4a5AdbcD6a0b25972DD907761d5f4648e4",
     rewardToken: "0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846",
     wether: '',
-    poolFactory: '',
-    poolGenerator: ''
   },
   4: {
-    factory: "0xd1FDf8F8aB2B0D89b4f71435D2BC274F4D2Cd374",
-    generator: "0x2D23d44d1bD7566186F72A200bBFC4a22B20539A",
+    factory: "0x015C2Bd64B3338b024AC32f99e11C794d19E0374",
+    generator: "0xcD848c4034049ccA50C6B7594A5F974425ab09a2",
     rewardToken: "0xBd83855cfADe70EDA1f93080c32387d93Dc39BE1",
     wether: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-    poolFactory: '0x4D76B13CE7b28F26011cE4182484c9718337F9c6',
-    poolGenerator: '0x709839ABA3a71a3938675dE92B93f65bbD32d0c5'
   }
 }
 
@@ -63,23 +55,8 @@ const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
 export const signer = web3Provider.getSigner();
 // contracts
 
-export const poolFactory = (chain) => {
-  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  return new ethers.Contract(address[chain]['poolFactory'], PoolFactory.abi, provider);
-}
 
-export const poolFactoryWeb3 = (chain) => {
-  return new ethers.Contract(address[chain]['poolFactory'], PoolFactory.abi, signer);
-}
 
-export const poolGenerator = (chain) => {
-  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  return new ethers.Contract(address[chain]['poolGenerator'], PoolGenerator.abi, provider);
-}
-
-export const poolGeneratorWeb3 = (chain) => {
-  return new ethers.Contract(address[chain]['poolGenerator'], PoolGenerator.abi, signer);
-}
 
 export const factory = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
@@ -110,18 +87,6 @@ export const pair = (chain, pairAddress) => {
 
 export const routerWeb3 = (chain) => {
   const contract = new ethers.Contract(swapFactories[chain]['router'], Router.abi, signer);
-  return contract;
-}
-
-
-export const pool = (chain, poolAddress) => {
-  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  const contract = new ethers.Contract(poolAddress, Pool.abi, provider);
-  return contract;
-}
-
-export const poolWeb3 = (poolAddress) => {
-  const contract = new ethers.Contract(poolAddress, Pool.abi, signer);
   return contract;
 }
 

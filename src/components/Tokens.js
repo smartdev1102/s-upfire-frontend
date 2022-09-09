@@ -38,25 +38,6 @@ const Tokens = ({ chain, walletAddress }) => {
         setTokens(tempTokens);
       }
     }
-    async function getStakeTokens () {
-      if(!chain || !walletAddress) return;
-      const poolsLength = await poolFactory(chain).poolsLength();
-      let tempStakeTokens = [];
-      for(let i = 0; i < Number(poolsLength); i++) {
-        const poolAddress = await poolFactory(chain).poolAtIndex(i);
-        const stakeToken = await pool(chain, poolAddress).token();
-        const symbol = await tokenContract(chain, stakeToken).symbol();
-        const name = await tokenContract(chain, stakeToken).name();
-        tempStakeTokens.push({
-          name: name,
-          symbol: symbol,
-          price: 0,
-          address: stakeToken
-        });
-        setStakeTokens(tempStakeTokens);
-      }
-    }
-    getStakeTokens();
     getFarms();
   }, [chain]);
   const optimizeAddress = (address) => {
