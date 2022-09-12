@@ -15,8 +15,8 @@ import Banner from './components/common/Banner';
 import { useEffect, useState } from 'react';
 import Referral from './components/Referral';
 import ReferralDlg from './components/common/ReferralDlg';
-import CreatePool from './components/CreatePool';
-import { address, erc20Abi, signer, generatorWeb3, factory, farm, tokenContract, pair, pool, swapFactory, sfactory, spool } from './utils/ethers.util';
+import CreateFarm from './components/CreateFarm';
+import { address, erc20Abi, signer, generatorWeb3, factory, farm, tokenContract, pair, pool, swapFactory, sfactory, spool, sgeneratorWeb3 } from './utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import WalletAlert from './components/common/WalletAlert';
@@ -225,6 +225,21 @@ function App() {
     }
   }
 
+  // create pool
+  const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
+    const contract = new ethers.Contract(rewardToken, erc20Abi, signer);
+    await contract.approve(address[chain]['sgenerator'], parseEther(amountIn));
+    contract.once("Approval", async () => {
+      const tx = await sgeneratorWeb3(chain).createPool(
+        rewardToken,
+        stakeToken,
+        apr,
+        parseEther(amountIn)
+      );
+      await tx.wait();
+    });
+  }
+
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
       const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });  // connect wallet
@@ -294,7 +309,16 @@ function App() {
               />}
             />
             <Route path="/referral" element={<Referral chain={chain} walletAddress={walletAddress} />} />
-            <Route path="/create_pool/:referralAddress" element={<CreatePool chain={chain} create={createFarm} walletAddress={walletAddress} />} />
+            <Route path="/create_pool/:referralAddress"
+              element={
+                <CreateFarm
+                  chain={chain}
+                  create={createFarm}
+                  walletAddress={walletAddress}
+                  pairs={pairs}
+                  createPool={createPool}
+                />}
+            />
           </Routes>
         </Box>
         <Footer />
