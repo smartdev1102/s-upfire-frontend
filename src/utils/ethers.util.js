@@ -18,15 +18,15 @@ export const address = {
     generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
     rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
     wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
-    sfactory: '',
-    sgenerator: ''
+    sfactory: '0x336227924a7187411E64BDA693AE266C5be1C99d',
+    sgenerator: '0x719475e78A5C0661198E673c517cEDe900a5E7b9'
   },
   43113: {
     factory: "0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7",
     generator: "0xd5649a4a5AdbcD6a0b25972DD907761d5f4648e4",
     rewardToken: "0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846",
-    sfactory: '',
-    sgenerator: '',
+    sfactory: '0x3fa9b82Dd7db611242b6B0C67EaC1bb580F2259e',
+    sgenerator: '0xd946aa73e10e3dE0BDdB193C0de4233ef8AEc9fA',
     wether: '',
   },
   4: {
