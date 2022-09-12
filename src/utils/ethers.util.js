@@ -15,17 +15,23 @@ export const address = {
     generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
     rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
     wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+    sfactory: '',
+    sgenerator: ''
   },
   43113: {
     factory: "0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7",
     generator: "0xd5649a4a5AdbcD6a0b25972DD907761d5f4648e4",
     rewardToken: "0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846",
+    sfactory: '',
+    sgenerator: '',
     wether: '',
   },
   4: {
     factory: "0x587a39A679994B9E6BA1F6e29Eb0ebA20Df42abF",
     generator: "0x40275f985d891cd73E5b594faaEb01f99142F46C",
     rewardToken: "0xBd83855cfADe70EDA1f93080c32387d93Dc39BE1",
+    sfactory: '0x36f708Cd37f35e9517Be6F1F6D0f3b52b9898799',
+    sgenerator: '0x1e10444e7280f1f1A353c5436cfEc2CB27c63F66',
     wether: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
   }
 }
