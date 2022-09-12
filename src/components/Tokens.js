@@ -7,59 +7,9 @@ import RoundButton from './common/RoundButton';
 import Pagination from '@mui/material/Pagination';
 import { factory, tokenContract, farm, pair, poolFactory, pool } from '../utils/ethers.util';
 
-const Tokens = ({ chain, walletAddress }) => {
-  const [tokens, setTokens] = useState([]);
+const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [stakeTokens, setStakeTokens] = useState([]);
 
-  // tokens
-  useEffect(() => {
-    async function getFarms() {
-      if (!chain || !walletAddress) return;
-      const farmsLength = await factory(chain).farmsLength();
-      const farmsLengthV3 = await factory(chain).farmsLengthV3();
-      let tempTokens = [];
-      let tempPools = [];
-      for (let i = 0; i < Number(farmsLength); i++) {
-        const farmAddress = await factory(chain).farmAtIndex(i);
-        const farmInfo = await farm(chain, farmAddress).farmInfo();
-        const lptoken = farmInfo.lpToken;
-        const name = await tokenContract(chain, lptoken).name();
-        const token0 = await pair(chain, lptoken).token0();
-        const token1 = await pair(chain, lptoken).token1();
-        const symbol1 = await tokenContract(chain, token0).symbol();
-        const symbol2 = await tokenContract(chain, token1).symbol();
-        const lpSymbol = `${symbol1}/${symbol2}`;
-        tempTokens = [...tokens];
-        tempTokens.push({
-          name: name,
-          symbol: lpSymbol,
-          price: 0,
-          address: lptoken
-        });
-        setTokens(tempTokens);
-      }
-      for (let i = 0; i < Number(farmsLengthV3); i++) {
-        const farmAddress = await factory(chain).farmAtIndexV3(i);
-        const farmInfo = await farm(chain, farmAddress).farmInfo();
-        const lptoken = farmInfo.lpToken;
-        const token0 = await pool(chain, lptoken).token0();
-        const token1 = await pool(chain, lptoken).token1();
-        const symbol1 = await tokenContract(chain, token0).symbol();
-        const symbol2 = await tokenContract(chain, token1).symbol();
-        const lpSymbol = `${symbol1}/${symbol2}`;
-        tempPools = [...tokens];
-        tempPools.push({
-          name: 'Unswap V3',
-          symbol: lpSymbol,
-          price: 0,
-          address: lptoken
-        });
-        setStakeTokens(tempPools);
-      }
-    }
-    getFarms();
-  }, [chain, walletAddress]);
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -125,7 +75,7 @@ const Tokens = ({ chain, walletAddress }) => {
             tabIndex == 0 ? (
               <Box sx={{ mt: '30px' }}>
                 {
-                  tokens.map((token, i) => (
+                  farmTokens.map((token, i) => (
                     <Card
                       key={i}
                       sx={{
@@ -146,21 +96,21 @@ const Tokens = ({ chain, walletAddress }) => {
                           <Box sx={{ fontSize: '30px', mr: '10px' }}>
                             {token.symbol}
                           </Box>
-                          <Box sx={{ color: 'primary.main' }}>
+                          {/* <Box sx={{ color: 'primary.main' }}>
                             {`$${token.price}`}
-                          </Box>
+                          </Box> */}
                         </Box>
                         <Box sx={{ color: 'primary.main' }}>
                           {token.name}
                         </Box>
                       </Box>
                       <Box sx={{ flexGrow: 1 }}></Box>
-                      <Box sx={{ mx: '20px' }}>
+                      {/* <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>View farms</RoundButton>
-                      </Box>
-                      <Box sx={{ mx: '20px' }}>
+                      </Box> */}
+                      {/* <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>Uniswap</RoundButton>
-                      </Box>
+                      </Box> */}
                       <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>Etherscan</RoundButton>
                       </Box>
@@ -205,21 +155,21 @@ const Tokens = ({ chain, walletAddress }) => {
                           <Box sx={{ fontSize: '30px', mr: '10px' }}>
                             {token.symbol}
                           </Box>
-                          <Box sx={{ color: 'primary.main' }}>
+                          {/* <Box sx={{ color: 'primary.main' }}>
                             {`$${token.price}`}
-                          </Box>
+                          </Box> */}
                         </Box>
                         <Box sx={{ color: 'primary.main' }}>
                           {token.name}
                         </Box>
                       </Box>
                       <Box sx={{ flexGrow: 1 }}></Box>
-                      <Box sx={{ mx: '20px' }}>
+                      {/* <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>View farms</RoundButton>
                       </Box>
                       <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>Uniswap</RoundButton>
-                      </Box>
+                      </Box> */}
                       <Box sx={{ mx: '20px' }}>
                         <RoundButton color='secondary' variant='contained'>Etherscan</RoundButton>
                       </Box>

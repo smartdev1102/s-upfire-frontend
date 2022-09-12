@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import Referral from './components/Referral';
 import ReferralDlg from './components/common/ReferralDlg';
 import CreatePool from './components/CreatePool';
-import { address, erc20Abi, signer, generatorWeb3, factory, farm, tokenContract, pair, pool, swapFactory } from './utils/ethers.util';
+import { address, erc20Abi, signer, generatorWeb3, factory, farm, tokenContract, pair, pool, swapFactory, sfactory, spool } from './utils/ethers.util';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import WalletAlert from './components/common/WalletAlert';
@@ -32,6 +32,46 @@ function App() {
   const [farms, setFarms] = useState([]);
   const [farmsv3, setFarmsv3] = useState([]);
   const [pairs, setPairs] = useState([]);
+  const [farmTokens, setFarmTokens] = useState([]);
+  const [stakeTokens, setStakeTokens] = useState([]);
+
+  // pool info
+  const [stakePools, setStakePools] = useState([]);
+  useEffect(() => {
+    async function getPools() {
+      if (!chain || !walletAddress) return;
+      const poolsLength = await sfactory(chain).poolsLength();
+      let tempPools = [];
+      let tempTokens = [];
+      for (let i = 0; i < Number(poolsLength); i++) {
+        const poolAddress = await sfactory(chain).poolAtIndex(i);
+        const rewardToken = await spool(chain, poolAddress).rewardToken();
+        const stakeToken = await spool(chain, poolAddress).token();
+        const stakeName = await tokenContract(chain, stakeToken).name();
+        const apr = await spool(chain, poolAddress).aprPercent();
+        const owner = await spool(chain, poolAddress).ownAddr();
+        const balance = await spool(chain, poolAddress).balanceOf(walletAddress);
+        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+        const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+        tempTokens.push({
+          name: stakeName,
+          symbol: stakeSymbol,
+          address: stakeToken
+        });
+        setStakeTokens(tempTokens);
+        tempPools.push({
+          name: `${stakeSymbol}/${rewardSymbol}`,
+          apr: Number(apr),
+          owner: owner.toLowerCase(),
+          balance: formatEther(balance),
+          rewardToken: rewardToken,
+          stakeToken: stakeToken
+        });
+        setStakePools(tempPools);
+      }
+    }
+    getPools();
+  }, [chain, walletAddress]);
 
   // get farms
   useEffect(() => {
@@ -40,6 +80,7 @@ function App() {
       let farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
+      let tempTokens = [];
       // get farms v2
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory(chain).farmAtIndex(i);
@@ -61,6 +102,12 @@ function App() {
         const symbol1 = await tokenContract(chain, token0).symbol();
         const symbol2 = await tokenContract(chain, token1).symbol();
         const lpSymbol = `${symbol1}-${symbol2}`;
+        const lpName = await tokenContract(chain, lptoken).name();
+        tempTokens.push({
+          name: lpName,
+          symbol: lpSymbol,
+          address: lptoken
+        })
         tempFarms.push({
           icon: '',
           name: lpSymbol,
@@ -78,6 +125,7 @@ function App() {
           token1: token1
         });
         setFarms(tempFarms);
+        setFarmTokens(tempTokens);
       }
       // get farms v3
       tempFarms = [];
@@ -102,6 +150,12 @@ function App() {
         const symbol1 = await tokenContract(chain, token0).symbol();
         const symbol2 = await tokenContract(chain, token1).symbol();
         const lpSymbol = `${symbol1}-${symbol2}`;
+        const lpName = await tokenContract(chain, lptoken).name();
+        tempTokens.push({
+          name: lpName,
+          symbol: lpSymbol,
+          address: lptoken
+        });
         tempFarms.push({
           icon: '',
           name: lpSymbol,
@@ -119,6 +173,7 @@ function App() {
           token1: token1
         });
         setFarmsv3(tempFarms);
+        setFarmTokens(tempTokens);
       }
       const pairsLength = await swapFactory(chain).allPairsLength();
       const tempPair = [];
@@ -223,8 +278,21 @@ function App() {
                   totalLiquidity={farmLiq}
                 />}
             />
-            <Route path="/tokens" element={<Tokens chain={chain} walletAddress={walletAddress} />} />
-            <Route path="/pools" element={<Pools chain={chain} walletAddress={walletAddress} />} />
+            <Route path="/tokens"
+              element={
+                <Tokens
+                  chain={chain}
+                  walletAddress={walletAddress}
+                  farmTokens={farmTokens}
+                  stakeTokens={stakeTokens}
+                />}
+            />
+            <Route path="/pools" element={
+              <Pools chain={chain}
+                walletAddress={walletAddress}
+                stakePools={stakePools}
+              />}
+            />
             <Route path="/referral" element={<Referral chain={chain} walletAddress={walletAddress} />} />
             <Route path="/create_pool/:referralAddress" element={<CreatePool chain={chain} create={createFarm} walletAddress={walletAddress} />} />
           </Routes>
