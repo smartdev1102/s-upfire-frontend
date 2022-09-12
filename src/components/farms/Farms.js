@@ -3,23 +3,19 @@ import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Card, Menu, MenuItem } from '@mui/material';
-import Pagination from '@mui/material/Pagination';
-
-import dnxcIcon from '../../assets/tokenIcons/dnxc.svg';
+import { Menu, MenuItem } from '@mui/material';
+// import Pagination from '@mui/material/Pagination';
 
 import CreateFarm from './CreateFarm';
-import { address, erc20Abi, factory, farm, generator, generatorWeb3, pair, signer, swapFactory, tokenContract } from '../../utils/ethers.util';
-import { formatEther, parseEther } from 'ethers/lib/utils';
-import { BigNumber, ethers } from 'ethers';
+import { address, erc20Abi, generatorWeb3, signer } from '../../utils/ethers.util';
+import { parseEther } from 'ethers/lib/utils';
+import { ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
+import FarmCardV3 from '../common/FarmCardV3';
 
-const Farms = ({ walletAddress, chain, openWalletAlert }) => {
-  const [totalLiquidity, setTotalLiquidity] = useState(0);
+const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity}) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
-  const [farms, setFarms] = useState([]);
-  const [pairs, setPairs] = useState([]);
   const [selectedFarm, setSelectedFarm] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState();
@@ -46,10 +42,20 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
         if (a.blockReward < b.blockReward) { return -1; }
         if (a.blockReward > b.blockReward) { return 1; }
         return 0;
+      });
+      farmsv3.sort((a, b) => {
+        if (a.blockReward < b.blockReward) { return -1; }
+        if (a.blockReward > b.blockReward) { return 1; }
+        return 0;
       })
     }
     if (filter === 'liq') {
       farms.sort((a, b) => {
+        if (a.supply < b.supply) { return -1; }
+        if (a.supply > b.supply) { return 1; }
+        return 0;
+      });
+      farmsv3.sort((a, b) => {
         if (a.supply < b.supply) { return -1; }
         if (a.supply > b.supply) { return 1; }
         return 0;
@@ -61,73 +67,13 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
         if(a.symbol > b.symbol) { return 1;}
         return 0;
       })
+      farmsv3.sort((a, b) => {
+        if(a.symbol < b.symbol) { return -1;}
+        if(a.symbol > b.symbol) { return 1;}
+        return 0;
+      })
     }
   }, [filter]);
-
-
-  // get farms
-  useEffect(() => {
-    async function getFarms() {
-      if (!chain || !walletAddress) return;
-      const farmsLength = await factory(chain).farmsLength();
-      let tempFarms = [];
-      let tempTotal = 0;
-      for (let i = 0; i < Number(farmsLength); i++) {
-        const farmAddress = await factory(chain).farmAtIndex(i);
-        const farmInfo = await farm(chain, farmAddress).farmInfo();
-        const blockReward = farmInfo.blockReward;
-        const farmSupply = farmInfo.farmableSupply;
-        tempTotal += Number(formatEther(farmSupply));
-        setTotalLiquidity(tempTotal);
-        const rewardToken = farmInfo.rewardToken;
-        const lptoken = farmInfo.lpToken;
-        const startBlock = farmInfo.startBlock;
-        const endBlock = farmInfo.endBlock;
-        const start = new Date(startBlock * 1000);
-        const end = new Date(endBlock * 1000);
-        const numFarmers = farmInfo.numFarmers;
-        const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
-        const token0 = await pair(chain, lptoken).token0();
-        const token1 = await pair(chain, lptoken).token1();
-        const symbol1 = await tokenContract(chain, token0).symbol();
-        const symbol2 = await tokenContract(chain, token1).symbol();
-        const lpSymbol = `${symbol1}-${symbol2}`;
-        tempFarms.push({
-          icon: '',
-          name: lpSymbol,
-          baseToken: rewardSymbol,
-          symbol: lpSymbol,
-          start: start,
-          end: end,
-          numFarmers: numFarmers.toString(),
-          supply: formatEther(farmSupply),
-          blockReward: blockReward.toNumber(),
-          address: farmAddress,
-          lptoken: lptoken,
-          rewardToken: rewardToken,
-          token0: token0,
-          token1: token1
-        });
-        setFarms(tempFarms);
-      }
-      const pairsLength = await swapFactory(chain).allPairsLength();
-      let tempPair = [];
-      for (let i = 0; i < Number(pairsLength); i++) {
-        const pairAddress = await swapFactory(chain).allPairs(i);
-        const token0 = await pair(chain, pairAddress).token0();
-        const token1 = await pair(chain, pairAddress).token1();
-        const symbol1 = await tokenContract(chain, token0).symbol();
-        const symbol2 = await tokenContract(chain, token1).symbol();
-        tempPair.push({
-          address: pairAddress,
-          symbol1: symbol1,
-          symbol2: symbol2
-        });
-        setPairs(tempPair);
-      }
-    }
-    getFarms();
-  }, [chain]);
 
 
   const createFarm = async (
@@ -138,22 +84,36 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
     startBlock,
     bonusEndBlock,
     bonus,
-    withReferral
+    isV3
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      const tx = await generatorWeb3(chain).createFarmV2(
-        farmToken,
-        parseEther(amountIn),
-        lptoken,
-        blockReward,
-        startBlock,
-        bonusEndBlock,
-        bonus,
-        withReferral
-      );
-      await tx.wait();
+      if(isV3) {
+        const tx = await generatorWeb3(chain).createFarmV3(
+          farmToken,
+          parseEther(amountIn),
+          lptoken,
+          blockReward,
+          startBlock,
+          bonusEndBlock,
+          bonus,
+          false
+        );
+        await tx.wait();
+      } else {
+        const tx = await generatorWeb3(chain).createFarmV2(
+          farmToken,
+          parseEther(amountIn),
+          lptoken,
+          blockReward,
+          startBlock,
+          bonusEndBlock,
+          bonus,
+          false
+        );
+        await tx.wait();
+      }
       setOpenCreateFarm(false);
     });
   }
@@ -189,7 +149,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
           <Box>
             <Box>
               <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
-                {`$${Math.trunc(totalLiquidity)}`}
+                {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
               </Typography>
             </Box>
             <Box>
@@ -271,6 +231,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert }) => {
           {
             farms.map((farm, i) => (
               <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
+            ))
+          }
+          {
+            farmsv3.map((farm, i) => (
+              <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
             ))
           }
         </Box>

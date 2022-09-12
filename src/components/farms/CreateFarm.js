@@ -22,6 +22,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   const [amountIn, setAmountIn] = useState('');
   const [rewardBlock, setRewardBlock] = useState('0');
   const [isBonus, setIsBonus] = useState(false);
+  const [isV3, setIsV3] = useState(false);
 
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
@@ -96,7 +97,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
           }}
         >
           <Box sx={{ width: '100%', height: '100%' }}>
-            <PerfectScrollbar style={{padding: '30px'}}>
+            <PerfectScrollbar style={{ padding: '30px' }}>
               <Box>
                 <Typography variant='h6' component='h6'>
                   Farm which token?
@@ -108,27 +109,42 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
               <Box>
                 <TextField value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
               </Box>
-              <Box sx={{ mt: '30px' }}>
+              <Box sx={{ color: 'text.secondary' }}>
+                Bonus end date
+              </Box>
+              <Box sx={{mt: '30px'}}>
+                <FormControlLabel control={<Checkbox checked={isV3} onChange={() => {setIsV3(!isV3); setLpToken('')}} />} label="uniswapV3 pool" />
+              </Box>
+              <Box >
                 <Typography variant='h6' component='h6'>
-                  Select uniswap pair
+                  {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
                 </Typography>
               </Box>
-              <Box>
-                <FormControl fullWidth>
-                  <Select
-                    value={lpToken}
-                    onChange={e => setLpToken(e.target.value)}
-                  >
-                    {
-                      pairs.map((pair, i) => (
-                        <MenuItem key={i} value={pair.address}>
-                          {pair.symbol1}/{pair.symbol2}
-                        </MenuItem>
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </Box>
+              {
+                isV3 ? (
+                  <Box>
+                    <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
+                  </Box>
+                ) : (
+                  <Box>
+                    <FormControl fullWidth>
+                      <Select
+                        value={lpToken}
+                        onChange={e => setLpToken(e.target.value)}
+                      >
+                        {
+                          pairs.map((pair, i) => (
+                            <MenuItem key={i} value={pair.address}>
+                              {pair.symbol1}/{pair.symbol2}
+                            </MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Box>
+                )
+              }
+
               <Box sx={{ color: 'text.secondary' }}>
                 This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
               </Box>
@@ -208,13 +224,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                 Rewards Per Block: {rewardBlock}
               </Box>
             </PerfectScrollbar>
-
-            {/* <Box sx={{my: '10px'}}>
-            APY: {}
-          </Box> */}
-            {/* <Box>
-            <FormControlLabel control={<Checkbox checked={withReferral} onChange={()=>setWithReferral(!withReferral)} />} label="Referral" />
-          </Box> */}
           </Box>
         </Box>
 

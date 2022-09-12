@@ -7,6 +7,9 @@ import SwapFactory from '../contracts/interfaces/IUniFactory.sol/IUniFactory.jso
 import Pair from '../contracts/interfaces/IUniswapV2Pair.sol/IUniswapV2Pair.json';
 import Router from '../contracts/interfaces/IUniswapV2Router01.sol/IUniswapV2Router01.json';
 import Pool from '../contracts/interfaces/pool/IUniswapV3PoolImmutables.sol/IUniswapV3PoolImmutables.json';
+import SFactory from '../contracts/PoolFactory.sol/PoolFactory.json';
+import SGenerator from '../contracts/PoolGenerator.sol/PoolGenerator.json';
+import SPool from '../contracts/Pool.sol/Pool.json';
 
 
 export const address = {
@@ -121,6 +124,41 @@ export const tokenContract = (chain, tokenAddress) => {
 
 export const tokenWeb3 = (tokenAddress) => {
   const contract = new ethers.Contract(tokenAddress, erc20Abi, signer);
+  return contract;
+}
+
+// staking pool
+
+export const sfactory = (chain) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  const contract = new ethers.Contract(address[chain]['sfactory'], SFactory.abi, provider);
+  return contract;
+}
+
+export const sfactoryWeb3 = (chain) => {
+  const contract = new ethers.Contract(address[chain]['sfactory'], SFactory.abi, signer);
+  return contract;
+}
+
+export const sgenerator = (chain) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  const contract = new ethers.Contract(address[chain]['sgenerator'], SGenerator.abi, provider);
+  return contract;
+}
+
+export const sgeneratorWeb3 = (chain) => {
+  const contract = new ethers.Contract(address[chain]['sgenerator'], SGenerator.abi, signer);
+  return contract;
+}
+
+export const spool = (chain, poolAddress) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  const contract = new ethers.Contract(poolAddress, SPool.abi, provider);
+  return contract;
+}
+
+export const spoolWeb3 = (poolAddress) => {
+  const contract = new ethers.Contract(poolAddress, SPool.abi, signer);
   return contract;
 }
 

@@ -66,7 +66,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
           {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
         </RoundButton>
       </Box>
-      <Box
+      {/* <Box
         sx={{
           mx: '10px'
         }}
@@ -74,7 +74,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
         <IconButton>
           <SearchIcon />
         </IconButton>
-      </Box>
+      </Box> */}
       <Box
         sx={{
           mx: '10px'
