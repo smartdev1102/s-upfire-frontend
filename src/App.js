@@ -75,6 +75,12 @@ function App() {
 
   // get farms
   useEffect(() => {
+    setFarms([]);
+    setPairs([]);
+    setFarmLiq(0);
+    setFarmsv3([]);
+    setFarmTokens([]);
+    setStakeTokens([]);
     async function getFarms() {
       if (!chain) return;
       let farmsLength = await factory(chain).farmsLength();
