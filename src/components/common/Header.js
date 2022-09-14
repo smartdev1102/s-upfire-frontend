@@ -32,12 +32,11 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
       <Box
         sx={{ mr: '80px', display: 'flex', alignItems: 'center' }}
       >
-        <img src={logo} />
-        <Typography sx={{ml: '10px'}} variant='h2' component='h2'> CoinCove</Typography>
+        <img style={{height: '80px'}} src={logo} />
       </Box>
       <Box
         sx={{
-          mx: '10px'
+          mx: '0px'
         }}
       >
         <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
