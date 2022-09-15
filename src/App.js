@@ -20,6 +20,7 @@ import { address, erc20Abi, signer, generatorWeb3, factory, farm, tokenContract,
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import WalletAlert from './components/common/WalletAlert';
+import Hidden from '@mui/material/Hidden';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -266,24 +267,28 @@ function App() {
         bgcolor: 'background.default',
         color: 'text.primary',
         minHeight: '100vh',
+        width: '100%'
       }}
     >
       <BrowserRouter>
-        <Box>
+        <Hidden mdDown>
           <Header chain={chain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
-        </Box>
+        </Hidden>
         <ReferralDlg referral={referral} onClose={() => setReferral()} />
         <WalletAlert open={openWalletAlert} onClose={() => setOpenWalletAlert(false)} />
+        <Hidden mdDown>
+          <Box
+            sx={{
+              mt: '20px'
+            }}
+          >
+            <Banner chain={chain} setChain={setChain} />
+          </Box>
+        </Hidden>
+
         <Box
           sx={{
-            mt: '20px'
-          }}
-        >
-          <Banner chain={chain} setChain={setChain} />
-        </Box>
-        <Box
-          sx={{
-            p: '20px'
+            p: '1%',
           }}
         >
           <Routes>

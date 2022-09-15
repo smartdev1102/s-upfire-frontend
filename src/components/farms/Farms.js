@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Menu, MenuItem } from '@mui/material';
+import { Hidden, Menu, MenuItem } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 
 import CreateFarm from './CreateFarm';
@@ -14,7 +14,7 @@ import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 import FarmCardV3 from '../common/FarmCardV3';
 
-const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity}) => {
+const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -23,7 +23,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
 
 
   const handleOpenCreateFarm = () => {
-    if(!walletAddress) {
+    if (!walletAddress) {
       openWalletAlert();
     } else {
       setOpenCreateFarm(true);
@@ -63,13 +63,13 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     }
     if (filter === 'alpha') {
       farms.sort((a, b) => {
-        if(a.symbol < b.symbol) { return -1;}
-        if(a.symbol > b.symbol) { return 1;}
+        if (a.symbol < b.symbol) { return -1; }
+        if (a.symbol > b.symbol) { return 1; }
         return 0;
       })
       farmsv3.sort((a, b) => {
-        if(a.symbol < b.symbol) { return -1;}
-        if(a.symbol > b.symbol) { return 1;}
+        if (a.symbol < b.symbol) { return -1; }
+        if (a.symbol > b.symbol) { return 1; }
         return 0;
       })
     }
@@ -89,7 +89,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     const contract = new ethers.Contract(farmToken, erc20Abi, signer);
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      if(isV3) {
+      if (isV3) {
         const tx = await generatorWeb3(chain).createFarmV3(
           farmToken,
           parseEther(amountIn),
@@ -121,7 +121,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
   return (
     <Box
       sx={{
-        p: '20px'
+        p: '1%'
       }}
     >
       <StakeDlg onClose={() => setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
@@ -136,84 +136,96 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       >
         <Box
           sx={{
-            background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
-            borderRadius: '20px',
-            height: '152px',
-            width: '1366px',
-            py: '20px',
-            px: '80px',
-            display: 'flex',
-            alignItems: 'center'
+            width: '100%',
+            display: 'flex'
           }}
         >
-          <Box>
+          <Hidden mdDown>
+            <Box sx={{ width: '15%' }}></Box>
+          </Hidden>
+          <Box
+            sx={{
+              background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
+              borderRadius: '20px',
+              py: '2%',
+              px: '8%',
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%'
+            }}
+          >
             <Box>
-              <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
-                {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
-              </Typography>
+              <Box>
+                <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
+                  {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="h6" gutterBottom component="h6">
+                  Total farming liquidity
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <Box>
+              <RoundButton
+                onClick={handleOpenCreateFarm}
+                sx={{
+                  color: 'text.primary',
+                  border: '1px solid white',
+                }}
+                variant='outlined'
+              >
+                Create farm
+              </RoundButton>
             </Box>
             <Box>
-              <Typography variant="h6" gutterBottom component="h6">
-                Total farming liquidity
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <Box>
-            <RoundButton
-              onClick={handleOpenCreateFarm}
-              sx={{
-                color: 'text.primary',
-                border: '1px solid white',
-                width: '150px'
-              }}
-              variant='outlined'
-            >
-              Create farm
-            </RoundButton>
-          </Box>
-          <Box>
-            <RoundButton
-              sx={{
-                color: 'text.primary',
-                border: '1px solid white',
-                mx: '10px'
-              }}
-              variant='outlined'
-              id="filter-button"
-              aria-controls={open ? 'filter-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={e => setAnchorEl(e.currentTarget)}
-            >
-              <FilterAltIcon />
-            </RoundButton>
-            <Menu
-              id="filter-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={() => setAnchorEl(null)}
-              MenuListProps={{
-                'aria-labelledby': 'filter-button',
-              }}
-              PaperProps={{
-                sx: {
+              <RoundButton
+                sx={{
+                  color: 'text.primary',
+                  border: '1px solid white',
+                  mx: '10%'
+                }}
+                variant='outlined'
+                id="filter-button"
+                aria-controls={open ? 'filter-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={e => setAnchorEl(e.currentTarget)}
+              >
+                <FilterAltIcon />
+              </RoundButton>
+              <Menu
+                id="filter-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+                MenuListProps={{
+                  'aria-labelledby': 'filter-button',
+                }}
+                PaperProps={{
+                  sx: {
 
-                }
-              }}
-            >
-              <MenuItem onClick={() => handleFilter('apr')}>
-                APR
-              </MenuItem>
-              <MenuItem onClick={() => handleFilter('liq')}>
-                Liquidity
-              </MenuItem>
-              <MenuItem onClick={() => handleFilter('alpha')}>
-                Alphabetic
-              </MenuItem>
-            </Menu>
+                  }
+                }}
+              >
+                <MenuItem onClick={() => handleFilter('apr')}>
+                  APR
+                </MenuItem>
+                <MenuItem onClick={() => handleFilter('liq')}>
+                  Liquidity
+                </MenuItem>
+                <MenuItem onClick={() => handleFilter('alpha')}>
+                  Alphabetic
+                </MenuItem>
+              </Menu>
+            </Box>
           </Box>
+          <Hidden mdDown>
+            <Box sx={{ width: '15%' }}></Box>
+          </Hidden>
         </Box>
+
       </Box>
       {/* farms */}
       <Box
@@ -225,7 +237,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
         <Box
           sx={{
             width: '1366px',
-            minHeight: '400px'
+            minHeight: '60vh'
           }}
         >
           {

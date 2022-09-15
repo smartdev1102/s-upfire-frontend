@@ -6,8 +6,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import PoolDlg from './common/PoolDlg';
 import { address, erc20Abi, signer, generatorWeb3, factory, pool, farm, tokenContract, sgeneratorWeb3, spoolWeb3 } from '../utils/ethers.util';
 import { ethers } from 'ethers';
-import { formatEther, parseEther } from 'ethers/lib/utils';
-import FarmCardV3 from './common/FarmCardV3';
+import { parseEther } from 'ethers/lib/utils';
+import Hidden from '@mui/material/Hidden';
+
 
 
 const Pools = ({ chain, walletAddress, stakePools }) => {
@@ -86,7 +87,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
         sx={{
           width: '1366px',
           bgcolor: '#010621',
-          minHeight: '200px',
+          minHeight: '60vh',
           p: '20px'
         }}
       >
@@ -125,21 +126,24 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
             <Box>
               <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
             </Box>
-            <Box
-              sx={{ position: 'relative', width: '300px' }}
-            >
-              <SearchInput
-                sx={{
-                  position: 'absolute'
-                }}
-                placeholder='Search by name, symbol, address'
-              />
-              <IconButton
-                sx={{ position: 'absolute', right: '0px', top: '4px' }}
+            <Hidden mdDown>
+              <Box
+                sx={{ position: 'relative', width: '300px' }}
               >
-                <SearchIcon />
-              </IconButton>
-            </Box>
+                <SearchInput
+                  sx={{
+                    position: 'absolute'
+                  }}
+                  placeholder='Search by name, symbol, address'
+                />
+                <IconButton
+                  sx={{ position: 'absolute', right: '0px', top: '4px' }}
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Box>
+            </Hidden>
+
           </Box>
           <Box sx={{ my: '20px', color: 'primary.main', fontWeight: 'bold', p: '20px' }}>
             <Grid container spacing={2}>

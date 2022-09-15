@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 import { theme } from './style/theme';
 import "./index.css";
-import store from './reducers/store';
+// import store from './reducers/store';
 
 const myTheme = createTheme(theme);
 
@@ -14,9 +14,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={myTheme}>
-      <Provider store={store}>
+      {/* <Provider store={store}> */}
         <App />
-      </Provider>
+      {/* </Provider> */}
     </ThemeProvider>
   </React.StrictMode>
 );

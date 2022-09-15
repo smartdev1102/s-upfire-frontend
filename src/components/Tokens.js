@@ -1,13 +1,11 @@
-import { Box, Button, Card, IconButton, InputAdornment, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Card, IconButton, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
-import pkgIcon from '../assets/tokenIcons/pkg.svg';
 import RoundButton from './common/RoundButton';
-import Pagination from '@mui/material/Pagination';
-import { factory, tokenContract, farm, pair, poolFactory, pool } from '../utils/ethers.util';
+import Hidden from '@mui/material/Hidden';
 
-const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
+const Tokens = ({ farmTokens, stakeTokens }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const optimizeAddress = (address) => {
@@ -20,12 +18,15 @@ const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
         justifyContent: 'center'
       }}
     >
+      <Hidden mdDown>
+        <Box sx={{width: '20%'}}></Box>
+      </Hidden>
       <Box
         sx={{
-          width: '1366px',
-          minHeight: '600px',
+          width: '100%',
+          minHeight: '60vh',
           bgcolor: '#010621',
-          p: '20px'
+          p: '2%'
         }}
       >
         <Box
@@ -54,21 +55,23 @@ const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
               </Typography>
             </Button>
             <Box sx={{ flexGrow: 1 }}></Box>
-            <Box
-              sx={{ position: 'relative', width: '250px' }}
-            >
-              <SearchInput
-                sx={{
-                  position: 'absolute'
-                }}
-                placeholder='Search tokens'
-              />
-              <IconButton
-                sx={{ position: 'absolute', right: '0px', top: '4px' }}
+            <Hidden mdDown>
+              <Box
+                sx={{ position: 'relative', width: '250px' }}
               >
-                <SearchIcon />
-              </IconButton>
-            </Box>
+                <SearchInput
+                  sx={{
+                    position: 'absolute'
+                  }}
+                  placeholder='Search tokens'
+                />
+                <IconButton
+                  sx={{ position: 'absolute', right: '0px', top: '4px' }}
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Box>
+            </Hidden>
           </Box>
           {/* token list */}
           {
@@ -81,11 +84,10 @@ const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
                       sx={{
                         width: '100%',
                         borderRadius: '20px',
-                        py: '5px',
-                        px: '30px',
+                        p: '3%',
                         display: 'flex',
                         alignItems: 'center',
-                        my: '10px'
+                        my: '20px'
                       }}
                     >
                       <Box>
@@ -195,6 +197,9 @@ const Tokens = ({ chain, walletAddress, farmTokens, stakeTokens }) => {
 
         </Box>
       </Box>
+      <Hidden mdDown>
+        <Box sx={{width: '20%'}}></Box>
+      </Hidden>
     </Box>
   )
 }

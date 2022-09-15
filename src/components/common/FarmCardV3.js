@@ -8,12 +8,13 @@ import accountIcon from '../../assets/icons/account.svg';
 import { farm, farmWeb3, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
 import { parseEther } from 'ethers/lib/utils';
 import moment from 'moment';
+import Hidden from '@mui/material/Hidden';
 
 const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
-  
+
 
   const handleSelectedFarm = () => {
     setSelectedFarm(farmInfo);
@@ -46,7 +47,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
       <Box
         onClick={() => setOpenStake(!openStake)}
         sx={{
-          p: '10px',
+          p: '1%',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -57,14 +58,14 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
         </Box>
         <Box
           sx={{
-            mx: '50px'
+            mx: '1%'
           }}
         >
-          <Box>
-            <Typography sx={{mb: 0}} variant="h5" gutterBottom component="h5">
+          <Hidden mdDown>
+            <Typography sx={{ mb: 0 }} variant="h5" gutterBottom component="h5">
               {`Farm ${farmInfo.name.toUpperCase()}`}
             </Typography>
-          </Box>
+          </Hidden>
           <Box>
             {`${farmInfo.symbol} / ${farmInfo.baseToken}`}
           </Box>
@@ -93,34 +94,36 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
           </Box>
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
-        <Box sx={{ mx: '30px' }}>
+        <Box sx={{ mx: '3%' }}>
           <img src={farmIcon} />
         </Box>
+        <Hidden mdDown>
+          <Box
+            sx={{
+              width: '10%'
+            }}
+          >
+            ~{moment(farmInfo.start).format('MMM DD YYYY')}
+          </Box>
+        </Hidden>
         <Box
           sx={{
-            width: '150px'
-          }}
-        >
-          ~{moment(farmInfo.start).format('MMM DD YYYY')}
-        </Box>
-        <Box
-          sx={{
-            width: '150px'
+            width: '10%'
           }}
         >
           ~{moment(farmInfo.end).format('MMM DD YYYY')}
         </Box>
-        <Box sx={{ mx: '30px', display: 'flex', width: '80px' }}>
-          <Box sx={{ mx: '10px' }}>
+        <Box sx={{ mx: '10%', display: 'flex', width: '80px' }}>
+          <Box sx={{ mx: '2%' }}>
             <img src={airdropIcon} />
           </Box>
           <Box>
             {Math.trunc(farmInfo.supply)}
           </Box>
         </Box>
-        <Box sx={{ mx: '30px', display: 'flex', width: '80px' }}>
-          <Box sx={{ mx: '10px' }}>
-            <img style={{ height: '20px' }} src={accountIcon} />
+        <Box sx={{ mx: '1%', display: 'flex', width: '80px' }}>
+          <Box sx={{ mx: '1%' }}>
+            <img style={{ height: '50%' }} src={accountIcon} />
           </Box>
           <Box>
             {farmInfo.numFarmers}
@@ -133,8 +136,8 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
           <Box
             sx={{
               background: '#020826',
-              px: '30px',
-              py: '10px'
+              px: '3%',
+              py: '1%'
             }}
           >
             <Box
@@ -150,13 +153,13 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
               <Box>
                 <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
-              <Box sx={{ mx: '20px' }}>
+              <Box sx={{ mx: '2%' }}>
                 <Button onClick={stake} variant='contained'>stake</Button>
               </Box>
               <Box>
                 <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
-              <Box sx={{ mx: '20px' }}>
+              <Box sx={{ mx: '2%' }}>
                 <Button onClick={withdraw} variant='contained'>withdraw</Button>
               </Box>
             </Box>

@@ -57,6 +57,7 @@ const Banner = ({ setChain, chain }) => {
           display: 'flex',
           justifyContent: 'center'
         }}
+        
       >
         <Link style={{ textDecoration: 'none' }} to="/tokens">
           <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
