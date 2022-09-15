@@ -44,7 +44,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         </DialogTitle>
         <Box
           sx={{
-            width: '600px',
+            maxWidth: '600px',
+            minWidth: '400px',
             p: '10px',
             background: '#030927'
           }}

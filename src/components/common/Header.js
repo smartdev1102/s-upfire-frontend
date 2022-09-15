@@ -18,55 +18,59 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
   return (
-    <Box
-      sx={{
-        p: '10px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <Box
-        sx={{ mr: '80px', display: 'flex', alignItems: 'center' }}
-      >
-        <img style={{ height: '80px' }} src={logo} />
-      </Box>
+    <Box>
       <Box
         sx={{
-          mx: '0px'
+          p: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
-      </Box>
-      <Hidden mdDown>
+        <Box
+          sx={{ mr: '80px', display: 'flex', alignItems: 'center' }}
+        >
+          <img style={{ height: '80px' }} src={logo} />
+        </Box>
+        <Box
+          sx={{
+            mx: '0px'
+          }}
+        >
+          <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
+        </Box>
+        <Hidden mdDown>
+          <Box
+            sx={{
+              mx: '10px'
+            }}
+          >
+            <RoundButton onClick={connectWallet} size='large' variant='contained'>
+              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+            </RoundButton>
+          </Box>
+        </Hidden>
         <Box
           sx={{
             mx: '10px'
           }}
         >
-          <RoundButton onClick={connectWallet} size='large' variant='contained'>
+          <IconButton>
+            <img style={{ width: '50px' }} src={chainLogos[chain]} />
+          </IconButton>
+        </Box>
+      </Box>
+      <Hidden smUp>
+        <Box
+          sx={{
+            mx: '10px'
+          }}
+        >
+          <RoundButton onClick={connectWallet} size='large' fullWidth variant='contained'>
             {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
           </RoundButton>
         </Box>
       </Hidden>
-      <Box
-        sx={{
-          mx: '10px'
-        }}
-      >
-        <IconButton>
-          <img style={{ width: '50px' }} src={chainLogos[chain]} />
-        </IconButton>
-      </Box>
-      {/* <Box
-        sx={{
-          mx: '10px'
-        }}
-      >
-        <IconButton>
-          <img src={appIcon} />
-        </IconButton>
-      </Box> */}
     </Box>
   )
 }

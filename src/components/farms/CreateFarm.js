@@ -92,7 +92,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
         </DialogTitle>
         <Box
           sx={{
-            width: '600px',
+            maxWidth: '600px',
             height: '700px',
             p: '10px',
             background: '#030927'
