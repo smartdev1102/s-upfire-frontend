@@ -271,12 +271,11 @@ function App() {
       }}
     >
       <BrowserRouter>
-        <Hidden mdDown>
+        <Box>
           <Header chain={chain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
-        </Hidden>
+        </Box>
         <ReferralDlg referral={referral} onClose={() => setReferral()} />
         <WalletAlert open={openWalletAlert} onClose={() => setOpenWalletAlert(false)} />
-        <Hidden mdDown>
           <Box
             sx={{
               mt: '20px'
@@ -284,8 +283,6 @@ function App() {
           >
             <Banner chain={chain} setChain={setChain} />
           </Box>
-        </Hidden>
-
         <Box
           sx={{
             p: '1%',
