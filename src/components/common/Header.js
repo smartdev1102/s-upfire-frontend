@@ -39,7 +39,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
         >
           <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
         </Box>
-        <Hidden mdDown>
+        <Hidden smDown>
           <Box
             sx={{
               mx: '10px'
@@ -66,7 +66,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
             mx: '10px'
           }}
         >
-          <RoundButton onClick={connectWallet} size='large' fullWidth variant='contained'>
+          <RoundButton onClick={connectWallet} fullWidth variant='contained'>
             {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
           </RoundButton>
         </Box>

@@ -126,7 +126,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
             <Box>
               <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
             </Box>
-            <Hidden mdDown>
+            <Hidden smDown>
               <Box
                 sx={{ position: 'relative', width: '300px' }}
               >

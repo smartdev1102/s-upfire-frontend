@@ -283,11 +283,7 @@ function App() {
           >
             <Banner chain={chain} setChain={setChain} />
           </Box>
-        <Box
-          sx={{
-            p: '1%',
-          }}
-        >
+        <Box>
           <Routes>
             <Route path='/' element={<Navigate to="/farms" />} />
             <Route path="/farms"

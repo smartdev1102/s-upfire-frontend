@@ -137,93 +137,98 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
         <Box
           sx={{
             width: '100%',
-            display: 'flex'
+            display: 'flex',
+            justifyContent: 'center'
           }}
         >
-          <Hidden mdDown>
-            <Box sx={{ width: '15%' }}></Box>
-          </Hidden>
-          <Box
-            sx={{
-              background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
-              borderRadius: '20px',
-              py: '2%',
-              px: '8%',
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%'
-            }}
-          >
-            <Box>
-              <Box>
-                <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
-                  {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" gutterBottom component="h6">
-                  Total farming liquidity
-                </Typography>
-              </Box>
-            </Box>
-            <Box sx={{ flexGrow: 1 }}></Box>
-            <Box>
-              <RoundButton
-                onClick={handleOpenCreateFarm}
+          
+            <Box
+              sx={{
+                width: '1366px'
+              }}
+            >
+              <Box
                 sx={{
-                  color: 'text.primary',
-                  border: '1px solid white',
+                  background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
+                  borderRadius: '20px',
+                  py: '2%',
+                  px: '8%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%'
                 }}
-                variant='outlined'
               >
-                Create farm
-              </RoundButton>
-            </Box>
-            <Box>
-              <RoundButton
-                sx={{
-                  color: 'text.primary',
-                  border: '1px solid white',
-                  mx: '10%'
-                }}
-                variant='outlined'
-                id="filter-button"
-                aria-controls={open ? 'filter-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={e => setAnchorEl(e.currentTarget)}
-              >
-                <FilterAltIcon />
-              </RoundButton>
-              <Menu
-                id="filter-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                  'aria-labelledby': 'filter-button',
-                }}
-                PaperProps={{
-                  sx: {
+                <Box>
+                  <Box>
+                    <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
+                      {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" gutterBottom component="h6">
+                      Total farming liquidity
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ flexGrow: 1 }}></Box>
+                <Box>
+                  <RoundButton
+                    onClick={handleOpenCreateFarm}
+                    sx={{
+                      color: 'text.primary',
+                      border: '1px solid white',
+                    }}
+                    variant='outlined'
+                  >
+                    Create farm
+                  </RoundButton>
+                </Box>
+                <Box>
+                  <RoundButton
+                    sx={{
+                      color: 'text.primary',
+                      border: '1px solid white',
+                      mx: '10%'
+                    }}
+                    variant='outlined'
+                    id="filter-button"
+                    aria-controls={open ? 'filter-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={e => setAnchorEl(e.currentTarget)}
+                  >
+                    <FilterAltIcon />
+                  </RoundButton>
+                  <Menu
+                    id="filter-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={() => setAnchorEl(null)}
+                    MenuListProps={{
+                      'aria-labelledby': 'filter-button',
+                    }}
+                    PaperProps={{
+                      sx: {
 
-                  }
-                }}
-              >
-                <MenuItem onClick={() => handleFilter('apr')}>
-                  APR
-                </MenuItem>
-                <MenuItem onClick={() => handleFilter('liq')}>
-                  Liquidity
-                </MenuItem>
-                <MenuItem onClick={() => handleFilter('alpha')}>
-                  Alphabetic
-                </MenuItem>
-              </Menu>
+                      }
+                    }}
+                  >
+                    <MenuItem onClick={() => handleFilter('apr')}>
+                      APR
+                    </MenuItem>
+                    <MenuItem onClick={() => handleFilter('liq')}>
+                      Liquidity
+                    </MenuItem>
+                    <MenuItem onClick={() => handleFilter('alpha')}>
+                      Alphabetic
+                    </MenuItem>
+                  </Menu>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-          <Hidden mdDown>
-            <Box sx={{ width: '15%' }}></Box>
-          </Hidden>
+   
+
+
         </Box>
 
       </Box>

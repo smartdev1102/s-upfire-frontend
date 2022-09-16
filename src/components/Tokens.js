@@ -18,7 +18,7 @@ const Tokens = ({ farmTokens, stakeTokens }) => {
         justifyContent: 'center'
       }}
     >
-      <Hidden mdDown>
+      <Hidden smDown>
         <Box sx={{width: '20%'}}></Box>
       </Hidden>
       <Box
@@ -55,7 +55,7 @@ const Tokens = ({ farmTokens, stakeTokens }) => {
               </Typography>
             </Button>
             <Box sx={{ flexGrow: 1 }}></Box>
-            <Hidden mdDown>
+            <Hidden smDown>
               <Box
                 sx={{ position: 'relative', width: '250px' }}
               >
@@ -197,7 +197,7 @@ const Tokens = ({ farmTokens, stakeTokens }) => {
 
         </Box>
       </Box>
-      <Hidden mdDown>
+      <Hidden smDown>
         <Box sx={{width: '20%'}}></Box>
       </Hidden>
     </Box>

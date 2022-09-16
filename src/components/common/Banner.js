@@ -56,7 +56,7 @@ const Banner = ({ setChain, chain }) => {
   return (
     <Box>
       {/* tab buttons */}
-      <Hidden mdDown>
+      <Hidden smDown>
         <Box
           sx={{
             display: 'flex',
@@ -174,7 +174,7 @@ const Banner = ({ setChain, chain }) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              color={'secondary'} sx={{ mx: '20px', width: '300px' }} variant='contained' size='large'
+              color={'secondary'} sx={{ mx: '20px', width: '200px' }} variant='contained' size='large'
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img style={{ marginRight: '20px' }} src={stakeIcon} />
@@ -194,7 +194,7 @@ const Banner = ({ setChain, chain }) => {
               }}
               PaperProps={{
                 sx: {
-                  width: '300px',
+                  width: '200px',
                   background: '#030927',
                 }
               }}

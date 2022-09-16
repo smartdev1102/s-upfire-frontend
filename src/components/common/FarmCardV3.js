@@ -61,7 +61,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
             mx: '1%'
           }}
         >
-          <Hidden mdDown>
+          <Hidden smDown>
             <Typography sx={{ mb: 0 }} variant="h5" gutterBottom component="h5">
               {`Farm ${farmInfo.name.toUpperCase()}`}
             </Typography>
@@ -97,7 +97,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
         <Box sx={{ mx: '3%' }}>
           <img src={farmIcon} />
         </Box>
-        <Hidden mdDown>
+        <Hidden smDown>
           <Box
             sx={{
               width: '10%'
