@@ -5,7 +5,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
 import { generator, swapFactory, pair, tokenContract } from '../utils/ethers.util';
-import { useParams } from 'react-router-dom';
+import RoundButton from './common/RoundButton';
 
 const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
   const [startDate, setStartDate] = useState(new Date());
@@ -25,6 +25,8 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
   const [stakeToken, setStakeToken] = useState('');
   const [apr, setApr] = useState(0);
   const [amount, setAmount] = useState('0');
+
+  const [currentSwap, setCurrentSwap] = useState(0); // for avalanche
 
   useEffect(() => {
     if (!isBonus) {
@@ -46,16 +48,6 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
       true
     );
   }
-
-  const createStakePool = () => {
-    create(
-      rewardToken,
-      stakeToken,
-      apr,
-      amount
-    )
-  }
-
   useEffect(() => {
     async function determineBlockReward() {
       try {
@@ -102,9 +94,22 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
           {
             isFarm ? (
               <Box sx={{ mt: '20px', background: '#000314' }}>
-                <Box sx={{ mt: '30px' }}>
-                  <FormControlLabel control={<Checkbox checked={isV3} onChange={() => { setIsV3(!isV3); setLpToken('') }} />} label="uniswapV3 pool" />
-                </Box>
+                {
+                  (chain === 43113) && (
+                    <Box>
+                      <RoundButton onClick={() => { setCurrentSwap(0); setLpToken('') }} color={currentSwap !== 0 ? 'secondary' : 'primary'} variant='contained'>Pangolin</RoundButton>
+                      <RoundButton onClick={() => { setCurrentSwap(1); setLpToken('') }} color={currentSwap === 1 ? 'primary' : 'secondary'} variant='contained'>Trader Joe</RoundButton>
+                    </Box>
+                  )
+                }
+                {
+                  (chain === 4) && (
+                    <Box>
+                      <RoundButton onClick={() => setIsV3(false)} color={isV3 ? 'secondary' : 'primary'} variant='contained'>UniswapV2</RoundButton>
+                      <RoundButton onClick={() => { setIsV3(true); setLpToken('') }} color={isV3 ? 'primary' : 'secondary'} variant='contained'>UniswapV3</RoundButton>
+                    </Box>
+                  )
+                }
                 <Box >
                   <Box>
                     {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
@@ -208,7 +213,7 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
               >
                 <Box
                   sx={{
-                    width: '600px',
+                    width: '100%',
                     p: '10px',
                     background: '#030927'
                   }}

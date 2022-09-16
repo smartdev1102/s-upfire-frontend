@@ -122,7 +122,8 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
         background: 'rgb(0,36,48)',
         padding: '30px',
         transform: 'translate(-50%, -50%)',
-        width: '650px',
+        maxWidth: '650px',
+        minWidth: '450px',
         borderRadius: '20px',
         zIndex: '1000'
       }}
@@ -144,7 +145,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
           </Typography>
         </Box>
         <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-          <Grid item xs={4} >
+          <Grid item xs={12} md={4} >
             <Box
               sx={{
                 display: 'flex'
@@ -158,7 +159,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
               <TextField value={amountIn0} onChange={e => setAmountIn0(e.target.value)} fullWidth />
             </Box>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Box
               sx={{
                 display: 'flex'
@@ -172,7 +173,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
               <TextField value={amountIn1} onChange={e => setAmountIn1(e.target.value)} fullWidth />
             </Box>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} md={4}>
             <Box>
               {
                 isApproved ? (
@@ -189,7 +190,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
             Stake
           </Typography>
           <Grid container spacing={2} sx={{alignItems: 'center'}}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Box sx={{display: 'flex'}}>
                 Balance: { Number(formatEther(lpBalance)).toFixed(1)}
                 <Box sx={{flexGrow: 1}}></Box>
@@ -197,7 +198,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
               </Box>
               <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} fullWidth/>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Button onClick={stake} sx={{mt: '20px'}} variant='contained'>Stake</Button>
             </Grid>
           </Grid>

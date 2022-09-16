@@ -58,12 +58,12 @@ const Referral = ({ walletAddress, chain }) => {
     >
       <Box
         sx={{
-          width: '50%'
+          
         }}
       >
         <Card
           sx={{
-            p: '20px'
+            p: '2%'
           }}
         >
           <Box sx={{ display: 'flex' }}>
