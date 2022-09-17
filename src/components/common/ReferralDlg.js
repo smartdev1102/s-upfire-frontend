@@ -19,7 +19,7 @@ const ReferralDlg = ({referral, onClose}) => {
         padding: '30px',
         transform: 'translate(-50%, -50%)',
         maxWidth: '650px',
-        minWidth: '450px',
+        minWidth: '300px',
         borderRadius: '20px',
         zIndex: 100
       }}
