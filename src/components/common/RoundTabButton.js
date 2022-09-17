@@ -7,7 +7,7 @@ const RoundTabButton = styled(Button) ({
   borderRadius: '25px',
   fontWeight: 'bold',
   textTransform: 'capitalize',
-  width: '200px',
+  maxWidth: '200px',
   color: 'white',
   fontSize: '18px',
   border: '2px solid #2494F3'

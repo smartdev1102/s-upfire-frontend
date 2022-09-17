@@ -60,99 +60,108 @@ const Banner = ({ setChain, chain }) => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
-          <Link style={{ textDecoration: 'none' }} to="/tokens">
-            <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
-              <img style={{ marginRight: '20px' }} src={coinIcon} />
-              tokens
-            </RoundTabButton>
-          </Link>
-          <Link style={{ textDecoration: 'none' }} to="/farms">
-            <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
-              <img style={{ marginRight: '20px' }} src={farmIcon} />
-              farms
-            </RoundTabButton>
-          </Link>
-          <Link style={{ textDecoration: 'none' }} to="/pools">
-            <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
-              <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
-              pools
-            </RoundTabButton>
-          </Link>
-          <Box>
-            <RoundTabButton
-              id="basic-button"
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-              color={'secondary'} sx={{ mx: '20px', width: '300px' }} variant='contained' size='large'
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <img style={{ marginRight: '20px' }} src={stakeIcon} />
-                <Box sx={{ flexGrow: 1 }}></Box>
-                {networks[chain].chainName}
-                <Box sx={{ flexGrow: 1 }}></Box>
-                <ExpandMoreIcon />
-              </Box>
-            </RoundTabButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              PaperProps={{
-                sx: {
-                  width: '300px',
-                  background: '#030927',
-                }
-              }}
-            >
-              <MenuItem
-                sx={{
-                  background: 'skyBlue',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'lightBlue'
-                  }
-                }}
-                onClick={() => handleChain(4)}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              width: '1366px'
+            }}
+          >
+            <Link style={{ textDecoration: 'none' }} to="/tokens">
+              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
+                <img style={{ marginRight: '20px' }} src={coinIcon} />
+                tokens
+              </RoundTabButton>
+            </Link>
+            <Link style={{ textDecoration: 'none' }} to="/farms">
+              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
+                <img style={{ marginRight: '20px' }} src={farmIcon} />
+                farms
+              </RoundTabButton>
+            </Link>
+            <Link style={{ textDecoration: 'none' }} to="/pools">
+              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
+                <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
+                pools
+              </RoundTabButton>
+            </Link>
+            <Box>
+              <RoundTabButton
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+                color={'secondary'} sx={{ width: '300px' }} variant='contained' size='large'
               >
-                Ethereum
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  background: 'pink',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'hotPink'
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <img style={{ marginRight: '20px' }} src={stakeIcon} />
+                  <Box sx={{ flexGrow: 1 }}></Box>
+                  {networks[chain].chainName}
+                  <Box sx={{ flexGrow: 1 }}></Box>
+                  <ExpandMoreIcon />
+                </Box>
+              </RoundTabButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                PaperProps={{
+                  sx: {
+                    width: '300px',
+                    background: '#030927',
                   }
                 }}
-                onClick={() => handleChain(43113)}
-              >Avalanche</MenuItem>
-              <MenuItem
-                sx={{
-                  background: 'orange',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'darkOrange'
-                  }
-                }}
-                onClick={() => handleChain(97)}
-              >Binance Smart Chain</MenuItem>
-            </Menu>
+              >
+                <MenuItem
+                  sx={{
+                    background: 'skyBlue',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'lightBlue'
+                    }
+                  }}
+                  onClick={() => handleChain(4)}
+                >
+                  Ethereum
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    background: 'pink',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'hotPink'
+                    }
+                  }}
+                  onClick={() => handleChain(43113)}
+                >Avalanche</MenuItem>
+                <MenuItem
+                  sx={{
+                    background: 'orange',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'darkOrange'
+                    }
+                  }}
+                  onClick={() => handleChain(97)}
+                >Binance Smart Chain</MenuItem>
+              </Menu>
+            </Box>
           </Box>
+
           {/* <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
           <img style={{ marginRight: '20px' }} src={accountIcon} />
           account
