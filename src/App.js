@@ -21,6 +21,7 @@ import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import WalletAlert from './components/common/WalletAlert';
 import Hidden from '@mui/material/Hidden';
+import Main from './components/Main';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -272,45 +273,35 @@ function App() {
     >
       <BrowserRouter>
         <Box>
-          <Header chain={chain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
+          <Header chain={chain} setChain={setChain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />
         </Box>
         <ReferralDlg referral={referral} onClose={() => setReferral()} />
         <WalletAlert open={openWalletAlert} onClose={() => setOpenWalletAlert(false)} />
-          <Box
+        {/* <Box
             sx={{
               mt: '20px'
             }}
           >
             <Banner chain={chain} setChain={setChain} />
-          </Box>
+          </Box> */}
         <Box>
           <Routes>
-            <Route path='/' element={<Navigate to="/farms" />} />
-            <Route path="/farms"
+            <Route path='/' element={<Navigate to="/main" />} />
+            <Route path='/main'
               element={
-                <Farms
+                <Main
                   openWalletAlert={() => setOpenWalletAlert(true)}
-                  walletAddress={walletAddress} chain={chain}
+                  walletAddress={walletAddress} 
+                  chain={chain}
                   farms={farms}
                   farmsv3={farmsv3}
                   pairs={pairs}
                   totalLiquidity={farmLiq}
-                />}
-            />
-            <Route path="/tokens"
-              element={
-                <Tokens
-                  chain={chain}
-                  walletAddress={walletAddress}
                   farmTokens={farmTokens}
                   stakeTokens={stakeTokens}
-                />}
-            />
-            <Route path="/pools" element={
-              <Pools chain={chain}
-                walletAddress={walletAddress}
-                stakePools={stakePools}
-              />}
+                  stakePools={stakePools}
+                />
+              }
             />
             <Route path="/referral" element={<Referral chain={chain} walletAddress={walletAddress} />} />
             <Route path="/create_pool/:referralAddress"
@@ -325,7 +316,7 @@ function App() {
             />
           </Routes>
         </Box>
-        <Footer />
+        {/* <Footer /> */}
       </BrowserRouter>
     </Box>
   );

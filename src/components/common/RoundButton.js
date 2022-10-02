@@ -4,10 +4,12 @@ import { Button } from '@mui/material';
 
 
 const RoundButton = styled(Button) ({
-  borderRadius: '25px',
+  borderRadius: '10px',
   borderWidth: '2px',
   fontWeight: 'bold',
   textTransform: 'capitalize',
+  marginLeft: '5px',
+  marginRight: '5px'
 });
 
 export default RoundButton;

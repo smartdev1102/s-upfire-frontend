@@ -1,11 +1,22 @@
 import { Box } from '@mui/system';
 import { IconButton, Hidden } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../../assets/logo.png';
 import RoundButton from './RoundButton';
 import ethereumIcon from '../../assets/tokenIcons/ethereum-ether-logo.png';
 import bnbIcon from '../../assets/tokenIcons/bsc-bnb-logo.png';
 import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
+import { networks } from '../../utils/network.util';
+import stakeIcon from '../../assets/icons/stake.svg';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
+import coinIcon from '../../assets/icons/coin.svg';
+import farmIcon from '../../assets/icons/farm.svg';
+import pickaxeIcon from '../../assets/icons/pickaxe.svg';
+
 
 const chainLogos = {
   97: bnbIcon,
@@ -13,7 +24,41 @@ const chainLogos = {
   4: ethereumIcon
 }
 
-const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
+const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  }
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
+
+  const handleChain = async (chainId) => {
+    if (chainId !== 4) {
+      await window.ethereum.request(
+        {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "method": "wallet_addEthereumChain",
+          "params": [networks[chainId]]
+        }
+      );
+    }
+    await window.ethereum.request(
+      {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "wallet_switchEthereumChain",
+        "params": [{
+          chainId: networks[chainId].chainId
+        }]
+      }
+    );
+    setChain(chainId);
+    setAnchorEl(null);
+    // navigate(`/pools?chain=${chainId}`);
+  }
   const optimizeAddress = (address) => {
     return `${address.substring(0, 5)}..${address.substring(address.length - 5)}`
   }
@@ -24,32 +69,98 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
           p: '10px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
         }}
       >
         <Box
-          sx={{ mr: '80px', display: 'flex', alignItems: 'center' }}
+          sx={{ display: 'flex', alignItems: 'center' }}
         >
           <img style={{ height: '80px' }} src={logo} />
         </Box>
+        <Box sx={{ flexGrow: 1 }}></Box>
         <Box
           sx={{
-            mx: '0px'
+            display: 'flex',
+            justifyContent: 'space-around',
+            width: '90vh'
           }}
         >
-          <RoundButton onClick={handleReferral} size='large' variant='outlined'>Create referral link</RoundButton>
-        </Box>
-        <Hidden smDown>
-          <Box
-            sx={{
-              mx: '10px'
-            }}
-          >
-            <RoundButton onClick={connectWallet} size='large' variant='contained'>
-              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+          <Box>
+            <RoundButton
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+              sx={{ width: '300px' }} variant='contained' size='large'
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <img style={{ marginRight: '20px' }} src={stakeIcon} />
+                <Box sx={{ flexGrow: 1 }}></Box>
+                {networks[chain].chainName}
+                <Box sx={{ flexGrow: 1 }}></Box>
+                <ExpandMoreIcon />
+              </Box>
             </RoundButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+              PaperProps={{
+                sx: {
+                  width: '300px',
+                  background: '#030927',
+                }
+              }}
+            >
+              <MenuItem
+                sx={{
+                  background: 'skyBlue',
+                  m: '5px',
+                  borderRadius: '10px',
+                  justifyContent: 'center',
+                  ":hover": {
+                    background: 'lightBlue'
+                  }
+                }}
+                onClick={() => handleChain(4)}
+              >
+                Ethereum
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  background: 'pink',
+                  m: '5px',
+                  borderRadius: '10px',
+                  justifyContent: 'center',
+                  ":hover": {
+                    background: 'hotPink'
+                  }
+                }}
+                onClick={() => handleChain(43113)}
+              >Avalanche</MenuItem>
+              <MenuItem
+                sx={{
+                  background: 'orange',
+                  m: '5px',
+                  borderRadius: '10px',
+                  justifyContent: 'center',
+                  ":hover": {
+                    background: 'darkOrange'
+                  }
+                }}
+                onClick={() => handleChain(97)}
+              >Binance Smart Chain</MenuItem>
+            </Menu>
           </Box>
-        </Hidden>
+          <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
+          <RoundButton onClick={connectWallet} size='large' variant='contained'>
+            {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+          </RoundButton>
+        </Box>
         <Box
           sx={{
             mx: '10px'
@@ -60,17 +171,6 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain }) => {
           </IconButton>
         </Box>
       </Box>
-      <Hidden smUp>
-        <Box
-          sx={{
-            mx: '10px'
-          }}
-        >
-          <RoundButton onClick={connectWallet} fullWidth variant='contained'>
-            {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-          </RoundButton>
-        </Box>
-      </Hidden>
     </Box>
   )
 }

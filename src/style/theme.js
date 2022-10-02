@@ -2,14 +2,14 @@ export const theme = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#2494F3'
+      main: '#266d7a'
     },
     secondary: {
       main: '#001126'
     },
     background: {
-      default: '#000314',
-      paper: '#030927'
+      default: '#4660c9',
+      paper: '#081931'
     },
     text: {
       primary: '#ffffff',
