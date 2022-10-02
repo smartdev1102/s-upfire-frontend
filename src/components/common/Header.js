@@ -24,6 +24,21 @@ const chainLogos = {
   4: ethereumIcon
 }
 
+const chainColors = {
+  97: {
+    main: 'orange',
+    hover: 'darkOrange'
+  },
+  43113: {
+    main: 'pink',
+    hover: 'hotPink'
+  },
+  4: {
+    main: 'skyBlue',
+    hover: 'lightBlue'
+  }
+}
+
 const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -91,7 +106,8 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              sx={{ width: '300px' }} variant='contained' size='large'
+              sx={{ width: '300px', background: chainColors[chain].main, ":hover": {background: chainColors[chain].hover} }} variant='contained' size='large'
+           
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img style={{ marginRight: '20px' }} src={stakeIcon} />
