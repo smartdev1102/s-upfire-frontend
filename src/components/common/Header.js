@@ -11,11 +11,6 @@ import stakeIcon from '../../assets/icons/stake.svg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
-import coinIcon from '../../assets/icons/coin.svg';
-import farmIcon from '../../assets/icons/farm.svg';
-import pickaxeIcon from '../../assets/icons/pickaxe.svg';
 
 
 const chainLogos = {
@@ -174,11 +169,11 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               </Menu>
             </Box>
             <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
-            <RoundButton onClick={connectWallet} size='large' variant='contained'>
-              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-            </RoundButton>
           </Box>
         </Hidden>
+        <RoundButton onClick={connectWallet} size='large' variant='contained'>
+          {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+        </RoundButton>
         <Box
           sx={{
             mx: '10px'

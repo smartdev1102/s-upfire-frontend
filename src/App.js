@@ -22,12 +22,14 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import WalletAlert from './components/common/WalletAlert';
 import Hidden from '@mui/material/Hidden';
 import Main from './components/Main';
+import WalletModal from './components/common/WalletModal';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
   const [chain, setChain] = useState(4);
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
+  const [openWalletModal, setOpenWalletModal] = useState(false);
 
   // farm info
   const [farmLiq, setFarmLiq] = useState(0);
@@ -249,10 +251,11 @@ function App() {
   }
 
   const connectWallet = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });  // connect wallet
-      setWalletAddress(account);
-    }
+    setOpenWalletModal(true);
+    // if (typeof window.ethereum !== 'undefined') {
+    //   const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });  // connect wallet
+    //   setWalletAddress(account);
+    // }
   }
 
   const handleReferral = () => {
@@ -271,6 +274,7 @@ function App() {
         width: '100%'
       }}
     >
+      <WalletModal chain={chain} open={openWalletModal} onClose={() => setOpenWalletModal(false)} />
       <BrowserRouter>
         <Box>
           <Header chain={chain} setChain={setChain} handleReferral={handleReferral} walletAddress={walletAddress} connectWallet={connectWallet} />

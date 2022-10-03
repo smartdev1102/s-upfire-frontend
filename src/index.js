@@ -8,15 +8,24 @@ import { theme } from './style/theme';
 import "./index.css";
 // import store from './reducers/store';
 
+import { Web3ReactProvider } from '@web3-react/core';
+import { ethers } from 'ethers';
+
+const getLibrary = (provider) => {
+  const library = new ethers.providers.Web3Provider(provider);
+  library.pollingInterval = 8000;
+  return library;
+}
+
 const myTheme = createTheme(theme);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={myTheme}>
-      {/* <Provider store={store}> */}
+      <Web3ReactProvider getLibrary={getLibrary}>
         <App />
-      {/* </Provider> */}
+      </Web3ReactProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

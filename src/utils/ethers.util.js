@@ -11,6 +11,9 @@ import SFactory from '../contracts/PoolFactory.sol/PoolFactory.json';
 import SGenerator from '../contracts/PoolGenerator.sol/PoolGenerator.json';
 import SPool from '../contracts/Pool.sol/Pool.json';
 
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { InjectedConnector } from "@web3-react/injected-connector";
+
 
 export const address = {
   97: {
@@ -162,6 +165,17 @@ export const spoolWeb3 = (poolAddress) => {
   return contract;
 }
 
+export const walletConnect = (chain) => {
+  return new WalletConnectConnector({
+    rpcUrl: networks[chain].rpcUrls[0],
+    bridge: 'https://bridge.walletconnect.org',
+    qrcode: true
+  });
+}
+
+export const Injected = new InjectedConnector({
+  supportedChainIds: [1, 3, 4, 5, 42, 97, 56, 43113]
+})
 
 export const erc20Abi = [
   {
