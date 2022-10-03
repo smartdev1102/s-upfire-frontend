@@ -85,7 +85,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
       />
       <Box
         sx={{
-          width: '1366px',
+          width: '100%',
           bgcolor: '#010621',
           minHeight: '60vh',
           p: '20px'

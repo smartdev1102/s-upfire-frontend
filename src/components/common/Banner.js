@@ -14,8 +14,22 @@ import { useNavigate } from 'react-router-dom';
 import { networks } from '../../utils/network.util';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import RoundButton from './RoundButton';
 
-
+const chainColors = {
+  97: {
+    main: 'orange',
+    hover: 'darkOrange'
+  },
+  43113: {
+    main: 'pink',
+    hover: 'hotPink'
+  },
+  4: {
+    main: 'skyBlue',
+    hover: 'lightBlue'
+  }
+}
 const Banner = ({ setChain, chain }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = useState();
@@ -56,134 +70,23 @@ const Banner = ({ setChain, chain }) => {
   return (
     <Box>
       {/* tab buttons */}
-      <Hidden smDown>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-around',
-              width: '1366px'
-            }}
-          >
-            <Link style={{ textDecoration: 'none' }} to="/tokens">
-              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
-                <img style={{ marginRight: '20px' }} src={coinIcon} />
-                tokens
-              </RoundTabButton>
-            </Link>
-            <Link style={{ textDecoration: 'none' }} to="/farms">
-              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
-                <img style={{ marginRight: '20px' }} src={farmIcon} />
-                farms
-              </RoundTabButton>
-            </Link>
-            <Link style={{ textDecoration: 'none' }} to="/pools">
-              <RoundTabButton color={'secondary'}  variant='contained' size='large'>
-                <img style={{ marginRight: '20px' }} src={pickaxeIcon} />
-                pools
-              </RoundTabButton>
-            </Link>
-            <Box>
-              <RoundTabButton
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                color={'secondary'} sx={{ width: '300px' }} variant='contained' size='large'
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <img style={{ marginRight: '20px' }} src={stakeIcon} />
-                  <Box sx={{ flexGrow: 1 }}></Box>
-                  {networks[chain].chainName}
-                  <Box sx={{ flexGrow: 1 }}></Box>
-                  <ExpandMoreIcon />
-                </Box>
-              </RoundTabButton>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-                PaperProps={{
-                  sx: {
-                    width: '300px',
-                    background: '#030927',
-                  }
-                }}
-              >
-                <MenuItem
-                  sx={{
-                    background: 'skyBlue',
-                    m: '5px',
-                    borderRadius: '10px',
-                    justifyContent: 'center',
-                    ":hover": {
-                      background: 'lightBlue'
-                    }
-                  }}
-                  onClick={() => handleChain(4)}
-                >
-                  Ethereum
-                </MenuItem>
-                <MenuItem
-                  sx={{
-                    background: 'pink',
-                    m: '5px',
-                    borderRadius: '10px',
-                    justifyContent: 'center',
-                    ":hover": {
-                      background: 'hotPink'
-                    }
-                  }}
-                  onClick={() => handleChain(43113)}
-                >Avalanche</MenuItem>
-                <MenuItem
-                  sx={{
-                    background: 'orange',
-                    m: '5px',
-                    borderRadius: '10px',
-                    justifyContent: 'center',
-                    ":hover": {
-                      background: 'darkOrange'
-                    }
-                  }}
-                  onClick={() => handleChain(97)}
-                >Binance Smart Chain</MenuItem>
-              </Menu>
-            </Box>
-          </Box>
-
-          {/* <RoundTabButton color={'secondary'} sx={{ mx: '20px' }} variant='contained' size='large'>
-          <img style={{ marginRight: '20px' }} src={accountIcon} />
-          account
-        </RoundTabButton> */}
-        </Box>
-
-      </Hidden>
       <Hidden smUp>
         <Box
           sx={{
             display: 'flex',
-            px: '20px'
+            justifyContent: 'center',
+            width: '100%',
           }}
         >
           <Box>
-            <RoundTabButton
+            <RoundButton
               id="basic-button"
               aria-controls={open ? 'basic-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              color={'secondary'} sx={{ mx: '20px', width: '200px' }} variant='contained' size='large'
+              sx={{ width: '300px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
+
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img style={{ marginRight: '20px' }} src={stakeIcon} />
@@ -192,7 +95,7 @@ const Banner = ({ setChain, chain }) => {
                 <Box sx={{ flexGrow: 1 }}></Box>
                 <ExpandMoreIcon />
               </Box>
-            </RoundTabButton>
+            </RoundButton>
             <Menu
               id="basic-menu"
               anchorEl={anchorEl}
@@ -203,7 +106,7 @@ const Banner = ({ setChain, chain }) => {
               }}
               PaperProps={{
                 sx: {
-                  width: '200px',
+                  width: '300px',
                   background: '#030927',
                 }
               }}
@@ -248,41 +151,7 @@ const Banner = ({ setChain, chain }) => {
               >Binance Smart Chain</MenuItem>
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <IconButton onClick={() => setOpenMenu(!openMenu)}>
-            <MenuIcon />
-          </IconButton>
         </Box>
-        {
-          openMenu && (
-            <List sx={{ px: '20px' }}>
-              <ListItem disablePadding>
-                <ListItemButton to="/tokens">
-                  <ListItemIcon>
-                    <img src={coinIcon} />
-                  </ListItemIcon>
-                  <ListItemText sx={{ textAlign: 'center' }} primary="Tokens" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton to="/farms">
-                  <ListItemIcon>
-                    <img src={farmIcon} />
-                  </ListItemIcon>
-                  <ListItemText sx={{ textAlign: 'center' }} primary="Farms" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton to="/pools">
-                  <ListItemIcon>
-                    <img src={pickaxeIcon} />
-                  </ListItemIcon>
-                  <ListItemText sx={{ textAlign: 'center' }} primary="Pools" />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          )
-        }
       </Hidden>
     </Box>
   )

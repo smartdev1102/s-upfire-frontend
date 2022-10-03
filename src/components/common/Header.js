@@ -92,91 +92,93 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
           <img style={{ height: '80px' }} src={logo} />
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            width: '90vh'
-          }}
-        >
-          <Box>
-            <RoundButton
-              id="basic-button"
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-              sx={{ width: '300px', background: chainColors[chain].main, ":hover": {background: chainColors[chain].hover} }} variant='contained' size='large'
-           
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <img style={{ marginRight: '20px' }} src={stakeIcon} />
-                <Box sx={{ flexGrow: 1 }}></Box>
-                {networks[chain].chainName}
-                <Box sx={{ flexGrow: 1 }}></Box>
-                <ExpandMoreIcon />
-              </Box>
-            </RoundButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-              PaperProps={{
-                sx: {
-                  width: '300px',
-                  background: '#030927',
-                }
-              }}
-            >
-              <MenuItem
-                sx={{
-                  background: 'skyBlue',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'lightBlue'
-                  }
-                }}
-                onClick={() => handleChain(4)}
+        <Hidden smDown>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              width: '90vh'
+            }}
+          >
+            <Box>
+              <RoundButton
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+                sx={{ width: '300px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
+
               >
-                Ethereum
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  background: 'pink',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'hotPink'
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <img style={{ marginRight: '20px' }} src={stakeIcon} />
+                  <Box sx={{ flexGrow: 1 }}></Box>
+                  {networks[chain].chainName}
+                  <Box sx={{ flexGrow: 1 }}></Box>
+                  <ExpandMoreIcon />
+                </Box>
+              </RoundButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                PaperProps={{
+                  sx: {
+                    width: '300px',
+                    background: '#030927',
                   }
                 }}
-                onClick={() => handleChain(43113)}
-              >Avalanche</MenuItem>
-              <MenuItem
-                sx={{
-                  background: 'orange',
-                  m: '5px',
-                  borderRadius: '10px',
-                  justifyContent: 'center',
-                  ":hover": {
-                    background: 'darkOrange'
-                  }
-                }}
-                onClick={() => handleChain(97)}
-              >Binance Smart Chain</MenuItem>
-            </Menu>
+              >
+                <MenuItem
+                  sx={{
+                    background: 'skyBlue',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'lightBlue'
+                    }
+                  }}
+                  onClick={() => handleChain(4)}
+                >
+                  Ethereum
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    background: 'pink',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'hotPink'
+                    }
+                  }}
+                  onClick={() => handleChain(43113)}
+                >Avalanche</MenuItem>
+                <MenuItem
+                  sx={{
+                    background: 'orange',
+                    m: '5px',
+                    borderRadius: '10px',
+                    justifyContent: 'center',
+                    ":hover": {
+                      background: 'darkOrange'
+                    }
+                  }}
+                  onClick={() => handleChain(97)}
+                >Binance Smart Chain</MenuItem>
+              </Menu>
+            </Box>
+            <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
+            <RoundButton onClick={connectWallet} size='large' variant='contained'>
+              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+            </RoundButton>
           </Box>
-          <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
-          <RoundButton onClick={connectWallet} size='large' variant='contained'>
-            {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-          </RoundButton>
-        </Box>
+        </Hidden>
         <Box
           sx={{
             mx: '10px'

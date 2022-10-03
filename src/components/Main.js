@@ -4,6 +4,7 @@ import RoundButton from './common/RoundButton';
 import Tokens from './Tokens';
 import Farms from './farms/Farms';
 import Pools from './Pools';
+import { Hidden } from '@mui/material';
 
 const Main = ({
   openWalletAlert,
@@ -25,9 +26,12 @@ const Main = ({
         justifyContent: 'center'
       }}
     >
+      <Hidden smDown>
+        <Box sx={{width: '20%'}}></Box>
+      </Hidden>
       <Box
         sx={{
-          width: '1366px',
+          width: '100%',
           background: '#081931',
           borderRadius: '10px',
         }}
@@ -86,6 +90,9 @@ const Main = ({
           }
         </Box>
       </Box>
+      <Hidden smDown>
+        <Box sx={{width: '20%'}}></Box>
+      </Hidden>
     </Box>
   );
 }

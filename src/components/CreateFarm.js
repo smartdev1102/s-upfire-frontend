@@ -1,4 +1,4 @@
-import { Box, TextField, Typography, Button, FormControl, Select, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
+import { Box, TextField, Typography, Button, FormControl, Select, MenuItem, FormControlLabel, Checkbox, Hidden } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -78,9 +78,14 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
           justifyContent: 'center'
         }}
       >
+        <Hidden smDown>
+          <Box sx={{width: '30%'}}></Box>
+        </Hidden>
         <Box
           sx={{
-            width: '600px'
+            width: '100%',
+            px: '10%',
+            pt: '5px'
           }}
         >
           <Box sx={{ display: 'flex' }}>
@@ -93,7 +98,7 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
           </Box>
           {
             isFarm ? (
-              <Box sx={{ mt: '20px', background: '#000314' }}>
+              <Box sx={{ mt: '20px' }}>
                 {
                   (chain === 43113) && (
                     <Box>
@@ -207,15 +212,12 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
             ) : (
               <Box
                 sx={{
-                  background: '#000314',
-                  mt: '20px'
+                  mt: '20px',
                 }}
               >
                 <Box
                   sx={{
                     width: '100%',
-                    p: '10px',
-                    background: '#030927'
                   }}
                 >
                   <Box sx={{ width: '100%', height: '100%' }}>
@@ -267,6 +269,9 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
             )
           }
         </Box>
+        <Hidden smDown>
+          <Box sx={{width: '30%'}}></Box>
+        </Hidden>
       </Box>
     </Box>
   );
