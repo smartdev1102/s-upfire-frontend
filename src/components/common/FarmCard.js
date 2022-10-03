@@ -9,12 +9,14 @@ import { farm, farmWeb3, tokenContract, tokenWeb3 } from '../../utils/ethers.uti
 import { parseEther } from 'ethers/lib/utils';
 import moment from 'moment';
 import Hidden from '@mui/material/Hidden';
+import { useWeb3React } from '@web3-react/core';
 
 const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
 
+  const { library } = useWeb3React()
 
   const handleSelectedFarm = () => {
     setSelectedFarm(farmInfo);
@@ -22,15 +24,15 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
 
   const stake = async () => {
     await tokenWeb3(farmInfo.lptoken).approve(farmInfo.address, parseEther(amountIn));
-    tokenWeb3(farmInfo.lptoken).once("Approval", async () => {
-      const tx = await farmWeb3(farmInfo.address).deposit(parseEther(amountIn));
+    tokenWeb3(farmInfo.lptoken, library.getSigner()).once("Approval", async () => {
+      const tx = await farmWeb3(farmInfo.address, library.getSigner()).deposit(parseEther(amountIn));
       await tx.wait();
       window.alert("Deposit.");
     });
   }
 
   const withdraw = async () => {
-    const tx = await farmWeb3(farmInfo.address).withdraw(parseEther(amountIn));
+    const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(parseEther(amountIn));
     await tx.wait();
     window.alert("Withdraw");
   }

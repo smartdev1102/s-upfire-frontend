@@ -7,12 +7,13 @@ import { Hidden, Menu, MenuItem } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 
 import CreateFarm from './CreateFarm';
-import { address, erc20Abi, generatorWeb3, signer } from '../../utils/ethers.util';
+import { address, erc20Abi, generatorWeb3 } from '../../utils/ethers.util';
 import { parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 import FarmCardV3 from '../common/FarmCardV3';
+import { useWeb3React } from '@web3-react/core';
 
 const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
@@ -21,6 +22,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
   const [filter, setFilter] = useState();
   const open = Boolean(anchorEl);
 
+  const { library } = useWeb3React();
 
   const handleOpenCreateFarm = () => {
     if (!walletAddress) {
@@ -86,11 +88,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     bonus,
     isV3
   ) => {
-    const contract = new ethers.Contract(farmToken, erc20Abi, signer);
+    const contract = new ethers.Contract(farmToken, erc20Abi, library.getSigner());
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async () => {
       if (isV3) {
-        const tx = await generatorWeb3(chain).createFarmV3(
+        const tx = await generatorWeb3(chain, library.getSigner()).createFarmV3(
           farmToken,
           parseEther(amountIn),
           lptoken,
@@ -102,7 +104,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
         );
         await tx.wait();
       } else {
-        const tx = await generatorWeb3(chain).createFarmV2(
+        const tx = await generatorWeb3(chain, library.getSigner()).createFarmV2(
           farmToken,
           parseEther(amountIn),
           lptoken,

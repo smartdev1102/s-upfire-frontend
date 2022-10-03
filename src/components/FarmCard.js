@@ -11,13 +11,12 @@ import moment from 'moment';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 
-const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
+const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
 
-
-  const { library } = useWeb3React();
+  const { library } = useWeb3React()
 
   const handleSelectedFarm = () => {
     setSelectedFarm(farmInfo);
@@ -25,7 +24,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
 
   const stake = async () => {
     await tokenWeb3(farmInfo.lptoken, library.getSigner()).approve(farmInfo.address, parseEther(amountIn));
-    tokenWeb3(farmInfo.lptoken).once("Approval", async () => {
+    tokenWeb3(farmInfo.lptoken, library.getSigner()).once("Approval", async () => {
       const tx = await farmWeb3(farmInfo.address, library.getSigner()).deposit(parseEther(amountIn));
       await tx.wait();
       window.alert("Deposit.");
@@ -56,9 +55,6 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
           alignItems: 'center',
         }}
       >
-        <Box>
-          {/* <img src={dnxcIcon} /> */}
-        </Box>
         <Box
           sx={{
             mx: '1%'
@@ -150,15 +146,15 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
                 alignItems: 'center'
               }}
             >
-              {/* <Box sx={{ mx: '20px' }}>
+              <Box sx={{ mx: '2%' }}>
                 <Button onClick={handleSelectedFarm} variant='contained'>add liquidity and stake</Button>
-              </Box> */}
-              <Box>
+              </Box>
+              {/* <Box>
                 <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
-              <Box sx={{ mx: '2%' }}>
+              <Box sx={{ mx: '20px' }}>
                 <Button onClick={stake} variant='contained'>stake</Button>
-              </Box>
+              </Box> */}
               <Box>
                 <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
@@ -174,4 +170,4 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
   );
 }
 
-export default FarmCardV3;
+export default FarmCard;

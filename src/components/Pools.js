@@ -4,10 +4,11 @@ import RoundButton from './common/RoundButton';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, signer, generatorWeb3, factory, pool, farm, tokenContract, sgeneratorWeb3, spoolWeb3 } from '../utils/ethers.util';
+import { address, erc20Abi, generatorWeb3, factory, pool, farm, tokenContract, sgeneratorWeb3, spoolWeb3 } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import Hidden from '@mui/material/Hidden';
+import { useWeb3React } from '@web3-react/core';
 
 
 
@@ -18,11 +19,13 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   const [amountOut, setAmountOut] = useState('0');
   const [openIndex, setOpenIndex] = useState([]);
 
+  const { library } = useWeb3React();
+
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
-    const contract = new ethers.Contract(rewardToken, erc20Abi, signer);
+    const contract = new ethers.Contract(rewardToken, erc20Abi, library.getSigner());
     await contract.approve(address[chain]['sgenerator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      const tx = await sgeneratorWeb3(chain).createPool(
+      const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
         rewardToken,
         stakeToken,
         apr,
@@ -50,7 +53,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   const stake = async (tokenAddress, poolAddress) => {
     await tokenContract(chain, tokenAddress).approve(poolAddress, parseEther(amountIn));
     tokenContract(chain, tokenAddress).once("Approval", async () => {
-      const tx = await spoolWeb3(poolAddress).stake(parseEther(amountIn));
+      const tx = await spoolWeb3(poolAddress, library.getSigner()).stake(parseEther(amountIn));
       await tx.wait();
       window.alert("staked");
     });
@@ -58,13 +61,13 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
 
 
   const unstake = async (poolAddress) => {
-    const tx = await spoolWeb3(poolAddress).unstake(parseEther(amountOut));
+    const tx = await spoolWeb3(poolAddress, library.getSigner()).unstake(parseEther(amountOut));
     await tx.wait();
     window.alert('unstake');
   }
 
   const harvest = async (poolAddress) => {
-    const tx = await spoolWeb3(poolAddress).harvest();
+    const tx = await spoolWeb3(poolAddress, library.getSigner()).harvest();
     await tx.wait();
     window.alert('harvest');
   }

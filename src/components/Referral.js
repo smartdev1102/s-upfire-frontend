@@ -1,8 +1,9 @@
 import { Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import { utils } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
-import { address, generator, generatorWeb3, signer } from '../utils/ethers.util';
+import { address, generator, generatorWeb3 } from '../utils/ethers.util';
 
 
 const Referral = ({ walletAddress, chain }) => {
@@ -13,7 +14,8 @@ const Referral = ({ walletAddress, chain }) => {
   const [signerAddr, setSignerAddr] = useState('');
   const [referralToken, setReferralToken] = useState('');
 
-
+  const { library } = useWeb3React();
+  
   const signReferral = async() => {
     console.log(walletAddress, referralIn)
     const hash = await generator(chain).getMessageHash(
@@ -21,8 +23,8 @@ const Referral = ({ walletAddress, chain }) => {
       parseEther(amount),
       referralIn
     );
-    const sig = await signer.signMessage(utils.arrayify(hash));
-    const tx = await generatorWeb3(chain).storeReferralInfo(
+    const sig = await library.getSigner().signMessage(utils.arrayify(hash));
+    const tx = await generatorWeb3(chain, library.getSigner()).storeReferralInfo(
       sig,
       parseEther(amount),
       referralToken
@@ -32,7 +34,7 @@ const Referral = ({ walletAddress, chain }) => {
   }
 
   const claimReferral = async () => {
-    const tx = await generatorWeb3(chain).claimReferral(
+    const tx = await generatorWeb3(chain, library.getSigner()).claimReferral(
       signerAddr,
       referralOut
     );

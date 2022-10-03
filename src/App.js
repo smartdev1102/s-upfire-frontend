@@ -23,6 +23,7 @@ import WalletAlert from './components/common/WalletAlert';
 import Hidden from '@mui/material/Hidden';
 import Main from './components/Main';
 import WalletModal from './components/common/WalletModal';
+import { useWeb3React } from '@web3-react/core';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -38,6 +39,12 @@ function App() {
   const [pairs, setPairs] = useState([]);
   const [farmTokens, setFarmTokens] = useState([]);
   const [stakeTokens, setStakeTokens] = useState([]);
+
+  const { account, library } = useWeb3React();
+
+  useEffect(() => {
+    setWalletAddress(account);
+  }, [account]);
 
   // pool info
   const [stakePools, setStakePools] = useState([]);
@@ -217,10 +224,10 @@ function App() {
     if (!walletAddress) {
       setOpenWalletAlert(true);
     } else {
-      const contract = new ethers.Contract(farmToken, erc20Abi, signer);
+      const contract = new ethers.Contract(farmToken, erc20Abi, library.getSigner());
       await contract.approve(address[chain]['generator'], parseEther(amountIn));
       contract.once("Approval", async () => {
-        const tx = await generatorWeb3(chain).createFarmV2(
+        const tx = await generatorWeb3(chain, library.getSigner()).createFarmV2(
           farmToken,
           parseEther(amountIn),
           lptoken,
@@ -237,10 +244,10 @@ function App() {
 
   // create pool
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
-    const contract = new ethers.Contract(rewardToken, erc20Abi, signer);
+    const contract = new ethers.Contract(rewardToken, erc20Abi, library.getSigner());
     await contract.approve(address[chain]['sgenerator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      const tx = await sgeneratorWeb3(chain).createPool(
+      const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
         rewardToken,
         stakeToken,
         apr,

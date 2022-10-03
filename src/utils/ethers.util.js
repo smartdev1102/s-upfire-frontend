@@ -64,18 +64,13 @@ export const swapFactories = {
 }
 // providers
 
-const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
-export const signer = web3Provider.getSigner();
-// contracts
-
-
 
 
 export const factory = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
   return new ethers.Contract(address[chain]['factory'], Factory.abi, provider);
 }
-export const factoryWeb3 = (chain) => {
+export const factoryWeb3 = (chain, signer) => {
   return new ethers.Contract(address[chain]['factory'], Factory.abi, signer);
 } 
 
@@ -83,7 +78,7 @@ export const generator = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
   return new ethers.Contract(address[chain]['generator'], Generator.abi, provider);
 }
-export const generatorWeb3 = (chain) => {
+export const generatorWeb3 = (chain, signer) => {
   return new ethers.Contract(address[chain]['generator'], Generator.abi, signer);
 } 
 
@@ -103,7 +98,7 @@ export const pool = (chain, poolAddress) => {
   return new ethers.Contract(poolAddress, Pool.abi, provider);
 }
 
-export const routerWeb3 = (chain) => {
+export const routerWeb3 = (chain, signer) => {
   const contract = new ethers.Contract(swapFactories[chain]['router'], Router.abi, signer);
   return contract;
 }
@@ -114,7 +109,7 @@ export const farm = (chain, farmAddress) => {
   return contract;
 }
 
-export const farmWeb3 = (farmAddress) => {
+export const farmWeb3 = (farmAddress, signer) => {
   const contract = new ethers.Contract(farmAddress, Farm.abi, signer);
   return contract;
 }
@@ -125,7 +120,7 @@ export const tokenContract = (chain, tokenAddress) => {
   return contract;
 }
 
-export const tokenWeb3 = (tokenAddress) => {
+export const tokenWeb3 = (tokenAddress, signer) => {
   const contract = new ethers.Contract(tokenAddress, erc20Abi, signer);
   return contract;
 }
@@ -138,7 +133,7 @@ export const sfactory = (chain) => {
   return contract;
 }
 
-export const sfactoryWeb3 = (chain) => {
+export const sfactoryWeb3 = (chain, signer) => {
   const contract = new ethers.Contract(address[chain]['sfactory'], SFactory.abi, signer);
   return contract;
 }
@@ -149,7 +144,7 @@ export const sgenerator = (chain) => {
   return contract;
 }
 
-export const sgeneratorWeb3 = (chain) => {
+export const sgeneratorWeb3 = (chain, signer) => {
   const contract = new ethers.Contract(address[chain]['sgenerator'], SGenerator.abi, signer);
   return contract;
 }
@@ -160,7 +155,7 @@ export const spool = (chain, poolAddress) => {
   return contract;
 }
 
-export const spoolWeb3 = (poolAddress) => {
+export const spoolWeb3 = (poolAddress, signer) => {
   const contract = new ethers.Contract(poolAddress, SPool.abi, signer);
   return contract;
 }

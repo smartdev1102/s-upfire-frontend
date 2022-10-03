@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { address, coinSymbols, farmWeb3, routerWeb3, swapFactories, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
 import { networks } from '../../utils/network.util';
 import { Close } from '@mui/icons-material';
+import { useWeb3React } from '@web3-react/core';
 
 const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   const [balance0, setBalance0] = useState('0');
@@ -17,6 +18,8 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   const [isApproved, setIsApproved] = useState();
   const [lpBalance, setLpBalance] = useState('0');
   const [amountIn, setAmountIn] = useState('0');
+
+  const { library } = useWeb3React();
 
 
   useEffect(() => {
@@ -54,11 +57,11 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
 
   const handleApprove = async () => {
     if (isEther !== 0) {
-      const tx = await tokenWeb3(farm.token0).approve(swapFactories[chain]['router'], parseEther(amountIn0));
+      const tx = await tokenWeb3(farm.token0, library.getSigner()).approve(swapFactories[chain]['router'], parseEther(amountIn0));
       await tx.wait();
     }
     if (isEther !== 1) {
-      const tx = await tokenWeb3(farm.token1).approve(swapFactories[chain]['router'], parseEther(amountIn1));
+      const tx = await tokenWeb3(farm.token1, library.getSigner()).approve(swapFactories[chain]['router'], parseEther(amountIn1));
       await tx.wait();
     }
     setIsApproved(true);
@@ -67,7 +70,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   const addLiquidity = async () => {
     const deadline = Math.round(Date.now() / 1000) + 10;
     if (isEther == 0) {
-      const tx = await routerWeb3(chain).addLiquidityETH(
+      const tx = await routerWeb3(chain, library.getSigner()).addLiquidityETH(
         farm.token1,
         parseEther(amountIn1),
         0,
@@ -78,7 +81,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
       );
       await tx.wait();
     } else if (isEther == 1) {
-      const tx = await routerWeb3(chain).addLiquidityETH(
+      const tx = await routerWeb3(chain, library.getSigner()).addLiquidityETH(
         farm.token0,
         parseEther(amountIn0),
         0,
@@ -89,7 +92,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
       );
       await tx.wait();
     } else {
-      const tx = await routerWeb3(chain).addLiquidity(
+      const tx = await routerWeb3(chain, library.getSigner()).addLiquidity(
         farm.token0,
         farm.token1,
         parseEther(amountIn0),
@@ -104,9 +107,9 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   }
 
   const stake = async () => {
-    await tokenWeb3(farm.lptoken).approve(farm.address, parseEther(amountIn));
+    await tokenWeb3(farm.lptoken, library.getSigner()).approve(farm.address, parseEther(amountIn));
     tokenWeb3(farm.lptoken).once("Approval", async () => {
-      const tx = await farmWeb3.apply(farm.address).deposit(parseEther(amountIn));
+      const tx = await farmWeb3.apply(farm.address, library.getSigner()).deposit(parseEther(amountIn));
       await tx.wait();
       window.alert("Deposit.");
     });
