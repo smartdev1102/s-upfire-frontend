@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import MenuIcon from '@mui/icons-material/Menu';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Hidden, Menu, MenuItem } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
+import Divider from '@mui/material/Divider';
 
 import CreateFarm from './CreateFarm';
 import { address, erc20Abi, generatorWeb3 } from '../../utils/ethers.util';
@@ -194,7 +196,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 aria-expanded={open ? 'true' : undefined}
                 onClick={e => setAnchorEl(e.currentTarget)}
               >
-                <FilterAltIcon />
+                <MenuIcon />
+                {/* <ExpandMoreIcon /> */}
               </RoundButton>
               <Menu
                 id="filter-menu"
@@ -210,6 +213,10 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                   }
                 }}
               >
+                <MenuItem>
+                  Filtered By
+                </MenuItem>
+                <Divider />
                 <MenuItem onClick={() => handleFilter('apr')}>
                   APR
                 </MenuItem>

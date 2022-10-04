@@ -97,13 +97,13 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
           </Box>
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
-        <Box sx={{ mx: '3%' }}>
+        <Box sx={{ mx: '2%' }}>
           <img src={farmIcon} />
         </Box>
         <Hidden smDown>
           <Box
             sx={{
-              width: '10%'
+              width: '9%'
             }}
           >
             ~{moment(farmInfo.start).format('MMM DD YYYY')}
@@ -111,24 +111,24 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
         </Hidden>
         <Box
           sx={{
-            width: '10%'
+            width: '9%'
           }}
         >
           ~{moment(farmInfo.end).format('MMM DD YYYY')}
         </Box>
         <Box sx={{ mx: '10%', display: 'flex', width: '80px' }}>
-          <Box sx={{ mx: '2%' }}>
+          <Box sx={{ mx: '20%' }}>
             <img src={airdropIcon} />
           </Box>
           <Box>
             {Math.trunc(farmInfo.supply)}
           </Box>
         </Box>
-        <Box sx={{ mx: '1%', display: 'flex', width: '80px' }}>
-          <Box sx={{ mx: '1%' }}>
-            <img style={{ height: '50%' }} src={accountIcon} />
+        <Box sx={{ mx: '1%', display: 'flex', width: '80px', alignItems: 'center' }}>
+          <Box sx={{ mx: '10%' }}>
+            <img style={{ height: '20px' }} src={accountIcon} />
           </Box>
-          <Box>
+          <Box sx={{marginBottom: '4px'}}>
             {farmInfo.numFarmers}
           </Box>
         </Box>
