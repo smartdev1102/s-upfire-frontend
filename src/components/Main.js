@@ -46,13 +46,13 @@ const Main = ({
             display: 'flex',
           }}
         >
-          <RoundButton onClick={()=>setTabIndex(0)} variant='contained'>
+          <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
             Tokens
           </RoundButton>
-          <RoundButton onClick={()=>setTabIndex(1)} variant='contained'>
+          <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(1)} variant='contained'>
             Farms
           </RoundButton>
-          <RoundButton onClick={()=>setTabIndex(2)} variant='contained'>
+          <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(2)} variant='contained'>
             Pools
           </RoundButton>
         </Box>
