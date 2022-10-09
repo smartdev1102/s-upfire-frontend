@@ -85,7 +85,7 @@ const Banner = ({ setChain, chain }) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              sx={{ width: '300px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
+              sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
 
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -106,7 +106,7 @@ const Banner = ({ setChain, chain }) => {
               }}
               PaperProps={{
                 sx: {
-                  width: '300px',
+                  width: '220px',
                   background: '#030927',
                 }
               }}

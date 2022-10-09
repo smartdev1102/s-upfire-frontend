@@ -130,7 +130,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               >
                 <MenuItem
                   sx={{
-                    background: 'skyBlue',
+                    background: '#7389DF',
                     m: '5px',
                     borderRadius: '10px',
                     justifyContent: 'center',
@@ -156,7 +156,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 >Avalanche</MenuItem>
                 <MenuItem
                   sx={{
-                    background: 'orange',
+                    background: '#C88E0D',
                     m: '5px',
                     borderRadius: '10px',
                     justifyContent: 'center',
@@ -168,26 +168,34 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 >Binance Smart Chain</MenuItem>
               </Menu>
             </Box>
-            <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
+            <Box>
+              <RoundButton sx={{ width: '220px', background: 'gray', ":hover": { background: 'white'}, color: '#424242' }} size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
+            </Box>
+            <Box
+              sx={{
+                mx: '10px'
+              }}
+            >
+              <IconButton>
+                <img style={{ width: '50px' }} src={chainLogos[chain]} />
+              </IconButton>
+            </Box>
           </Box>
         </Hidden>
-        <Hidden mdUp>
-          <Box>
-            <RoundButton onClick={connectWallet} size='large' variant='contained'>
-              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-            </RoundButton>
-          </Box>
-        </Hidden>
+
+      </Box>
+      <Hidden mdUp>
         <Box
           sx={{
-            mx: '10px'
+            display: 'flex',
+            justifyContent: 'center'
           }}
         >
-          <IconButton>
-            <img style={{ width: '50px' }} src={chainLogos[chain]} />
-          </IconButton>
+          <RoundButton onClick={connectWallet} size='large' variant='contained'>
+            {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+          </RoundButton>
         </Box>
-      </Box>
+      </Hidden>
     </Box>
   )
 }
