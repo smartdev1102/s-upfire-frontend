@@ -13,7 +13,6 @@ const WalletAlert = ({ open, onClose }) => {
         transform: 'translate(-50%, -50%)',
         borderRadius: '20px',
         zIndex: 100,
-        height: '250px',
         maxWidth: '100%',
       }}
     >

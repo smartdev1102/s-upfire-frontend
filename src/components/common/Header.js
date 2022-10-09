@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import { IconButton, Hidden } from '@mui/material';
 import React, { useState } from 'react';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo.svg';
 import RoundButton from './RoundButton';
 import ethereumIcon from '../../assets/tokenIcons/ethereum-ether-logo.png';
 import bnbIcon from '../../assets/tokenIcons/bsc-bnb-logo.png';
@@ -21,7 +21,7 @@ const chainLogos = {
 
 const chainColors = {
   97: {
-    main: 'orange',
+    main: '#C88E0D',
     hover: 'darkOrange'
   },
   43113: {
@@ -29,7 +29,7 @@ const chainColors = {
     hover: 'hotPink'
   },
   4: {
-    main: 'skyBlue',
+    main: '#7389DF',
     hover: 'lightBlue'
   }
 }
@@ -87,7 +87,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
           <img style={{ height: '80px' }} src={logo} />
         </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Box
             sx={{
               display: 'flex',
@@ -102,7 +102,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ width: '300px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
+                sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
 
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -123,7 +123,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 }}
                 PaperProps={{
                   sx: {
-                    width: '300px',
+                    width: '220px',
                     background: '#030927',
                   }
                 }}
@@ -171,9 +171,13 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             <RoundButton onClick={handleReferral} size='large' variant='contained'>Create referral link</RoundButton>
           </Box>
         </Hidden>
-        <RoundButton onClick={connectWallet} size='large' variant='contained'>
-          {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-        </RoundButton>
+        <Hidden mdUp>
+          <Box>
+            <RoundButton onClick={connectWallet} size='large' variant='contained'>
+              {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+            </RoundButton>
+          </Box>
+        </Hidden>
         <Box
           sx={{
             mx: '10px'

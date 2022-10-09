@@ -8,7 +8,7 @@ export const theme = {
       main: '#001126'
     },
     background: {
-      default: '#4660c9',
+      default: '#1E2A57',
       paper: '#081931'
     },
     text: {
