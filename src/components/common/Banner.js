@@ -70,7 +70,7 @@ const Banner = ({ setChain, chain }) => {
   return (
     <Box>
       {/* tab buttons */}
-      <Hidden smUp>
+      <Hidden mdUp>
         <Box
           sx={{
             display: 'flex',

@@ -289,12 +289,12 @@ function App() {
         <ReferralDlg referral={referral} onClose={() => setReferral()} />
         <WalletAlert open={openWalletAlert} onClose={() => setOpenWalletAlert(false)} />
         <Box
-            sx={{
-              mt: '20px'
-            }}
-          >
-            <Banner chain={chain} setChain={setChain} />
-          </Box>
+          sx={{
+            mt: '20px'
+          }}
+        >
+          <Banner chain={chain} setChain={setChain} />
+        </Box>
         <Box>
           <Routes>
             <Route path='/' element={<Navigate to="/main" />} />
@@ -302,7 +302,7 @@ function App() {
               element={
                 <Main
                   openWalletAlert={() => setOpenWalletAlert(true)}
-                  walletAddress={walletAddress} 
+                  walletAddress={walletAddress}
                   chain={chain}
                   farms={farms}
                   farmsv3={farmsv3}

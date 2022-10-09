@@ -91,8 +91,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-around',
-              width: '90vh'
+              justifyContent: 'space-around'
             }}
           >
             <Box>
@@ -169,16 +168,29 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               </Menu>
             </Box>
             <Box>
-              <RoundButton sx={{ width: '220px', background: 'gray', ":hover": { background: 'white'}, color: '#424242' }} size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
+              <RoundButton sx={{ width: '220px', background: 'gray', ":hover": { background: 'white' }, color: '#424242' }} size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
+            </Box>
+            <Box>
+              <RoundButton
+                sx={{
+                  background: '#7389DF',
+                  ":hover": {
+                    background: 'lightBlue'
+                  }
+                }}
+                onClick={connectWallet}
+                size='large'
+                variant='contained'
+              >
+                {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+              </RoundButton>
             </Box>
             <Box
               sx={{
                 mx: '10px'
               }}
             >
-              <IconButton>
-                <img style={{ width: '50px' }} src={chainLogos[chain]} />
-              </IconButton>
+              <img style={{ width: '50px' }} src={chainLogos[chain]} />
             </Box>
           </Box>
         </Hidden>
@@ -191,7 +203,17 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             justifyContent: 'center'
           }}
         >
-          <RoundButton onClick={connectWallet} size='large' variant='contained'>
+          <RoundButton
+            sx={{
+              background: '#7389DF',
+              ":hover": {
+                background: 'lightBlue'
+              }
+            }}
+            onClick={connectWallet}
+            size='large'
+            variant='contained'
+          >
             {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
           </RoundButton>
         </Box>
