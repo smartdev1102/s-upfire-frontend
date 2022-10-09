@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Switch, IconButton, Grid, TextField, Button } from '@mui/material';
+import { Box, Switch, IconButton, Grid, TextField, Button, FormGroup, FormControlLabel } from '@mui/material';
 import RoundButton from './common/RoundButton';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
@@ -18,6 +18,25 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
   const [openIndex, setOpenIndex] = useState([]);
+  const [isMyPool, setIsMyPool] = useState(false);
+  const [filterdPools, setFilteredPools] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
+
+  useEffect(() => {
+    if(isMyPool) {
+      const temp = stakePools.filter(pool => Number(pool.balance) > 0);
+      setFilteredPools(temp);
+    } else {
+      setFilteredPools(stakePools);
+    }
+  }, [isMyPool]);
+  useEffect(() => {
+    if(!!searchKey) {
+      const temp = stakePools.filter(pool => pool.name.includes(searchKey));
+    } else {
+      setFilteredPools(stakePools);
+    }
+  }, [searchKey])
 
   const { library } = useWeb3React();
 
@@ -129,15 +148,24 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
             <Box>
               <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
             </Box>
-            <Hidden smDown>
+            <Hidden mdDown>
+              <Box>
+                <FormGroup>
+                  <FormControlLabel control={<Switch checked={isMyPool} onChange={e=>setIsMyPool(e.target.checked)} />} label="My pools" />
+                </FormGroup>
+              </Box>
+            </Hidden>
+            <Hidden mdDown>
               <Box
                 sx={{ position: 'relative', width: '300px' }}
               >
                 <SearchInput
+                  value={searchKey}
+                  onChange={e=>setSearchKey(e.target.value)}
                   sx={{
                     position: 'absolute'
                   }}
-                  placeholder='Search by name, symbol, address'
+                  placeholder='Search by name, symbol'
                 />
                 <IconButton
                   sx={{ position: 'absolute', right: '0px', top: '4px' }}
@@ -167,7 +195,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
           {/* pools */}
           <Box>
             {
-              stakePools.map((pool, i) => (
+              filterdPools.map((pool, i) => (
                 <Box
                   key={i}
                 >
