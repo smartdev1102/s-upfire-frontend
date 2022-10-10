@@ -46,9 +46,9 @@ const Main = ({
             display: 'flex',
           }}
         >
-          <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
+          {/* <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
             Farmable Tokens
-          </RoundButton>
+          </RoundButton> */}
           <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(1)} variant='contained'>
             Farms
           </RoundButton>

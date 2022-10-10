@@ -327,6 +327,16 @@ function App() {
                   createPool={createPool}
                 />}
             />
+            <Route
+              path="/tokens"
+              element={
+                <Tokens
+                  chain={chain}
+                  walletAddress={walletAddress}
+                  farmTokens={farmTokens}
+                  stakeTokens={stakeTokens}
+                />}
+            />
           </Routes>
         </Box>
         {/* <Footer /> */}

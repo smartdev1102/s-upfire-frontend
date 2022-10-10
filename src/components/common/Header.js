@@ -11,6 +11,7 @@ import stakeIcon from '../../assets/icons/stake.svg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Link } from 'react-router-dom';
 
 
 const chainLogos = {
@@ -95,14 +96,18 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             }}
           >
             <Box>
+              <Link style={{textDecoration: 'none'}} to="/tokens">
+                <RoundButton variant='contained' color='primary' size='large'>Farmable Tokens</RoundButton>
+              </Link>
+            </Box>
+            <Box>
               <RoundButton
                 id="basic-button"
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
-
+                sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <img style={{ marginRight: '20px' }} src={stakeIcon} />
