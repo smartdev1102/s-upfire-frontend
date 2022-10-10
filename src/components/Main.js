@@ -47,13 +47,13 @@ const Main = ({
           }}
         >
           <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
-            Tokens
+            Farmable Tokens
           </RoundButton>
           <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(1)} variant='contained'>
             Farms
           </RoundButton>
           <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(2)} variant='contained'>
-            Pools
+            Staking Pools
           </RoundButton>
         </Box>
         <Box>

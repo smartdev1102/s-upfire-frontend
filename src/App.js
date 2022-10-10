@@ -24,6 +24,7 @@ import Hidden from '@mui/material/Hidden';
 import Main from './components/Main';
 import WalletModal from './components/common/WalletModal';
 import { useWeb3React } from '@web3-react/core';
+import backgroundImage from './assets/background.svg';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -278,7 +279,8 @@ function App() {
         bgcolor: 'background.default',
         color: 'text.primary',
         minHeight: '100vh',
-        width: '100%'
+        width: '100%',
+        backgroundImage: `url(${backgroundImage})`
       }}
     >
       <WalletModal chain={chain} open={openWalletModal} onClose={() => setOpenWalletModal(false)} />
