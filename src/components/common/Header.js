@@ -110,7 +110,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <img style={{ marginRight: '20px' }} src={stakeIcon} />
+                  <img style={{ marginRight: '20px', height: '30px' }} src={chainLogos[chain]} />
                   <Box sx={{ flexGrow: 1 }}></Box>
                   {networks[chain].chainName}
                   <Box sx={{ flexGrow: 1 }}></Box>
