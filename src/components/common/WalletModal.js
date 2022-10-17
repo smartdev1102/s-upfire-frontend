@@ -25,7 +25,8 @@ const WalletModal = ({ open, onClose, chain }) => {
       PaperProps={{
         style: {
           borderRadius: '15px',
-          maxWidth: '350px'
+          maxWidth: '350px',
+          fontFamily: 'Exo',
         }
       }}
     >
@@ -65,7 +66,7 @@ const WalletModal = ({ open, onClose, chain }) => {
               }}
               onClick={handleMetaMask}
             >
-              <Box sx={{ fontSize: '16px' }}>
+              <Box sx={{ fontSize: '14px' }}>
                 Metamask
               </Box>
               <Box sx={{ flexGrow: 1 }}></Box>
@@ -83,7 +84,7 @@ const WalletModal = ({ open, onClose, chain }) => {
               }}
               onClick={handleWalletConnect}
             >
-              <Box sx={{ fontSize: '16px' }}>
+              <Box sx={{ fontSize: '14px' }}>
                 WalletConnect
               </Box>
               <Box sx={{ flexGrow: 1 }}></Box>

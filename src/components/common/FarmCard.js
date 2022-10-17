@@ -43,7 +43,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
         my: '10px',
         borderRadius: '20px',
         border: '1px solid #2494F3',
-        fontFamily: 'Exo'
+        fontFamily: 'Exo',
       }}
     >
       <Box
@@ -53,6 +53,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
+          width: '100%'
         }}
       >
         <Box
