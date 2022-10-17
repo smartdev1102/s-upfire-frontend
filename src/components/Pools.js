@@ -143,7 +143,8 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
       {/* pools */}
       <Box
         sx={{
-          minHeight: '60vh'
+          minHeight: '60vh',
+          width: '100%'
         }}
       >
         {

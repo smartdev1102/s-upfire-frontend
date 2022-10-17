@@ -44,7 +44,8 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
         my: '10px',
         borderRadius: '20px',
         border: '1px solid #2494F3',
-        fontFamily: 'Exo'
+        fontFamily: 'Exo',
+        width: '100%'
       }}
     >
       <Box

@@ -241,7 +241,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       >
         <Box
           sx={{
-            minHeight: '50vh'
+            minHeight: '50vh',
+            width: '100%'
           }}
         >
           {
