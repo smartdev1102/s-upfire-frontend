@@ -26,6 +26,9 @@ const Main = ({
         justifyContent: 'center',
       }}
     >
+      <Hidden mdDown>
+        <Box sx={{ width: '150px' }}></Box>
+      </Hidden>
       <Box
         sx={{
           width: '100%',
@@ -46,17 +49,17 @@ const Main = ({
           {/* <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
             Farmable Tokens
           </RoundButton> */}
-          <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(1)} variant='contained'>
+          <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={() => setTabIndex(1)} variant='contained'>
             Farms
           </RoundButton>
-          <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(2)} variant='contained'>
+          <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} onClick={() => setTabIndex(2)} variant='contained'>
             Staking Pools
           </RoundButton>
         </Box>
         <Box>
           {
             (tabIndex === 0) && (
-              <Tokens 
+              <Tokens
                 chain={chain}
                 walletAddress={walletAddress}
                 farmTokens={farmTokens}
@@ -78,7 +81,7 @@ const Main = ({
           }
           {
             (tabIndex === 2) && (
-              <Pools 
+              <Pools
                 chain={chain}
                 walletAddress={walletAddress}
                 stakePools={stakePools}
@@ -87,6 +90,9 @@ const Main = ({
           }
         </Box>
       </Box>
+      <Hidden mdDown>
+        <Box sx={{ width: '150px' }}></Box>
+      </Hidden>
     </Box>
   );
 }
