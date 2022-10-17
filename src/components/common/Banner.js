@@ -15,6 +15,16 @@ import { networks } from '../../utils/network.util';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import RoundButton from './RoundButton';
+import ethereumIcon from '../../assets/tokenIcons/ethereum-ether-logo.png';
+import bnbIcon from '../../assets/tokenIcons/bsc-bnb-logo.png';
+import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
+
+
+const chainLogos = {
+  97: bnbIcon,
+  43113: avaxIcon,
+  4: ethereumIcon
+}
 
 const chainColors = {
   97: {
@@ -85,11 +95,10 @@ const Banner = ({ setChain, chain }) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained' size='large'
-
+              sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <img style={{ marginRight: '20px' }} src={stakeIcon} />
+                <img style={{ marginRight: '20px', height: '30px' }} src={chainLogos[chain]} />
                 <Box sx={{ flexGrow: 1 }}></Box>
                 {networks[chain].chainName}
                 <Box sx={{ flexGrow: 1 }}></Box>
@@ -113,42 +122,52 @@ const Banner = ({ setChain, chain }) => {
             >
               <MenuItem
                 sx={{
-                  background: 'skyBlue',
+                  background: '#7389DF',
                   m: '5px',
                   borderRadius: '10px',
-                  justifyContent: 'center',
+                  display: 'flex',
+                  fontSize: '14px',
                   ":hover": {
                     background: 'lightBlue'
                   }
                 }}
                 onClick={() => handleChain(4)}
               >
-                Ethereum
+                <img style={{ height: '30px', marginRight: '10px' }} src={ethereumIcon} />
+                <Box>Ethereum</Box>
               </MenuItem>
               <MenuItem
                 sx={{
                   background: 'pink',
                   m: '5px',
                   borderRadius: '10px',
-                  justifyContent: 'center',
+                  display: 'flex',
+                  fontSize: '14px',
                   ":hover": {
                     background: 'hotPink'
                   }
                 }}
                 onClick={() => handleChain(43113)}
-              >Avalanche</MenuItem>
+              >
+                <img style={{ height: '30px', marginRight: '10px' }} src={avaxIcon} />
+                <Box>Avalanche</Box>
+              </MenuItem>
               <MenuItem
                 sx={{
-                  background: 'orange',
+                  background: '#C88E0D',
                   m: '5px',
                   borderRadius: '10px',
-                  justifyContent: 'center',
+                  display: 'flex',
+                  fontSize: '14px',
                   ":hover": {
                     background: 'darkOrange'
                   }
                 }}
                 onClick={() => handleChain(97)}
-              >Binance Smart Chain</MenuItem>
+              >
+                <img style={{ height: '30px', marginRight: '10px' }} src={bnbIcon} />
+                <Box>Bianance Smart Chain</Box>
+              </MenuItem>
             </Menu>
           </Box>
         </Box>
