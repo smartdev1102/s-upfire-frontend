@@ -1,4 +1,4 @@
-import { Button, Dialog, Box, List, ListItem, ListItemButton, DialogTitle, IconButton } from '@mui/material';
+import { Button, Dialog, Box, List, ListItem, ListItemButton, DialogTitle, IconButton, Hidden } from '@mui/material';
 import React from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Injected, walletConnect } from '../../utils/ethers.util';
@@ -25,21 +25,21 @@ const WalletModal = ({ open, onClose, chain }) => {
       PaperProps={{
         style: {
           borderRadius: '15px',
+          maxWidth: '350px'
         }
       }}
     >
       <Box
         sx={{
           background: 'rgb(0,36,48)',
-          width: '320px',
-          minWidth: '225px'
+          fontWeight: 'bold'
         }}
       >
         <Box
           sx={{
             display: 'flex',
             pl: '20px',
-            fontSize: '20px',
+            fontSize: '18px',
             color: 'white',
             fontWeight: 'bold',
             alignItems: 'center'
@@ -59,7 +59,7 @@ const WalletModal = ({ open, onClose, chain }) => {
               sx={{
                 borderRadius: '10px',
                 height: '45px',
-                fontSize: '20px',
+                fontSize: '18px',
                 display: 'flex',
                 background: '#266d7a'
               }}
@@ -74,7 +74,6 @@ const WalletModal = ({ open, onClose, chain }) => {
           </ListItem>
           <ListItem>
             <ListItemButton
-              color='primary'
               sx={{
                 borderRadius: '10px',
                 height: '45px',
@@ -90,6 +89,20 @@ const WalletModal = ({ open, onClose, chain }) => {
               <Box sx={{ flexGrow: 1 }}></Box>
               <img style={{ height: '30px' }} src={connectwalletIcon} />
             </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <Box
+              sx={{
+                width: '100%',
+                p: '12px',
+                fontSize: '12px',
+                textAlign: 'left',
+                background: '#001126',
+                borderRadius: '10px'
+              }}
+            >
+              By connecting a wallet, you agree to Uniswap Lab's Terms of Service and acknowledge taht you ahve read and understand the Uniswap Protocol Disclaimer.
+            </Box>
           </ListItem>
         </List>
       </Box>

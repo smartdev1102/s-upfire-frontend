@@ -150,11 +150,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             sx={{
               background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
               borderRadius: '20px',
-              py: '2%',
-              px: '8%',
               display: 'flex',
               alignItems: 'center',
-              width: '100%'
+              width: '100%',
+              px: '40px',
+              py: '20px'
             }}
           >
             <Box>
@@ -230,7 +230,6 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             </Box>
           </Box>
         </Box>
-
       </Box>
       {/* farms */}
       <Box
@@ -241,8 +240,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       >
         <Box
           sx={{
-            width: '1366px',
-            minHeight: '60vh'
+            minHeight: '50vh'
           }}
         >
           {

@@ -96,7 +96,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             }}
           >
             <Box>
-              <Link style={{textDecoration: 'none'}} to="/tokens">
+              <Link style={{ textDecoration: 'none' }} to="/tokens">
                 <RoundButton variant='contained' color='primary' size='large'>Farmable Tokens</RoundButton>
               </Link>
             </Box>
@@ -137,39 +137,49 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                     background: '#7389DF',
                     m: '5px',
                     borderRadius: '10px',
-                    justifyContent: 'center',
+                    display: 'flex',
+                    fontSize: '14px',
                     ":hover": {
                       background: 'lightBlue'
                     }
                   }}
                   onClick={() => handleChain(4)}
                 >
-                  Ethereum
+                  <img style={{height: '30px', marginRight: '10px'}} src={ethereumIcon} />
+                  <Box>Ethereum</Box>
                 </MenuItem>
                 <MenuItem
                   sx={{
                     background: 'pink',
                     m: '5px',
                     borderRadius: '10px',
-                    justifyContent: 'center',
+                    display: 'flex',
+                    fontSize: '14px',
                     ":hover": {
                       background: 'hotPink'
                     }
                   }}
                   onClick={() => handleChain(43113)}
-                >Avalanche</MenuItem>
+                >
+                  <img style={{height: '30px', marginRight: '10px'}} src={avaxIcon} />
+                  <Box>Avalanche</Box>
+                </MenuItem>
                 <MenuItem
                   sx={{
                     background: '#C88E0D',
                     m: '5px',
                     borderRadius: '10px',
-                    justifyContent: 'center',
+                    display: 'flex',
+                    fontSize: '14px',
                     ":hover": {
                       background: 'darkOrange'
                     }
                   }}
                   onClick={() => handleChain(97)}
-                >Binance Smart Chain</MenuItem>
+                >
+                  <img style={{height: '30px', marginRight: '10px'}} src={bnbIcon} />
+                  <Box>Bianance Smart Chain</Box>
+                </MenuItem>
               </Menu>
             </Box>
             <Box>
@@ -189,13 +199,6 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               >
                 {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
               </RoundButton>
-            </Box>
-            <Box
-              sx={{
-                mx: '10px'
-              }}
-            >
-              <img style={{ width: '50px' }} src={chainLogos[chain]} />
             </Box>
           </Box>
         </Hidden>

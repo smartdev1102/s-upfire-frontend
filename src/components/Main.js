@@ -23,12 +23,9 @@ const Main = ({
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
-      <Hidden smDown>
-        <Box sx={{width: '20%'}}></Box>
-      </Hidden>
       <Box
         sx={{
           width: '100%',
@@ -38,12 +35,12 @@ const Main = ({
       >
         <Box
           sx={{
-            py: '2%',
-            px: '8%',
             display: 'flex',
             alignItems: 'center',
             width: '100%',
             display: 'flex',
+            py: '20px',
+            px: '10px'
           }}
         >
           {/* <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
@@ -90,9 +87,6 @@ const Main = ({
           }
         </Box>
       </Box>
-      <Hidden smDown>
-        <Box sx={{width: '20%'}}></Box>
-      </Hidden>
     </Box>
   );
 }

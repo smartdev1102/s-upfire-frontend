@@ -23,7 +23,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   const [searchKey, setSearchKey] = useState('');
 
   useEffect(() => {
-    if(isMyPool) {
+    if (isMyPool) {
       const temp = stakePools.filter(pool => Number(pool.balance) > 0);
       setFilteredPools(temp);
     } else {
@@ -31,7 +31,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
     }
   }, [isMyPool]);
   useEffect(() => {
-    if(!!searchKey) {
+    if (!!searchKey) {
       const temp = stakePools.filter(pool => pool.name.includes(searchKey));
     } else {
       setFilteredPools(stakePools);
@@ -94,8 +94,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center'
+        p: '1%'
       }}
     >
       <PoolDlg
@@ -107,167 +106,118 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
       />
       <Box
         sx={{
+          display: 'flex',
           width: '100%',
-          bgcolor: '#010621',
-          minHeight: '60vh',
-          p: '20px'
+          justifyContent: 'center'
         }}
       >
         <Box
           sx={{
+            display: 'flex',
             width: '100%',
-            height: '100%',
-            bgcolor: '#030930',
-            p: '30px'
+            alignItems: 'center',
+            px: '40px'
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}
-          >
-            {/* <Box>
-              <RoundButton onClick={() => setActiveTab('mining')} color={activeTab === 'mining' ? 'primary' : 'secondary'} variant='contained'>Liquidity mining</RoundButton>
-            </Box> */}
-            <Box>
-              <RoundButton color='secondary' sx={{ width: '150px' }} variant='contained'>Staking Pools</RoundButton>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                bgcolor: 'secondary.main',
-                px: '20px',
-                borderRadius: '20px'
-              }}
-            >
-              {/* <Switch />
-              <Box>My Pools</Box> */}
-            </Box>
-            <Box>
-              <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
-            </Box>
-            <Hidden mdDown>
-              <Box>
-                <FormGroup>
-                  <FormControlLabel control={<Switch checked={isMyPool} onChange={e=>setIsMyPool(e.target.checked)} />} label="My pools" />
-                </FormGroup>
-              </Box>
-            </Hidden>
-            <Hidden mdDown>
-              <Box
-                sx={{ position: 'relative', width: '300px' }}
-              >
-                <SearchInput
-                  value={searchKey}
-                  onChange={e=>setSearchKey(e.target.value)}
-                  sx={{
-                    position: 'absolute'
-                  }}
-                  placeholder='Search by name, symbol'
-                />
-                <IconButton
-                  sx={{ position: 'absolute', right: '0px', top: '4px' }}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Box>
-            </Hidden>
-
-          </Box>
-          <Box sx={{ my: '20px', color: 'primary.main', fontWeight: 'bold', p: '20px' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                #
-              </Grid>
-              <Grid item xs={4}>
-                Pool
-              </Grid>
-              <Grid item xs={2}>
-                APR
-              </Grid>
-              <Grid item xs={4}>
-                Balance
-              </Grid>
-            </Grid>
-          </Box>
-          {/* pools */}
           <Box>
-            {
-              filterdPools.map((pool, i) => (
-                <Box
-                  key={i}
-                >
+            <FormGroup>
+              <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
+            </FormGroup>
+          </Box>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <Box>
+            <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
+          </Box>
+          <Hidden mdDown>
+            <SearchInput
+              value={searchKey}
+              onChange={e => setSearchKey(e.target.value)}
+              placeholder='Search by name, symbol'
+            />
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </Hidden>
+        </Box>
+      </Box>
+      {/* pools */}
+      <Box
+        sx={{
+          minHeight: '60vh'
+        }}
+      >
+        {
+          filterdPools.map((pool, i) => (
+            <Box
+              key={i}
+            >
+              <Box
+                onClick={() => handleOpenIndex(i)}
+                sx={{
+                  bgcolor: 'background.paper',
+                  mt: '10px',
+                  p: '20px',
+                  borderRadius: '20px',
+                  cursor: 'pointer'
+                }}
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={2}>
+                    {i + 1}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
+                      {pool.name}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={2}>
+                    {`${pool.apr}%`}
+                  </Grid>
+                  <Grid item xs={4}>
+                    {pool.balance}
+                  </Grid>
+                </Grid>
+              </Box>
+              {
+                openIndex.includes(i) && (
                   <Box
-                    onClick={() => handleOpenIndex(i)}
                     sx={{
-                      bgcolor: 'background.paper',
-                      mt: '10px',
-                      p: '20px',
-                      borderRadius: '20px',
-                      cursor: 'pointer'
+                      background: '#020826',
+                      px: '30px',
+                      py: '10px'
                     }}
                   >
-                    <Grid container spacing={2}>
-                      <Grid item xs={2}>
-                        {i + 1}
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
-                          {pool.name}
-                        </Box>
-                      </Grid>
-                      <Grid item xs={2}>
-                        {`${pool.apr}%`}
-                      </Grid>
-                      <Grid item xs={4}>
-                        {pool.balance}
-                      </Grid>
-                    </Grid>
-                  </Box>
-                  {
-                    openIndex.includes(i) && (
-                      <Box
-                        sx={{
-                          background: '#020826',
-                          px: '30px',
-                          py: '10px'
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <Box>
-                            <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="Stake Amount" />
-                          </Box>
-                          <Box sx={{ mx: '20px' }}>
-                            <Button onClick={() => stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
-                          </Box>
-                          <Box>
-                            <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="Unstake Amount" />
-                          </Box>
-                          <Box sx={{ mx: '20px' }}>
-                            <Button onClick={() => unstake(pool.address)} variant='contained'>Unstake</Button>
-                          </Box>
-                          <Box sx={{ mx: '40px' }}>
-                            <Button onClick={() => harvest(pool.address)} variant='contained'>Harvest</Button>
-                          </Box>
-                        </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Box>
+                        <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="Stake Amount" />
                       </Box>
-                    )
-                  }
-                </Box>
-              ))
-            }
-          </Box>
-        </Box>
-      </Box >
+                      <Box sx={{ mx: '20px' }}>
+                        <Button onClick={() => stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
+                      </Box>
+                      <Box>
+                        <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="Unstake Amount" />
+                      </Box>
+                      <Box sx={{ mx: '20px' }}>
+                        <Button onClick={() => unstake(pool.address)} variant='contained'>Unstake</Button>
+                      </Box>
+                      <Box sx={{ mx: '40px' }}>
+                        <Button onClick={() => harvest(pool.address)} variant='contained'>Harvest</Button>
+                      </Box>
+                    </Box>
+                  </Box>
+                )
+              }
+            </Box>
+          ))
+        }
+      </Box>
     </Box >
   );
 }
