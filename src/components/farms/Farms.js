@@ -235,7 +235,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          width: '100%'
         }}
       >
         <Box
