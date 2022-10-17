@@ -33,7 +33,7 @@ const Main = ({
         sx={{
           width: '100%',
           background: '#081931',
-          borderRadius: '10px',
+          borderRadius: '25px',
         }}
       >
         <Box

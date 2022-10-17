@@ -107,7 +107,6 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
       <Box
         sx={{
           display: 'flex',
-          width: '100%',
           justifyContent: 'center'
         }}
       >

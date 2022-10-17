@@ -28,7 +28,7 @@ import backgroundImage from './assets/background.svg';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
-  const [chain, setChain] = useState(4);
+  const [chain, setChain] = useState(97);
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
   const [openWalletModal, setOpenWalletModal] = useState(false);

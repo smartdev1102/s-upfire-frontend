@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Hidden, Menu, MenuItem } from '@mui/material';
+import { Grid, Hidden, Menu, MenuItem } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 
@@ -142,33 +142,28 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           sx={{
             width: '100%',
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
 
           <Box
             sx={{
-              background: 'linear-gradient(0deg, #004186 0%, #289AF7 100%)',
-              borderRadius: '20px',
               display: 'flex',
               alignItems: 'center',
               width: '100%',
               px: '40px',
-              py: '20px'
+              background: '#001126',
+              py: '10px',
+              borderRadius: '15px'
             }}
           >
-            <Box>
-              <Box>
-                <Typography sx={{ mb: '0px' }} variant="h4" gutterBottom component="h4">
-                  {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" gutterBottom component="h6">
-                  Total farming liquidity
-                </Typography>
-              </Box>
-            </Box>
+            <Typography variant="h6" gutterBottom component="h6">
+              Total farming liquidity
+            </Typography>
+            <Typography sx={{ mx: '5px' }} variant="h5" gutterBottom component="h5">
+              {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
+            </Typography>
             <Box sx={{ flexGrow: 1 }}></Box>
             <Box>
               <RoundButton
@@ -230,6 +225,48 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             </Box>
           </Box>
         </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          px: '40px',
+          background: '#001126',
+          py: '20px',
+          borderRadius: '15px',
+          mt: '10px'
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid sx={{px: '20px'}} xs={3}>
+            Name
+          </Grid>
+          <Grid xs={5}>
+            <Box
+              sx={{
+                pt: '10px'
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid xs={2}>
+                </Grid>
+                <Grid xs={5}>
+                  Start Date
+                </Grid>
+                <Grid xs={5}>
+                  End Date
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid xs={2}>
+            Liquidity
+          </Grid>
+          <Grid xs={2}>
+            Farmers
+          </Grid>
+        </Grid>
       </Box>
       {/* farms */}
       <Box

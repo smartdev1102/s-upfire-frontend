@@ -10,6 +10,7 @@ import { parseEther } from 'ethers/lib/utils';
 import moment from 'moment';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 
 const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
   const [openStake, setOpenStake] = useState(false);
@@ -41,99 +42,117 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
   return (
     <Card
       sx={{
-        my: '10px',
         borderRadius: '20px',
         border: '1px solid #2494F3',
         fontFamily: 'Exo',
-        width: '100%'
+        pt: '15px',
+        my: '10px'
       }}
     >
-      <Box
+      <Grid
         onClick={() => setOpenStake(!openStake)}
         sx={{
-          p: '1%',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
+          cursor: 'pointer'
         }}
+        container
+        spacing={2}
       >
-        <Box>
-          {/* <img src={dnxcIcon} /> */}
-        </Box>
-        <Box
-          sx={{
-            mx: '1%'
-          }}
-        >
-          <Hidden smDown>
-            <Typography sx={{ mb: 0 }} variant="h5" gutterBottom component="h5">
-              {`Farm ${farmInfo.name.toUpperCase()}`}
-            </Typography>
-          </Hidden>
-          <Box>
-            {`${farmInfo.symbol} / ${farmInfo.baseToken}`}
-          </Box>
-          <Box>
-            {
-              farmInfo.start > new Date() && (
-                <Box sx={{ color: 'skyBlue' }}>
-                  Farming is not started.
-                </Box>
-              )
-            }
-            {
-              (farmInfo.start < new Date() && farmInfo.end > new Date()) && (
-                <Box sx={{ color: 'skyBlue' }}>
-                  Farming is active.
-                </Box>
-              )
-            }
-            {
-              farmInfo.bonusEndBlock < new Date() && (
-                <Box sx={{ color: 'skyBlue' }}>
-                  Farming has finished.
-                </Box>
-              )
-            }
-          </Box>
-        </Box>
-        <Box sx={{ flexGrow: 1 }}></Box>
-        <Box sx={{ mx: '2%' }}>
-          <img src={farmIcon} />
-        </Box>
-        <Hidden smDown>
+        <Grid xs={4}>
           <Box
             sx={{
-              width: '9%'
+              height: '100%',
+              py: '10px',
+              px: '20px',
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            ~{moment(farmInfo.start).format('MMM DD YYYY')}
+            <Box>
+              <Box sx={{ mb: 0 }}>
+                {`Farm ${farmInfo.name.toUpperCase()}/${farmInfo.baseToken}`}
+              </Box>
+              <Box sx={{ fontSize: '12px' }}>
+                {
+                  farmInfo.start > new Date() && (
+                    <Box sx={{ color: 'skyBlue' }}>
+                      Farming is not started.
+                    </Box>
+                  )
+                }
+                {
+                  (farmInfo.start < new Date() && farmInfo.end > new Date()) && (
+                    <Box sx={{ color: 'skyBlue' }}>
+                      Farming is active.
+                    </Box>
+                  )
+                }
+                {
+                  farmInfo.bonusEndBlock < new Date() && (
+                    <Box sx={{ color: 'skyBlue' }}>
+                      Farming has finished.
+                    </Box>
+                  )
+                }
+              </Box>
+            </Box>
           </Box>
-        </Hidden>
-        <Box
-          sx={{
-            width: '9%'
-          }}
-        >
-          ~{moment(farmInfo.end).format('MMM DD YYYY')}
-        </Box>
-        <Box sx={{ mx: '10%', display: 'flex', width: '80px' }}>
-          <Box sx={{ mx: '20%' }}>
-            <img src={airdropIcon} />
+        </Grid>
+        <Grid xs={4}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%'
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item sm={10} md={2}>
+                <DateRangeIcon />
+              </Grid>
+              <Hidden smDown>
+                <Grid item xs={5}>
+                  ~{moment(farmInfo.start).format('MMM DD YYYY')}
+                </Grid>
+              </Hidden>
+              <Grid item xs={5}>
+                ~{moment(farmInfo.end).format('MMM DD YYYY')}
+              </Grid>
+            </Grid>
           </Box>
-          <Box>
-            {Math.trunc(farmInfo.supply)}
+        </Grid>
+        <Grid xs={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              height: '100%',
+              alignItems: 'center'
+            }}
+          >
+            <Box sx={{ mx: '10px' }}>
+              <img src={airdropIcon} />
+            </Box>
+            <Box>
+              {Math.trunc(farmInfo.supply)}
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ mx: '1%', display: 'flex', width: '80px', alignItems: 'center' }}>
-          <Box sx={{ mx: '10%' }}>
-            <img style={{ height: '20px' }} src={accountIcon} />
+        </Grid>
+        <Grid xs={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              height: '100%',
+              alignItems: 'center'
+            }}
+          >
+            <Box sx={{ mx: '10px' }}>
+              <img style={{ height: '20px' }} src={accountIcon} />
+            </Box>
+            <Box sx={{ marginBottom: '4px' }}>
+              {farmInfo.numFarmers}
+            </Box>
           </Box>
-          <Box sx={{marginBottom: '4px'}}>
-            {farmInfo.numFarmers}
-          </Box>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
       {/* stake */}
       {
         openStake && (

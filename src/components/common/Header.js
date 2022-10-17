@@ -96,11 +96,6 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             }}
           >
             <Box>
-              <Link style={{ textDecoration: 'none' }} to="/tokens">
-                <RoundButton variant='contained' color='primary' size='large'>Farmable Tokens</RoundButton>
-              </Link>
-            </Box>
-            <Box>
               <RoundButton
                 id="basic-button"
                 aria-controls={open ? 'basic-menu' : undefined}
