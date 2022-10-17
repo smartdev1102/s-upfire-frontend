@@ -1,9 +1,10 @@
-import { Button, Dialog, Box, List, ListItem, ListItemButton, DialogTitle } from '@mui/material';
+import { Button, Dialog, Box, List, ListItem, ListItemButton, DialogTitle, IconButton } from '@mui/material';
 import React from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Injected, walletConnect } from '../../utils/ethers.util';
 import metamaskIcon from '../../assets/metamask.png';
 import connectwalletIcon from '../../assets/connectwallet.png';
+import CloseIcon from '@mui/icons-material/Close';
 
 const WalletModal = ({ open, onClose, chain }) => {
   const { activate } = useWeb3React();
@@ -21,52 +22,73 @@ const WalletModal = ({ open, onClose, chain }) => {
     <Dialog
       onClose={onClose}
       open={open}
+      PaperProps={{
+        style: {
+          borderRadius: '15px',
+        }
+      }}
     >
       <Box
         sx={{
-          background: '#001126',
-          width: '270px',
+          background: 'rgb(0,36,48)',
+          width: '320px',
+          minWidth: '225px'
         }}
       >
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center',
-            p: '10px',
+            pl: '20px',
             fontSize: '20px',
-            color: 'skyBlue',
-            fontWeight: 'bold'
+            color: 'white',
+            fontWeight: 'bold',
+            alignItems: 'center'
           }}
         >
-          Select your wallet
+          <Box>
+            Connect a wallet
+          </Box>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
         </Box>
         <List>
           <ListItem>
             <ListItemButton
               sx={{
-                background: '#266d7a',
-                borderRadius: '5px',
-                height: '50px',
-                fontSize: '20px'
+                borderRadius: '10px',
+                height: '45px',
+                fontSize: '20px',
+                display: 'flex',
+                background: '#266d7a'
               }}
               onClick={handleMetaMask}
             >
-              <img style={{height: '48px', marginRight: '10px'}} src={metamaskIcon} />
-              Metamask
+              <Box sx={{ fontSize: '16px' }}>
+                Metamask
+              </Box>
+              <Box sx={{ flexGrow: 1 }}></Box>
+              <img style={{ height: '30px' }} src={metamaskIcon} />
             </ListItemButton>
           </ListItem>
           <ListItem>
             <ListItemButton
+              color='primary'
               sx={{
-                background: '#266d7a',
-                borderRadius: '5px',
-                height: '50px',
-                fontSize: '20px'
+                borderRadius: '10px',
+                height: '45px',
+                fontSize: '20px',
+                display: 'flex',
+                background: '#266d7a'
               }}
               onClick={handleWalletConnect}
             >
-              <img style={{height: '48px', marginRight: '10px'}} src={connectwalletIcon} />
-              WalletConnect
+              <Box sx={{ fontSize: '16px' }}>
+                WalletConnect
+              </Box>
+              <Box sx={{ flexGrow: 1 }}></Box>
+              <img style={{ height: '30px' }} src={connectwalletIcon} />
             </ListItemButton>
           </ListItem>
         </List>
