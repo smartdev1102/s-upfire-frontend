@@ -30,7 +30,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         sx={{
           border: '2px solid #2494F3',
           overflowX: 'hidden',
-          background: '#000314'
+          background: '#000314',
+          fontFamily: 'Exo'
         }}
       >
         <DialogTitle sx={{ display: 'flex' }}>
@@ -45,7 +46,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         <Box
           sx={{
             maxWidth: '600px',
-            minWidth: '400px',
+            minWidth: '300px',
             p: '10px',
             background: '#030927'
           }}
@@ -57,38 +58,71 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                   Reward Token
                 </Typography>
               </Box>
-              <Box sx={{ color: 'text.secondary' }}>
+              <Box sx={{ color: 'text.secondary', mb: '5px' }}>
                 Paste token address
               </Box>
               <Box>
-                <TextField value={rewardToken} onChange={e => setRewardToken(e.target.value)} placeholder='0x...' fullWidth />
+                <TextField size='small' value={rewardToken} onChange={e => setRewardToken(e.target.value)} placeholder='0x...' fullWidth />
               </Box>
-              <Box>
+              <Box
+                sx={{
+                  mt: '20px'
+                }}
+              >
                 <Typography variant='h6' component='h6'>
                   Stake Token
                 </Typography>
               </Box>
-              <Box sx={{ color: 'text.secondary' }}>
+              <Box sx={{ color: 'text.secondary', mb: '5px' }}>
                 Paste token address
               </Box>
               <Box>
-                <TextField value={stakeToken} onChange={e => setStakeToken(e.target.value)} placeholder='0x...' fullWidth />
+                <TextField size='small' value={stakeToken} onChange={e => setStakeToken(e.target.value)} placeholder='0x...' fullWidth />
               </Box>
-              <Box>
+              <Box
+                sx={{
+                  mt: '20px'
+                }}
+              >
                 <Typography variant='h6' component='h6'>
                   APR percent
                 </Typography>
               </Box>
               <Box>
-                <TextField value={apr} onChange={e => setApr(e.target.value)} placeholder='0x...' fullWidth />
+                <TextField size='small' value={apr} onChange={e => setApr(e.target.value)} placeholder='0x...' fullWidth />
               </Box>
-              <Box>
+              <Box
+                sx={{
+                  my: '5px',
+                  textAlign: 'left',
+                  fontSize: '14px',
+                  color: 'text.secondary'
+                }}
+              >
+                Apr is monthly reward rate(1/1000)
+              </Box>
+              <Box
+                sx={{
+                  mt: '20px'
+                }}
+              >
                 <Typography variant='h6' component='h6'>
                   Amount
                 </Typography>
               </Box>
               <Box>
-                <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} placeholder='0x...' fullWidth />
+                <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} placeholder='0x...' fullWidth />
+              </Box>
+              <Box
+                sx={{
+                  my: '5px',
+                  textAlign: 'left',
+                  fontSize: '14px',
+                  color: 'text.secondary'
+                }}
+              >
+                Create must deposit token to create pool.
+                Pool end time is calculated with this amount and apr.
               </Box>
             </PerfectScrollbar>
           </Box>

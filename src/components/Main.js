@@ -86,6 +86,7 @@ const Main = ({
                 chain={chain}
                 walletAddress={walletAddress}
                 stakePools={stakePools}
+                openWalletAlert={openWalletAlert}
               />
             )
           }

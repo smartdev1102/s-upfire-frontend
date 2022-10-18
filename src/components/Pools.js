@@ -12,7 +12,7 @@ import { useWeb3React } from '@web3-react/core';
 
 
 
-const Pools = ({ chain, walletAddress, stakePools }) => {
+const Pools = ({ chain, walletAddress, stakePools, openWalletAlert }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
@@ -39,6 +39,14 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
   }, [searchKey])
 
   const { library } = useWeb3React();
+
+  const handleCreatePool = () => {
+    if(!walletAddress) {
+      openWalletAlert();
+    } else {
+      setOpenDlg(true);
+    }
+  }
 
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
     const contract = new ethers.Contract(rewardToken, erc20Abi, library.getSigner());
@@ -125,7 +133,7 @@ const Pools = ({ chain, walletAddress, stakePools }) => {
           </Box>
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
-            <RoundButton onClick={() => setOpenDlg(true)} variant='contained'>create pool</RoundButton>
+            <RoundButton onClick={handleCreatePool} variant='contained'>create pool</RoundButton>
           </Box>
           <Hidden mdDown>
             <SearchInput
