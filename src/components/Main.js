@@ -76,6 +76,7 @@ const Main = ({
                 farmsv3={farmsv3}
                 pairs={pairs}
                 totalLiquidity={totalLiquidity}
+                chain={chain}
               />
             )
           }

@@ -238,33 +238,81 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           mt: '10px'
         }}
       >
-        <Grid container spacing={2}>
-          <Grid sx={{px: '20px'}} xs={3}>
-            Name
-          </Grid>
+        <Grid
+          sx={{
+            cursor: 'pointer'
+          }}
+          container
+          spacing={2}
+        >
           <Grid xs={5}>
             <Box
               sx={{
-                pt: '10px'
+                height: '100%',
+                py: '10px',
+                px: '20px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Box>
+                <Box sx={{ mb: 0 }}>
+                  Name
+                </Box>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid xs={3}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%'
               }}
             >
               <Grid container spacing={2}>
-                <Grid xs={2}>
+                <Grid item sm={10} md={2}>
                 </Grid>
-                <Grid xs={5}>
-                  Start Date
-                </Grid>
-                <Grid xs={5}>
+                <Hidden smDown>
+                  <Grid item xs={5}>
+                    Start Date
+                  </Grid>
+                </Hidden>
+                <Grid item xs={5}>
                   End Date
                 </Grid>
               </Grid>
             </Box>
           </Grid>
           <Grid xs={2}>
-            Liquidity
+            <Box
+              sx={{
+                display: 'flex',
+                height: '100%',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ mx: '10px' }}>
+              </Box>
+              <Box>
+                Liquidity
+              </Box>
+            </Box>
           </Grid>
           <Grid xs={2}>
-            Farmers
+            <Box
+              sx={{
+                display: 'flex',
+                height: '100%',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ mx: '10px' }}>
+              </Box>
+              <Box sx={{ marginBottom: '4px' }}>
+                Farmers
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Box>
