@@ -83,7 +83,8 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
         }}
       >
         <Box
-          sx={{ display: 'flex', alignItems: 'center' }}
+          onClick={() => window.location.href='/main?tab=1'}
+          sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
         >
           <img style={{ height: '80px' }} src={logo} />
         </Box>
@@ -140,7 +141,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   }}
                   onClick={() => handleChain(4)}
                 >
-                  <img style={{height: '30px', marginRight: '10px'}} src={ethereumIcon} />
+                  <img style={{ height: '30px', marginRight: '10px' }} src={ethereumIcon} />
                   <Box>Ethereum</Box>
                 </MenuItem>
                 <MenuItem
@@ -156,7 +157,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   }}
                   onClick={() => handleChain(43113)}
                 >
-                  <img style={{height: '30px', marginRight: '10px'}} src={avaxIcon} />
+                  <img style={{ height: '30px', marginRight: '10px' }} src={avaxIcon} />
                   <Box>Avalanche</Box>
                 </MenuItem>
                 <MenuItem
@@ -172,7 +173,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   }}
                   onClick={() => handleChain(97)}
                 >
-                  <img style={{height: '30px', marginRight: '10px'}} src={bnbIcon} />
+                  <img style={{ height: '30px', marginRight: '10px' }} src={bnbIcon} />
                   <Box>Bianance Smart Chain</Box>
                 </MenuItem>
               </Menu>

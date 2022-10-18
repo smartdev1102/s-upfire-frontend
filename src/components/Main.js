@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import RoundButton from './common/RoundButton';
 import Tokens from './Tokens';
 import Farms from './farms/Farms';
 import Pools from './Pools';
 import { Hidden } from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
 
 const Main = ({
   openWalletAlert,
@@ -19,6 +20,18 @@ const Main = ({
   stakePools
 }) => {
   const [tabIndex, setTabIndex] = useState(1);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (!!tab) return;
+    setTabIndex(tab);
+  }, [searchParams.get('tab')]);
+
+  useEffect(() => {
+    setSearchParams({tab: tabIndex})
+  }, [tabIndex]);
   return (
     <Box
       sx={{

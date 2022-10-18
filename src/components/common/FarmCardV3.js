@@ -108,7 +108,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
           >
             <Grid container spacing={2}>
               <Grid item sm={10} md={2}>
-                <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px' }} />
+                <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px', ml: '20px' }} />
               </Grid>
               <Hidden smDown>
                 <Grid sx={{ mt: '5px' }} item xs={5}>
