@@ -20,8 +20,7 @@ const WalletAlert = ({ open, onClose }) => {
         sx={{
           textAlign: 'center',
           alignItems: 'center',
-          fontSize: '24px',
-          fontWeight: 'bold',
+          fontSize: '18px',
           height: '50%',
           display: 'flex',
         }}
@@ -29,7 +28,7 @@ const WalletAlert = ({ open, onClose }) => {
         Please connect your wallet first
       </Box>
       <Box sx={{display: 'flex', justifyContent: 'center', mt: '25px', alignItems: 'center', height: '50%'}}>
-        <Button onClick={onClose} variant='contained'>ok</Button>
+        <Button size='small' onClick={onClose} variant='contained'>ok</Button>
       </Box>
     </Card>
   );
