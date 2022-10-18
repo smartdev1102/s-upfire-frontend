@@ -70,7 +70,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
 
   // calculate apy with rewardBlock
   useEffect(() => {
-    if(rewardBlock <= 0) return;
+    if (rewardBlock <= 0) return;
     const tempapy = rewardBlock * 3600 * 24 * 365 / Math.pow(10, 18) / 10;
     setApy(tempapy);
   }, [rewardBlock]);
@@ -106,7 +106,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
     if (bonusBlock <= 0) return;
     const date = new Date(bonusBlock * 1000);
     setBonusEndDate(date);
-  }, [ bonusBlock])
+  }, [bonusBlock])
 
   // calculate end date when changing end block
   useEffect(() => {
@@ -160,7 +160,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   }, [amountIn, startDate, bonusEndDate, multiplier, endDate, walletAddress])
 
   useEffect(() => {
-    if(startDate <= bonusEndDate) return;
+    if (startDate <= bonusEndDate) return;
     setBonusEndDate(startDate);
   }, [startDate]);
 
@@ -288,7 +288,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                                 }}
                               >
                                 <Box sx={{ flexGrow: 1 }}></Box>
-                                <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${farmBalance} ${farmSymbol}`} variant='filled' focused />
+                                <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${farmBalance} ${farmSymbol}`} variant='filled' focused />
                                 <button
                                   onClick={() => setAmountIn(farmBalance)}
                                   style={{
@@ -309,11 +309,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                             </Box>
                           ) : (
                             <>
-                              <Box sx={{ color: 'text.secondary' }}>
+                              <Box sx={{ color: 'text.secondary', mb: '5px' }}>
                                 Paste token address
                               </Box>
                               <Box>
-                                <TextField value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
+                                <TextField size='small' value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
                               </Box>
                             </>
                           )
@@ -336,19 +336,17 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                       Select uniswap pair
                     </StepLabel>
                     <StepContent>
-                      <Box >
-                        <Typography variant='h6' component='h6'>
-                          {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
-                        </Typography>
+                      <Box sx={{ color: 'text.secondary', mb: '5px' }}>
+                        {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
                       </Box>
                       {
                         isV3 ? (
                           <Box>
-                            <TextField value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
+                            <TextField size='small' value={lpToken} onChange={e => setLpToken(e.target.value)} placeholder='0x...' fullWidth />
                           </Box>
                         ) : (
                           <Box>
-                            <FormControl fullWidth>
+                            <FormControl size='small' fullWidth>
                               <Select
                                 value={lpToken}
                                 onChange={e => setLpToken(e.target.value)}
@@ -365,7 +363,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                           </Box>
                         )
                       }
-                      <Box sx={{ color: 'text.secondary' }}>
+                      <Box sx={{ color: 'text.secondary', mt: '10px' }}>
                         This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
                       </Box>
                       <Box
@@ -386,7 +384,12 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                       <Box sx={{ color: 'text.secondary', mb: '10px' }}>
                         We reccommend a start block at least 24 hours in advance to give people time to get ready to farm.
                       </Box>
-                      <Box>
+                      <Box
+                        sx={{
+                          color: 'text.secondary',
+                          mb: '5px'
+                        }}
+                      >
                         Date
                       </Box>
                       <Box>
@@ -394,17 +397,23 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                           <DateTimePicker
                             value={startDate}
                             onChange={(newValue) => { setstartDate(newValue) }}
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField size='small' {...params} />}
                           />
                         </LocalizationProvider>
                       </Box>
-                      <Box>
+                      <Box
+                        sx={{
+                          color: 'text.secondary',
+                          mb: '5px',
+                          mt: '20px'
+                        }}
+                      >
                         Block
                       </Box>
                       <Box>
-                        <TextField value={startBlock} onChange={e => setStartBlock(e.target.value)} />
+                        <TextField size='small' value={startBlock} onChange={e => setStartBlock(e.target.value)} />
                       </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '10px' }}>
+                      <Box sx={{ color: 'text.secondary', my: '10px' }}>
                         {`* must be above ${now}`}
                       </Box>
                       <Box
@@ -431,9 +440,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                         }
                       </Box>
                       <Box>
-                        <TextField value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
+                        <TextField size='small' value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
                       </Box>
-                      <Box sx={{ color: 'text.secondary' }}>
+                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
                         Bonus end date
                       </Box>
                       <Box>
@@ -441,17 +450,17 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                           <DateTimePicker
                             value={bonusEndDate}
                             onChange={(newValue) => { setBonusEndDate(newValue) }}
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField size='small' {...params} />}
                           />
                         </LocalizationProvider>
                       </Box>
-                      <Box>
+                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
                         Bonus end block
                       </Box>
                       <Box>
-                        <TextField value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
+                        <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
                       </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '10px' }}>
+                      <Box sx={{ color: 'text.secondary', my: '10px' }}>
                         {`* must be >= ${now}`}
                       </Box>
                       <Box
@@ -469,7 +478,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                       End Block
                     </StepLabel>
                     <StepContent>
-                      <Box sx={{ color: 'text.secondary' }}>
+                      <Box sx={{ color: 'text.secondary', mb: '5px' }}>
                         Date
                       </Box>
                       <Box>
@@ -477,17 +486,17 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                           <DateTimePicker
                             value={endDate}
                             onChange={(newValue) => { setEndDate(newValue) }}
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField size='small' {...params} />}
                           />
                         </LocalizationProvider>
                       </Box>
-                      <Box sx={{ color: 'text.secondary' }}>
+                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
                         Block number
                       </Box>
                       <Box>
-                        <TextField value={endBlock} onChange={e => setEndBlock(e.target.value)} />
+                        <TextField size='small' value={endBlock} onChange={e => setEndBlock(e.target.value)} />
                       </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '10px' }}>
+                      <Box sx={{ color: 'text.secondary', my: '10px' }}>
                         {`* must be >= ${now}`}
                       </Box>
                       <Hidden smDown>
@@ -530,10 +539,10 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                   <Box>
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
-                        <TextField value={tokenPrice} onChange={e=>setTokenPrice(e.target.value)} label='Expected token price' />
+                        <TextField size='small' value={tokenPrice} onChange={e => setTokenPrice(e.target.value)} label='Expected token price' />
                       </Grid>
                       <Grid item xs={6}>
-                        <TextField value={liquidity} onChange={e=>setLiquidity(e.target.value)} label='Expected liquidity' />
+                        <TextField size='small' value={liquidity} onChange={e => setLiquidity(e.target.value)} label='Expected liquidity' />
                       </Grid>
                     </Grid>
                   </Box>
@@ -582,7 +591,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                             ml: '25px'
                           }}
                         >
-                          { apy }%
+                          {apy}%
                         </Box>
                       </Grid>
                     </Grid>
