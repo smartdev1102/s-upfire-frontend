@@ -206,7 +206,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
               }
               {
                 (chain === 4) && (
-                  <Box>
+                  <Box
+                    sx={{
+                      mb: '20px'
+                    }}
+                  >
                     <RoundButton onClick={() => setIsV3(false)} color={isV3 ? 'secondary' : 'primary'} variant='contained'>UniswapV2</RoundButton>
                     <RoundButton onClick={() => { setIsV3(true); setLpToken('') }} color={isV3 ? 'primary' : 'secondary'} variant='contained'>UniswapV3</RoundButton>
                   </Box>

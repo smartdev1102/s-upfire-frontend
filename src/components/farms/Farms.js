@@ -158,10 +158,10 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               borderRadius: '15px'
             }}
           >
-            <Typography variant="h6" gutterBottom component="h6">
+            <Typography sx={{mt: '5px'}} variant="h6" gutterBottom component="h6">
               Total farming liquidity
             </Typography>
-            <Typography sx={{ mx: '5px' }} variant="h5" gutterBottom component="h5">
+            <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
               {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
             </Typography>
             <Box sx={{ flexGrow: 1 }}></Box>
@@ -202,11 +202,6 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 MenuListProps={{
                   'aria-labelledby': 'filter-button',
                 }}
-                PaperProps={{
-                  sx: {
-
-                  }
-                }}
               >
                 <MenuItem>
                   Filtered By
@@ -233,7 +228,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           width: '100%',
           px: '40px',
           background: '#001126',
-          py: '20px',
+          py: '10px',
           borderRadius: '15px',
           mt: '10px'
         }}
@@ -256,7 +251,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               }}
             >
               <Box>
-                <Box sx={{ mb: 0 }}>
+                <Box sx={{ pt: '5px' }}>
                   Name
                 </Box>
               </Box>
@@ -274,11 +269,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 <Grid item sm={10} md={2}>
                 </Grid>
                 <Hidden smDown>
-                  <Grid item xs={5}>
+                  <Grid sx={{mt: '5px'}} item xs={5}>
                     Start Date
                   </Grid>
                 </Hidden>
-                <Grid item xs={5}>
+                <Grid sx={{mt: '5px'}} item xs={5}>
                   End Date
                 </Grid>
               </Grid>
@@ -289,7 +284,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               sx={{
                 display: 'flex',
                 height: '100%',
-                alignItems: 'center'
+                alignItems: 'center',
+                pt: '5px'
               }}
             >
               <Box sx={{ mx: '10px' }}>
@@ -309,7 +305,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             >
               <Box sx={{ mx: '10px' }}>
               </Box>
-              <Box sx={{ marginBottom: '4px' }}>
+              <Box sx={{ mt: '5px' }}>
                 Farmers
               </Box>
             </Box>

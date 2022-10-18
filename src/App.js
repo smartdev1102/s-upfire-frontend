@@ -280,7 +280,8 @@ function App() {
         color: 'text.primary',
         minHeight: '100vh',
         width: '100%',
-        backgroundImage: `url(${backgroundImage})`
+        backgroundImage: `url(${backgroundImage})`,
+        fontFamily: 'Exo'
       }}
     >
       <WalletModal chain={chain} open={openWalletModal} onClose={() => setOpenWalletModal(false)} />
