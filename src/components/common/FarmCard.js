@@ -107,7 +107,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
           >
             <Grid container spacing={2}>
               <Grid item sm={10} md={2}>
-                <DateRangeIcon sx={{color: '#1F8BED', mt: '3px'}} />
+                <DateRangeIcon sx={{color: '#1F8BED', mt: '4px'}} />
               </Grid>
               <Hidden smDown>
                 <Grid sx={{mt: '5px'}} item xs={5}>
@@ -129,7 +129,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
               ml: '-5px'
             }}
           >
-            <Box sx={{ mx: '10px' }}>
+            <Box sx={{ mx: '10px', mt: '3px' }}>
               <img src={airdropIcon} />
             </Box>
             <Box

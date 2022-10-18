@@ -57,7 +57,7 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
         container
         spacing={2}
       >
-        <Grid xs={4}>
+        <Grid xs={5}>
           <Box
             sx={{
               height: '100%',
@@ -97,25 +97,26 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
             </Box>
           </Box>
         </Grid>
-        <Grid xs={4}>
+        <Grid xs={3}>
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
-              height: '100%'
+              height: '100%',
+              ml: '-5px'
             }}
           >
             <Grid container spacing={2}>
               <Grid item sm={10} md={2}>
-                <DateRangeIcon />
+                <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px' }} />
               </Grid>
               <Hidden smDown>
-                <Grid item xs={5}>
-                  ~{moment(farmInfo.start).format('MMM DD YYYY')}
+                <Grid sx={{ mt: '5px' }} item xs={5}>
+                  {moment(farmInfo.start).format('MMM DD YYYY')}
                 </Grid>
               </Hidden>
-              <Grid item xs={5}>
-                ~{moment(farmInfo.end).format('MMM DD YYYY')}
+              <Grid sx={{ mt: '5px', ml: '-5px' }} item xs={5}>
+                {moment(farmInfo.end).format('MMM DD YYYY')}
               </Grid>
             </Grid>
           </Box>
@@ -125,13 +126,18 @@ const FarmCardV3 = ({ farmInfo, chain, setSelectedFarm }) => {
             sx={{
               display: 'flex',
               height: '100%',
-              alignItems: 'center'
+              alignItems: 'center',
+              ml: '-5px'
             }}
           >
-            <Box sx={{ mx: '10px' }}>
+            <Box sx={{ mx: '10px', mt: '3px' }}>
               <img src={airdropIcon} />
             </Box>
-            <Box>
+            <Box
+              sx={{
+                mt: '-2px'
+              }}
+            >
               {Math.trunc(farmInfo.supply)}
             </Box>
           </Box>

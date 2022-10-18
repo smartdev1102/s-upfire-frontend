@@ -520,7 +520,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                   mx: '-10px',
                   mt: '20px',
                   p: '10px',
-                  borderRadius: '10px'
+                  borderRadius: '10px',
+                  fontFamily: 'Exo'
                 }}
               >
                 <Box

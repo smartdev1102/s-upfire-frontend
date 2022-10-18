@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { ethers } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
@@ -123,43 +123,50 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
         left: '50%',
         top: '50%',
         background: 'rgb(0,36,48)',
-        padding: '30px',
+        p: '20px',
+        pl: '30px',
+        pb: '40px',
         transform: 'translate(-50%, -50%)',
         maxWidth: '650px',
         minWidth: '450px',
-        borderRadius: '20px',
+        borderRadius: '10px',
         zIndex: '1000'
       }}
     >
       <Box
         sx={{
-          display: 'flex'
+          display: 'flex',
+          width: '100%',
+          height: '50px',
+          alignItems: 'center'
         }}
       >
+        <Box sx={{ fontSize: '18px', fontWeight: 'bold' }}>
+          Add Liquidity
+        </Box>
         <Box sx={{ flexGrow: 1 }}></Box>
         <IconButton onClick={onClose}>
           <Close />
         </IconButton>
       </Box>
-      <Box>
-        <Box sx={{ m: '10px' }}>
-          <Typography variant='h6' component='h6'>
-            Add Liquidity
-          </Typography>
-        </Box>
-        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+      <Box
+        sx={{
+          pt: '10px'
+        }}
+      >
+        <Grid container spacing={2} sx={{ alignItems: 'center', fontSize: '14px' }}>
           <Grid item xs={12} md={4} >
             <Box
               sx={{
-                display: 'flex'
+                display: 'flex',
               }}
             >
               Balance: {Number(formatEther(balance0)).toFixed(1)} {symbol0}
               <Box sx={{ flexGrow: 1 }}></Box>
-              <button onClick={() => setAmountIn0(formatEther(balance0))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none' }}>Max</button>
+              <button onClick={() => setAmountIn0(formatEther(balance0))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none', borderRadius: '5px' }}>Max</button>
             </Box>
             <Box>
-              <TextField value={amountIn0} onChange={e => setAmountIn0(e.target.value)} fullWidth />
+              <TextField size='small' value={amountIn0} onChange={e => setAmountIn0(e.target.value)} fullWidth />
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -170,10 +177,10 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
             >
               Balance: {Number(formatEther(balance1)).toFixed(1)} {symbol1}
               <Box sx={{ flexGrow: 1 }}></Box>
-              <button onClick={() => setAmountIn1(formatEther(balance1))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none' }}>Max</button>
+              <button onClick={() => setAmountIn1(formatEther(balance1))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none', borderRadius: '5px' }}>Max</button>
             </Box>
             <Box>
-              <TextField value={amountIn1} onChange={e => setAmountIn1(e.target.value)} fullWidth />
+              <TextField size='small' value={amountIn1} onChange={e => setAmountIn1(e.target.value)} fullWidth />
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -188,21 +195,24 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
             </Box>
           </Grid>
         </Grid>
-        <Box sx={{ m: '10px' }}>
-          <Typography variant='h6' component='h6'>
+        <Box sx={{ my: '20px' }}>
+          <Divider />
+        </Box>
+        <Box>
+          <Box sx={{ fontSize: '18px', fontWeight: 'bold', mb: '20px' }}>
             Stake
-          </Typography>
-          <Grid container spacing={2} sx={{alignItems: 'center'}}>
+          </Box>
+          <Grid container spacing={2} sx={{ alignItems: 'center', fontSize: '14px' }}>
             <Grid item xs={12} md={6}>
-              <Box sx={{display: 'flex'}}>
-                Balance: { Number(formatEther(lpBalance)).toFixed(1)}
-                <Box sx={{flexGrow: 1}}></Box>
-                <button onClick={() => setAmountIn(formatEther(lpBalance))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none' }}>Max</button>
+              <Box sx={{ display: 'flex' }}>
+                Balance: {Number(formatEther(lpBalance)).toFixed(1)}
+                <Box sx={{ flexGrow: 1 }}></Box>
+                <button onClick={() => setAmountIn(formatEther(lpBalance))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none', borderRadius: '5px' }}>Max</button>
               </Box>
-              <TextField value={amountIn} onChange={e=>setAmountIn(e.target.value)} fullWidth/>
+              <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} fullWidth />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Button onClick={stake} sx={{mt: '20px'}} variant='contained'>Stake</Button>
+              <Button onClick={stake} sx={{ mt: '20px' }} variant='contained'>Stake</Button>
             </Grid>
           </Grid>
         </Box>
