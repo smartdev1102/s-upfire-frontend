@@ -25,6 +25,7 @@ import Main from './components/Main';
 import WalletModal from './components/common/WalletModal';
 import { useWeb3React } from '@web3-react/core';
 import backgroundImage from './assets/background.svg';
+import { pairService } from './services/api.service';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
@@ -193,21 +194,8 @@ function App() {
         setFarmsv3(tempFarms);
         setFarmTokens(tempTokens);
       }
-      const pairsLength = await swapFactory(chain).allPairsLength();
-      const tempPair = [];
-      for (let i = 0; i < Number(pairsLength); i++) {
-        const pairAddress = await swapFactory(chain).allPairs(i);
-        const token0 = await pair(chain, pairAddress).token0();
-        const token1 = await pair(chain, pairAddress).token1();
-        const symbol1 = await tokenContract(chain, token0).symbol();
-        const symbol2 = await tokenContract(chain, token1).symbol();
-        tempPair.push({
-          address: pairAddress,
-          symbol1: symbol1,
-          symbol2: symbol2
-        });
-        setPairs(tempPair);
-      }
+      const res = await pairService.fetchPairs(chain);
+      setPairs(res);
     }
     getFarms();
   }, [chain]);
