@@ -26,13 +26,15 @@ const Main = ({
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (!!tab) return;
-    setTabIndex(tab);
+    if (!tab) {
+      setTabIndex(1);
+      setSearchParams({tab: 1});
+    } else {
+      setTabIndex(tab);
+    }
   }, [searchParams.get('tab')]);
 
-  useEffect(() => {
-    setSearchParams({tab: tabIndex})
-  }, [tabIndex]);
+  
   return (
     <Box
       sx={{
