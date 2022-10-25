@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Switch, IconButton, Grid, TextField, Button, FormGroup, FormControlLabel } from '@mui/material';
+import { Box, Switch, IconButton, Grid, TextField, Button, FormGroup, FormControlLabel, Typography } from '@mui/material';
 import RoundButton from './common/RoundButton';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,7 +12,7 @@ import { useWeb3React } from '@web3-react/core';
 
 
 
-const Pools = ({ chain, walletAddress, stakePools, openWalletAlert }) => {
+const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
@@ -29,10 +29,11 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert }) => {
     } else {
       setFilteredPools(stakePools);
     }
-  }, [isMyPool]);
+  }, [isMyPool, stakePools]);
   useEffect(() => {
     if (!!searchKey) {
       const temp = stakePools.filter(pool => pool.name.includes(searchKey));
+      setFilteredPools(temp);
     } else {
       setFilteredPools(stakePools);
     }
@@ -41,7 +42,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert }) => {
   const { library } = useWeb3React();
 
   const handleCreatePool = () => {
-    if(!walletAddress) {
+    if (!walletAddress) {
       openWalletAlert();
     } else {
       setOpenDlg(true);
@@ -126,8 +127,14 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert }) => {
             px: '40px'
           }}
         >
+          <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
+            Total Pool liquidity
+          </Typography>
+          <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
+            {!!poolLiq ? `$${Math.trunc(poolLiq)}` : '0'}
+          </Typography>
           <Box>
-            <FormGroup>
+            <FormGroup sx={{mx: '50px'}}>
               <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
             </FormGroup>
           </Box>

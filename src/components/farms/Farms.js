@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Grid, Hidden, Menu, MenuItem } from '@mui/material';
+import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 
@@ -16,13 +16,18 @@ import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 import FarmCardV3 from '../common/FarmCardV3';
 import { useWeb3React } from '@web3-react/core';
+import SearchInput from '../common/SearchInput';
 
 const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState();
+  const [isMyFarm, setIsMyFarm] = useState(false);
   const open = Boolean(anchorEl);
+  const [filterFarm, setFilterFarm] = useState([]);
+  const [filterFarmv3, setFilterFarmv3] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
 
   const { library } = useWeb3React();
 
@@ -38,6 +43,31 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     setFilter(filterValue);
     setAnchorEl(null);
   }
+
+  useEffect(() => {
+    if (!!searchKey) {
+      const temp = farms.filter(pool => pool.name.includes(searchKey));
+      const tempv3 = farmsv3.filter(pool => pool.name.includes(searchKey));
+      setFilterFarm(temp);
+      setFilterFarmv3(tempv3);
+    } else {
+      setFilterFarm(farms);
+      setFilterFarmv3(farmsv3);
+    }
+  }, [searchKey])
+
+
+  useEffect(() => {
+    if (isMyFarm) {
+      const temp = farms.filter(farm => Number(farm.balance) > 0);
+      const tempv3 = farmsv3.filter(farm => Number(farm.balance) > 0);
+      setFilterFarm(temp);
+      setFilterFarmv3(tempv3);
+    } else {
+      setFilterFarm(farms);
+      setFilterFarmv3(farmsv3);
+    }
+  }, [isMyFarm, farms, farmsv3])
 
   // sort 
   useEffect(() => {
@@ -158,12 +188,26 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               borderRadius: '15px'
             }}
           >
-            <Typography sx={{mt: '5px'}} variant="h6" gutterBottom component="h6">
+            <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
               Total farming liquidity
             </Typography>
             <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
               {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
             </Typography>
+            <FormGroup
+              sx={{
+                mx: '50px'
+              }}
+            >
+              <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
+            </FormGroup>
+            <Hidden mdDown>
+              <SearchInput
+                value={searchKey}
+                onChange={e => setSearchKey(e.target.value)}
+                placeholder='Search by name, symbol'
+              />
+            </Hidden>
             <Box sx={{ flexGrow: 1 }}></Box>
             <Box>
               <RoundButton
@@ -269,11 +313,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 <Grid item sm={10} md={2}>
                 </Grid>
                 <Hidden smDown>
-                  <Grid sx={{mt: '5px'}} item xs={5}>
+                  <Grid sx={{ mt: '5px' }} item xs={5}>
                     Start Date
                   </Grid>
                 </Hidden>
-                <Grid sx={{mt: '5px'}} item xs={5}>
+                <Grid sx={{ mt: '5px' }} item xs={5}>
                   End Date
                 </Grid>
               </Grid>
@@ -327,12 +371,12 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           }}
         >
           {
-            farms.map((farm, i) => (
+            filterFarm.map((farm, i) => (
               <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
             ))
           }
           {
-            farmsv3.map((farm, i) => (
+            filterFarmv3.map((farm, i) => (
               <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
             ))
           }

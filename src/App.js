@@ -36,6 +36,7 @@ function App() {
 
   // farm info
   const [farmLiq, setFarmLiq] = useState(0);
+  const [poolLiq, setPoolLiq] = useState(0);
   const [farms, setFarms] = useState([]);
   const [farmsv3, setFarmsv3] = useState([]);
   const [pairs, setPairs] = useState([]);
@@ -56,6 +57,7 @@ function App() {
       const poolsLength = await sfactory(chain).poolsLength();
       let tempPools = [];
       let tempTokens = [];
+      let pooltotal = 0;
       for (let i = 0; i < Number(poolsLength); i++) {
         const poolAddress = await sfactory(chain).poolAtIndex(i);
         const rewardToken = await spool(chain, poolAddress).rewardToken();
@@ -66,6 +68,9 @@ function App() {
         const balance = await spool(chain, poolAddress).balanceOf(walletAddress);
         const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
         const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+        const liq = await tokenContract(chain, rewardToken).balanceOf(poolAddress);
+        pooltotal = liq.add(pooltotal);
+        setPoolLiq(formatEther(pooltotal));
         tempTokens.push({
           name: stakeName,
           symbol: stakeSymbol,
@@ -95,7 +100,9 @@ function App() {
     setFarmTokens([]);
     setStakeTokens([]);
     async function getFarms() {
-      if (!chain) return;
+      if (!chain || !walletAddress) return;
+      const res = await pairService.fetchPairs(chain);
+      setPairs(res);
       let farmsLength = await factory(chain).farmsLength();
       let tempFarms = [];
       let tempTotal = 0;
@@ -104,6 +111,7 @@ function App() {
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory(chain).farmAtIndex(i);
         const farminfo = await farm(chain, farmAddress).farmInfo();
+        const userinfo = await farm(chain, farmAddress).userInfo(walletAddress);
         const blockReward = farminfo.blockReward;
         const farmSupply = farminfo.farmableSupply;
         tempTotal += Number(formatEther(farmSupply));
@@ -141,7 +149,8 @@ function App() {
           lptoken: lptoken,
           rewardToken: rewardToken,
           token0: token0,
-          token1: token1
+          token1: token1,
+          balance: formatEther(userinfo.amount)
         });
         setFarms(tempFarms);
         setFarmTokens(tempTokens);
@@ -152,6 +161,7 @@ function App() {
       for (let i = 0; i < Number(farmsLength); i++) {
         const farmAddress = await factory(chain).farmAtIndex(i);
         const farminfo = await farm(chain, farmAddress).farmInfo();
+        const userinfo = await farm(chain, farmAddress).userInfo(walletAddress);
         const blockReward = farminfo.blockReward;
         const farmSupply = farminfo.farmableSupply;
         tempTotal += Number(formatEther(farmSupply));
@@ -189,16 +199,16 @@ function App() {
           lptoken: lptoken,
           rewardToken: rewardToken,
           token0: token0,
-          token1: token1
+          token1: token1,
+          balance: formatEther(userinfo.amount)
         });
         setFarmsv3(tempFarms);
         setFarmTokens(tempTokens);
       }
-      const res = await pairService.fetchPairs(chain);
-      setPairs(res);
+      
     }
     getFarms();
-  }, [chain]);
+  }, [chain, walletAddress]);
 
   const createFarm = async (
     farmToken,
@@ -302,6 +312,7 @@ function App() {
                   farmTokens={farmTokens}
                   stakeTokens={stakeTokens}
                   stakePools={stakePools}
+                  poolLiq={poolLiq}
                 />
               }
             />

@@ -115,6 +115,13 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
                     </Box>
                   )
                 }
+                {
+                  (chain === 97) && (
+                    <Box>
+                      <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
+                    </Box>
+                  )
+                }
                 <Box >
                   <Box>
                     {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}

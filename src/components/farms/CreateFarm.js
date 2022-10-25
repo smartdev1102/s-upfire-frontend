@@ -216,7 +216,17 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
                   </Box>
                 )
               }
-
+              {
+                (chain === 97) && (
+                  <Box
+                    sx={{
+                      mb: '20px'
+                    }}
+                  >
+                    <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
+                  </Box>
+                )
+              }
               <Box
                 sx={{
                   border: '2px solid green',

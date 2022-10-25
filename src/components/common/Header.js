@@ -179,7 +179,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
               </Menu>
             </Box>
             <Box>
-              <RoundButton sx={{ width: '220px', background: 'gray', ":hover": { background: 'white' }, color: '#424242' }} size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
+              <RoundButton color='primary' size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
             </Box>
             <Box>
               <RoundButton

@@ -17,7 +17,8 @@ const Main = ({
   totalLiquidity,
   farmTokens,
   stakeTokens,
-  stakePools
+  stakePools,
+  poolLiq
 }) => {
   const [tabIndex, setTabIndex] = useState(1);
 
@@ -100,6 +101,7 @@ const Main = ({
                 walletAddress={walletAddress}
                 stakePools={stakePools}
                 openWalletAlert={openWalletAlert}
+                poolLiq={poolLiq}
               />
             )
           }
