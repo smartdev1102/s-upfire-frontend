@@ -30,7 +30,7 @@ const Main = ({
       setTabIndex(1);
       setSearchParams({tab: 1});
     } else {
-      setTabIndex(tab);
+      setTabIndex(Number(tab));
     }
   }, [searchParams.get('tab')]);
 

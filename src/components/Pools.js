@@ -134,7 +134,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq }) =
             {!!poolLiq ? `$${Math.trunc(poolLiq)}` : '0'}
           </Typography>
           <Box>
-            <FormGroup sx={{mx: '50px'}}>
+            <FormGroup sx={{mx: '10px'}}>
               <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
             </FormGroup>
           </Box>

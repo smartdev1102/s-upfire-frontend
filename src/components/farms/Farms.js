@@ -196,7 +196,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             </Typography>
             <FormGroup
               sx={{
-                mx: '50px'
+                mx: '10px'
               }}
             >
               <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
