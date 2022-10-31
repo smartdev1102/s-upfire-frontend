@@ -140,16 +140,32 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
-    create(
-      farmToken,
-      amountIn,
-      lpToken,
-      rewardBlock,
-      startBlock,
-      bonusEndBlock,
-      multiplier,
-      false
-    );
+    if(chain === 97) {
+      create(
+        farmToken,
+        amountIn,
+        lpToken,
+        rewardBlock,
+        startBlock,
+        bonusEndBlock,
+        multiplier,
+        false,
+        0
+      );
+    } else {
+      create(
+        farmToken,
+        amountIn,
+        lpToken,
+        rewardBlock,
+        startBlock,
+        bonusEndBlock,
+        multiplier,
+        false,
+        currentSwap
+      );
+    }
+    
   }
 
   // determine reward per block

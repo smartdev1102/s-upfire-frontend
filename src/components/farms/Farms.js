@@ -9,16 +9,17 @@ import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup } fro
 import Divider from '@mui/material/Divider';
 
 import CreateFarm from './CreateFarm';
-import { address, erc20Abi, generatorWeb3 } from '../../utils/ethers.util';
-import { parseEther } from 'ethers/lib/utils';
+import { address, erc20Abi, farm, generatorWeb3, pair, tokenContract } from '../../utils/ethers.util';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ethers } from 'ethers';
 import FarmCard from '../common/FarmCard';
 import StakeDlg from '../common/StakeDlg';
 import FarmCardV3 from '../common/FarmCardV3';
 import { useWeb3React } from '@web3-react/core';
 import SearchInput from '../common/SearchInput';
+import { pairService } from '../../services/api.service';
 
-const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity }) => {
+const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity, setFarms }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -118,13 +119,14 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     startBlock,
     bonusEndBlock,
     bonus,
-    isV3
+    isV3,
+    index
   ) => {
     const contract = new ethers.Contract(farmToken, erc20Abi, library.getSigner());
     await contract.approve(address[chain]['generator'], parseEther(amountIn));
     contract.once("Approval", async () => {
       if (isV3) {
-        const tx = await generatorWeb3(chain, library.getSigner()).createFarmV3(
+        const address = await generatorWeb3(chain, library.getSigner(), index).createFarmV3(
           farmToken,
           parseEther(amountIn),
           lptoken,
@@ -134,9 +136,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           bonus,
           false
         );
-        await tx.wait();
       } else {
-        const tx = await generatorWeb3(chain, library.getSigner()).createFarmV2(
+        const address = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
           farmToken,
           parseEther(amountIn),
           lptoken,
@@ -146,7 +147,29 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           bonus,
           false
         );
-        await tx.wait();
+        const rewardSymbol = await tokenContract(chain, farmToken).symbol();
+        const token0 = await pair(chain, lptoken).token0();
+        const token1 = await pair(chain, lptoken).token1();
+        const symbol1 = await tokenContract(chain, token0).symbol();
+        const symbol2 = await tokenContract(chain, token1).symbol();
+        const lpsymbol = `${symbol1}-${symbol2}`;
+        const farminfo = await farm(chain, address).farmInfo();
+        const res = await pairService.createFarm({
+          name: lpsymbol,
+          baseToken: rewardSymbol,
+          symbol: lpsymbol,
+          start: new Date(startBlock * 1000),
+          end: new Date(farminfo.endBlock * 1000),
+          supply: formatEther(farminfo.farmableSupply),
+          blockReward: blockReward,
+          address: address,
+          lptoken: lptoken,
+          rewardToken: farmToken,
+          token0: token0,
+          token1: token1,
+          chain: chain
+        });
+        setFarms([...farms, res]);
       }
       setOpenCreateFarm(false);
     });

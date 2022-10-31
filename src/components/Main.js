@@ -18,7 +18,8 @@ const Main = ({
   farmTokens,
   stakeTokens,
   stakePools,
-  poolLiq
+  poolLiq,
+  setFarms
 }) => {
   const [tabIndex, setTabIndex] = useState(1);
 
@@ -93,6 +94,7 @@ const Main = ({
                 pairs={pairs}
                 totalLiquidity={totalLiquidity}
                 chain={chain}
+                setFarms={setFarms}
               />
             )
           }

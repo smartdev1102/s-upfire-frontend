@@ -208,6 +208,7 @@ function App() {
                   stakeTokens={stakeTokens}
                   stakePools={stakePools}
                   poolLiq={poolLiq}
+                  setFarms={setFarms}
                 />
               }
             />
