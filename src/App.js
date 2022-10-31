@@ -29,7 +29,7 @@ import { farmService, pairService, poolService } from './services/api.service';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
-  const [chain, setChain] = useState(process.env.REACT_APP_CHAIN);
+  const [chain, setChain] = useState(Number(process.env.REACT_APP_CHAIN));
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
   const [openWalletModal, setOpenWalletModal] = useState(false);

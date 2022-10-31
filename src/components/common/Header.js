@@ -186,7 +186,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                       background: 'darkOrange'
                     }
                   }}
-                  onClick={() => handleChain(56)}
+                  onClick={() => handleChain(Number(process.env.REACT_APP_CHAIN))}
                 >
                   <img style={{ height: '30px', marginRight: '10px' }} src={bnbIcon} />
                   <Box>Bianance Smart Chain</Box>

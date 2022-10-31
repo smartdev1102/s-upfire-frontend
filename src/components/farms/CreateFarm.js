@@ -12,7 +12,7 @@ import RoundButton from '../common/RoundButton';
 import loading from '../../assets/loading.svg';
 import { pairService } from '../../services/api.service';
 
-const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
+const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [startDate, setstartDate] = useState(new Date());
   const [startBlock, setStartBlock] = useState(0);
   const [bonusEndDate, setBonusEndDate] = useState(new Date());
@@ -42,10 +42,10 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
   useEffect(() => {
     async function getPairs() {
       if (chain === Number(process.env.REACT_APP_CHAIN)) {
-        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][0]['uniswap']});
+        const res = await pairService.fetchPairs({ chain: chain, factory: swapFactories[chain][0]['uniswap'] });
         setPairs(res);
       } else {
-        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][currentSwap]['uniswap']});
+        const res = await pairService.fetchPairs({ chain: chain, factory: swapFactories[chain][currentSwap]['uniswap'] });
         setPairs(res);
       }
     }
@@ -140,7 +140,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
-    if(chain === 56) {
+    if (chain === Number(process.env.REACT_APP_CHAIN)) {
       create(
         farmToken,
         amountIn,
@@ -165,7 +165,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
         currentSwap
       );
     }
-    
+
   }
 
   // determine reward per block
@@ -175,15 +175,27 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
         const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
         const endBlock = Math.floor(new Date(endDate).getTime() / 1000);
         const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
-        const [blockReward, requiredAmount, fee] = await generator(chain).determineBlockReward(
-          parseEther(amountIn),
-          startBlock,
-          Number(bonusEndBlock),
-          multiplier,
-          endBlock
-        );
-        setRewardBlock(blockReward.toString());
-        setLiquidity(formatEther(requiredAmount));
+        if (chain === Number(process.env.REACT_APP_CHAIN)) {
+          const [blockReward, requiredAmount, fee] = await generator(chain, 0).determineBlockReward(
+            parseEther(amountIn),
+            startBlock,
+            Number(bonusEndBlock),
+            multiplier,
+            endBlock
+          );
+          setRewardBlock(blockReward.toString());
+          setLiquidity(formatEther(requiredAmount));
+        } else {
+          const [blockReward, requiredAmount, fee] = await generator(chain, currentSwap).determineBlockReward(
+            parseEther(amountIn),
+            startBlock,
+            Number(bonusEndBlock),
+            multiplier,
+            endBlock
+          );
+          setRewardBlock(blockReward.toString());
+          setLiquidity(formatEther(requiredAmount));
+        }
       } catch (err) { }
     }
     if (!!amountIn && multiplier > 0) {

@@ -27,13 +27,13 @@ export const address = {
   },
   97: {
     0: {
-      factory: "0xDb9ADc1D6ED67B3f599c7706478342bCF2577411",
-      generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
+      factory: "0xE9f8B70CeE3cb8a22B68766Ba5429B23F2ECF1d9",
+      generator: "0x587a39A679994B9E6BA1F6e29Eb0ebA20Df42abF",
       rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
       wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       sfactory: '0x336227924a7187411E64BDA693AE266C5be1C99d',
       sgenerator: '0x719475e78A5C0661198E673c517cEDe900a5E7b9'
-    } 
+    }
   },
   43114: {
     0: {
@@ -68,8 +68,10 @@ export const coinSymbols = {
 
 export const swapFactories = {
   97: {
-    uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-    router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
+    0: {
+      uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+      router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
+    }
   },
   43114: {
     0: {
@@ -80,10 +82,6 @@ export const swapFactories = {
       uniswap: "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10",
       router: '0x60aE616a2155Ee3d9A68541Ba4544862310933d4'
     }
-  },
-  4: {
-    uniswap: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
-    router: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
   },
   56: {
     0: {
