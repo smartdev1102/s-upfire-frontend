@@ -20,7 +20,9 @@ export const address = {
     0: {
       factory: '0x63Abf57Bd3773901De3ec9FaF49D824B67d233CC',
       generator: '0xb463f85621cCAC9f7178eA72CAAA27941849f738',
-      wether: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+      wether: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      sfactory: '0x1a43abdbb2BDfC5ef3C5B9a92fFed566630C0a7D',
+      sgenerator: '0xc00ee850efA214742b548626c0Bc56FFebCa0032'
     }
   },
   97: {
@@ -37,7 +39,9 @@ export const address = {
     0: {
       factory: '0xafdC15eD96544f4Dc7bB3997f723A3F333eEE994',
       generator: '0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7',
-      wether: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
+      wether: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+      sfactory: '0x5997c902700D4a35456ee6BEC69699E2F57486F1',
+      sgenerator: '0xAa33efd126a446a1F518880bBEA0Ce3a740f5C39'
     },
     1: {
       factory: '0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846',
