@@ -56,7 +56,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
         container
         spacing={2}
       >
-        <Grid xs={5}>
+        <Grid item xs={5}>
           <Box
             sx={{
               height: '100%',
@@ -96,7 +96,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
             </Box>
           </Box>
         </Grid>
-        <Grid xs={3}>
+        <Grid item xs={3}>
           <Box
             sx={{
               display: 'flex',
@@ -120,7 +120,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
             </Grid>
           </Box>
         </Grid>
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <Box
             sx={{
               display: 'flex',
@@ -141,7 +141,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
             </Box>
           </Box>
         </Grid>
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <Box
             sx={{
               display: 'flex',

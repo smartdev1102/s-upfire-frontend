@@ -16,21 +16,31 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 
 
 export const address = {
-  97: {
-    factory: "0xDb9ADc1D6ED67B3f599c7706478342bCF2577411",
-    generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
-    rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
-    wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
-    sfactory: '0x336227924a7187411E64BDA693AE266C5be1C99d',
-    sgenerator: '0x719475e78A5C0661198E673c517cEDe900a5E7b9'
+  56: {
+    0: {
+      factory: '0x63Abf57Bd3773901De3ec9FaF49D824B67d233CC',
+      generator: '0xb463f85621cCAC9f7178eA72CAAA27941849f738'
+    }
   },
-  43113: {
-    factory: "0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7",
-    generator: "0xd5649a4a5AdbcD6a0b25972DD907761d5f4648e4",
-    rewardToken: "0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846",
-    sfactory: '0x3fa9b82Dd7db611242b6B0C67EaC1bb580F2259e',
-    sgenerator: '0xd946aa73e10e3dE0BDdB193C0de4233ef8AEc9fA',
-    wether: '',
+  97: {
+    0: {
+      factory: "0xDb9ADc1D6ED67B3f599c7706478342bCF2577411",
+      generator: "0xddf3b2233ba2B667c2f68eE9D863Ab288C6838d6",
+      rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
+      wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+      sfactory: '0x336227924a7187411E64BDA693AE266C5be1C99d',
+      sgenerator: '0x719475e78A5C0661198E673c517cEDe900a5E7b9'
+    } 
+  },
+  43114: {
+    0: {
+      factory: '0xafdC15eD96544f4Dc7bB3997f723A3F333eEE994',
+      generator: '0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7'
+    },
+    1: {
+      factory: '0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846',
+      generator: '0x3fa9b82Dd7db611242b6B0C67EaC1bb580F2259e'
+    }
   },
   4: {
     factory: "0x587a39A679994B9E6BA1F6e29Eb0ebA20Df42abF",
@@ -39,13 +49,15 @@ export const address = {
     sfactory: '0x36f708Cd37f35e9517Be6F1F6D0f3b52b9898799',
     sgenerator: '0x1e10444e7280f1f1A353c5436cfEc2CB27c63F66',
     wether: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
-  }
+  },
+
 }
 
 export const coinSymbols = {
   97: 'BNB',
-  43113: 'AVAX',
-  4: 'ETHER'
+  43114: 'AVAX',
+  4: 'ETHER',
+  56: 'BNB'
 }
 
 export const swapFactories = {
@@ -53,39 +65,51 @@ export const swapFactories = {
     uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
     router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
   },
-  43113: {
-    uniswap: "0x1005fffFE0E4154512FaDa53a68d75D15cE82120",
-    router: ''
+  43114: {
+    0: {
+      uniswap: "0xefa94DE7a4656D787667C749f7E1223D71E9FD88",
+      router: '0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106'
+    },
+    1: {
+      uniswap: "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10",
+      router: '0x60aE616a2155Ee3d9A68541Ba4544862310933d4'
+    }
   },
   4: {
     uniswap: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     router: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
   },
+  56: {
+    0: {
+      uniswap: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
+      router: '0x10ED43C718714eb63d5aA57B78B54704E256024E'
+    }
+  }
 }
 // providers
 
 
 
-export const factory = (chain) => {
+export const factory = (chain, index) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  return new ethers.Contract(address[chain]['factory'], Factory.abi, provider);
+  return new ethers.Contract(address[chain][index]['factory'], Factory.abi, provider);
 }
-export const factoryWeb3 = (chain, signer) => {
-  return new ethers.Contract(address[chain]['factory'], Factory.abi, signer);
-} 
-
-export const generator = (chain) => {
-  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  return new ethers.Contract(address[chain]['generator'], Generator.abi, provider);
+export const factoryWeb3 = (chain, signer, index) => {
+  return new ethers.Contract(address[chain][index]['factory'], Factory.abi, signer);
 }
-export const generatorWeb3 = (chain, signer) => {
-  return new ethers.Contract(address[chain]['generator'], Generator.abi, signer);
-} 
 
-
-export const swapFactory = (chain) => {
+export const generator = (chain, index) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  return new ethers.Contract(swapFactories[chain]['uniswap'], SwapFactory.abi, provider);
+  return new ethers.Contract(address[chain][index]['generator'], Generator.abi, provider);
+}
+export const generatorWeb3 = (chain, signer, index) => {
+  return new ethers.Contract(address[chain][index]['generator'], Generator.abi, signer);
+}
+
+
+export const swapFactory = (chain, index) => {
+  const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
+  return new ethers.Contract(swapFactories[chain][index]['uniswap'], SwapFactory.abi, provider);
 }
 
 export const pair = (chain, pairAddress) => {
@@ -169,7 +193,7 @@ export const walletConnect = (chain) => {
 }
 
 export const Injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 97, 56, 43113]
+  supportedChainIds: [1, 3, 4, 5, 42, 97, 56, 43114]
 })
 
 export const erc20Abi = [

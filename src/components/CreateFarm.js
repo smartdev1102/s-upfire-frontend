@@ -4,10 +4,11 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
-import { generator, swapFactory, pair, tokenContract } from '../utils/ethers.util';
+import { pairService } from '../services/api.service';
+import { generator, swapFactory, pair, tokenContract, address } from '../utils/ethers.util';
 import RoundButton from './common/RoundButton';
 
-const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
+const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [bonusEndDate, setBonusEndDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -19,6 +20,7 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
   const [isBonus, setIsBonus] = useState(false);
   const [isFarm, setIsFarm] = useState(true);
   const [isV3, setIsV3] = useState(false);
+  const [pairs, setPairs] = useState([]);
 
   // create pool values
   const [rewardToken, setRewardToken] = useState('');
@@ -27,6 +29,21 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
   const [amount, setAmount] = useState('0');
 
   const [currentSwap, setCurrentSwap] = useState(0); // for avalanche
+
+
+  useEffect(() => {
+    async function getPairs() {
+      if(chain === 97) {
+        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
+        setPairs(res);
+      } else {
+        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][currentSwap]['factory']});
+        setPairs(res);
+      }
+      
+    }
+    getPairs();
+  }, [currentSwap, chain]);
 
   useEffect(() => {
     if (!isBonus) {
@@ -100,7 +117,7 @@ const CreateFarm = ({ walletAddress, chain, create, pairs, createPool }) => {
             isFarm ? (
               <Box sx={{ mt: '20px' }}>
                 {
-                  (chain === 43113) && (
+                  (chain === 43114) && (
                     <Box>
                       <RoundButton onClick={() => { setCurrentSwap(0); setLpToken('') }} color={currentSwap !== 0 ? 'secondary' : 'primary'} variant='contained'>Pangolin</RoundButton>
                       <RoundButton onClick={() => { setCurrentSwap(1); setLpToken('') }} color={currentSwap === 1 ? 'primary' : 'secondary'} variant='contained'>Trader Joe</RoundButton>

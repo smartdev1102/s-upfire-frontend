@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 const chainLogos = {
   97: bnbIcon,
-  43113: avaxIcon,
+  43114: avaxIcon,
   4: ethereumIcon
 }
 
@@ -25,14 +25,14 @@ const chainColors = {
     main: '#C88E0D',
     hover: 'darkOrange'
   },
-  43113: {
+  43114: {
     main: 'pink',
     hover: 'hotPink'
   },
-  4: {
-    main: '#7389DF',
-    hover: 'lightBlue'
-  }
+  // 4: {
+  //   main: '#7389DF',
+  //   hover: 'lightBlue'
+  // }
 }
 
 const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain }) => {
@@ -128,7 +128,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   }
                 }}
               >
-                <MenuItem
+                {/* <MenuItem
                   sx={{
                     background: '#7389DF',
                     m: '5px',
@@ -143,7 +143,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 >
                   <img style={{ height: '30px', marginRight: '10px' }} src={ethereumIcon} />
                   <Box>Ethereum</Box>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   sx={{
                     background: 'pink',
@@ -155,7 +155,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                       background: 'hotPink'
                     }
                   }}
-                  onClick={() => handleChain(43113)}
+                  onClick={() => handleChain(43114)}
                 >
                   <img style={{ height: '30px', marginRight: '10px' }} src={avaxIcon} />
                   <Box>Avalanche</Box>

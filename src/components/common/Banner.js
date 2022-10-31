@@ -22,7 +22,7 @@ import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
 
 const chainLogos = {
   97: bnbIcon,
-  43113: avaxIcon,
+  43114: avaxIcon,
   4: ethereumIcon
 }
 
@@ -31,14 +31,14 @@ const chainColors = {
     main: 'orange',
     hover: 'darkOrange'
   },
-  43113: {
+  43114: {
     main: 'pink',
     hover: 'hotPink'
   },
-  4: {
-    main: 'skyBlue',
-    hover: 'lightBlue'
-  }
+  // 4: {
+  //   main: 'skyBlue',
+  //   hover: 'lightBlue'
+  // }
 }
 const Banner = ({ setChain, chain }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -120,7 +120,7 @@ const Banner = ({ setChain, chain }) => {
                 }
               }}
             >
-              <MenuItem
+              {/* <MenuItem
                 sx={{
                   background: '#7389DF',
                   m: '5px',
@@ -135,7 +135,7 @@ const Banner = ({ setChain, chain }) => {
               >
                 <img style={{ height: '30px', marginRight: '10px' }} src={ethereumIcon} />
                 <Box>Ethereum</Box>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 sx={{
                   background: 'pink',
@@ -147,7 +147,7 @@ const Banner = ({ setChain, chain }) => {
                     background: 'hotPink'
                   }
                 }}
-                onClick={() => handleChain(43113)}
+                onClick={() => handleChain(43114)}
               >
                 <img style={{ height: '30px', marginRight: '10px' }} src={avaxIcon} />
                 <Box>Avalanche</Box>

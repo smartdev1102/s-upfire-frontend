@@ -3,15 +3,16 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import React, { useEffect, useState } from 'react';
-import { generator, tokenContract } from '../../utils/ethers.util';
+import { address, generator, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { Close } from '@mui/icons-material';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import RoundButton from '../common/RoundButton';
 import loading from '../../assets/loading.svg';
+import { pairService } from '../../services/api.service';
 
-const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
+const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
   const [startDate, setstartDate] = useState(new Date());
   const [startBlock, setStartBlock] = useState(0);
   const [bonusEndDate, setBonusEndDate] = useState(new Date());
@@ -35,6 +36,21 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain, pairs }) => {
   const [tokenPrice, setTokenPrice] = useState(1);
   const [apy, setApy] = useState(0);
   const [liquidity, setLiquidity] = useState(0);
+  const [pairs, setPairs] = useState([]);
+
+
+  useEffect(() => {
+    async function getPairs() {
+      if (chain === 97) {
+        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
+        setPairs(res);
+      } else {
+        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][currentSwap]['factory']});
+        setPairs(res);
+      }
+    }
+    getPairs();
+  }, [currentSwap, chain]);
 
   // get farm token info when changing farm token
   useEffect(() => {

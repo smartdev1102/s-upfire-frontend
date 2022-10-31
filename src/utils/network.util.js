@@ -12,7 +12,7 @@ export const networks = {
   },
   56: {
     chainId: `0x${parseInt(56, 10).toString(16)}`,
-    chainName: 'BSC Mainnet',
+    chainName: 'Binance',
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
@@ -44,7 +44,7 @@ export const networks = {
     blockExplorerUrls: ['https://hecoinfo.com/'],
   },
   43113: {
-    chainId: `0x${parseInt(43113, 10).toString(16)}`,
+    chainId: `0x${parseInt(43114, 10).toString(16)}`,
     chainName: 'Avalanche Fuji Testnet',
     nativeCurrency: {
       name: 'AVAX',
@@ -56,7 +56,7 @@ export const networks = {
   },
   43114: {
     chainId: `0x${parseInt(43114, 10).toString(16)}`,
-    chainName: 'Avalanche C-Chain',
+    chainName: 'Avalanche',
     nativeCurrency: {
       name: 'AVAX',
       symbol: 'AVAX',
