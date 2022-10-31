@@ -41,7 +41,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
 
   useEffect(() => {
     async function getPairs() {
-      if (chain === 97) {
+      if (chain === 56) {
         const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
         setPairs(res);
       } else {
@@ -140,7 +140,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
-    if(chain === 97) {
+    if(chain === 56) {
       create(
         farmToken,
         amountIn,
@@ -249,7 +249,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
                 )
               }
               {
-                (chain === 97) && (
+                (chain === 56) && (
                   <Box
                     sx={{
                       mb: '20px'

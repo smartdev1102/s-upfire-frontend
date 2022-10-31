@@ -19,7 +19,8 @@ const Main = ({
   stakeTokens,
   stakePools,
   poolLiq,
-  setFarms
+  setFarms,
+  setPools
 }) => {
   const [tabIndex, setTabIndex] = useState(1);
 
@@ -106,6 +107,7 @@ const Main = ({
                 stakePools={stakePools}
                 openWalletAlert={openWalletAlert}
                 poolLiq={poolLiq}
+                setPools={setPools}
               />
             )
           }

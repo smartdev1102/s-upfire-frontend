@@ -33,7 +33,7 @@ const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
 
   useEffect(() => {
     async function getPairs() {
-      if(chain === 97) {
+      if(chain === 56) {
         const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
         setPairs(res);
       } else {
@@ -133,7 +133,7 @@ const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
                   )
                 }
                 {
-                  (chain === 97) && (
+                  (chain === 56) && (
                     <Box>
                       <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
                     </Box>

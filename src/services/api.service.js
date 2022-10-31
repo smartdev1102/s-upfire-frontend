@@ -19,3 +19,14 @@ export const farmService = {
     return response.data.data;
   }
 }
+
+export const poolService = {
+  fetchPools: async(payload) => {
+    const response = await axios.get(`${baseUrl}/pools/${payload}`);
+    return response.data.data;
+  },
+  createPool: async (payload) => {
+    const response = await axios.post(`${baseUrl}/pools`, payload);
+    return response.data.data;
+  }
+}

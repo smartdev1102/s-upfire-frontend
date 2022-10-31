@@ -9,10 +9,11 @@ import { ethers } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
+import { poolService } from '../services/api.service';
 
 
 
-const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq }) => {
+const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, setPools }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
@@ -53,13 +54,23 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq }) =
     const contract = new ethers.Contract(rewardToken, erc20Abi, library.getSigner());
     await contract.approve(address[chain]['sgenerator'], parseEther(amountIn));
     contract.once("Approval", async () => {
-      const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
+      const address = await sgeneratorWeb3(chain, library.getSigner()).createPool(
         rewardToken,
         stakeToken,
         apr,
         parseEther(amountIn)
       );
-      await tx.wait();
+      const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+      const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+      const res = await poolService.createPool({
+        name: `${stakeSymbol}/${rewardSymbol}`,
+        apr: Number(apr),
+        owner: walletAddress,
+        rewardToken: rewardToken,
+        stakeToken: stakeToken,
+        address: address
+      });
+      setPools([...stakePools, res]);
       setOpenDlg(false);
     });
   }

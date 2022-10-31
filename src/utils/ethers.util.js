@@ -19,7 +19,8 @@ export const address = {
   56: {
     0: {
       factory: '0x63Abf57Bd3773901De3ec9FaF49D824B67d233CC',
-      generator: '0xb463f85621cCAC9f7178eA72CAAA27941849f738'
+      generator: '0xb463f85621cCAC9f7178eA72CAAA27941849f738',
+      wether: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
     }
   },
   97: {
@@ -35,7 +36,8 @@ export const address = {
   43114: {
     0: {
       factory: '0xafdC15eD96544f4Dc7bB3997f723A3F333eEE994',
-      generator: '0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7'
+      generator: '0xfeaB072417019a9b2Dc1c6940c31845354a3d0E7',
+      wether: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7'
     },
     1: {
       factory: '0x0100e4D763bA57C0DCAa5E3D4cBb5A51f65e2846',
@@ -153,23 +155,23 @@ export const tokenWeb3 = (tokenAddress, signer) => {
 
 export const sfactory = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  const contract = new ethers.Contract(address[chain]['sfactory'], SFactory.abi, provider);
+  const contract = new ethers.Contract(address[chain][0]['sfactory'], SFactory.abi, provider);
   return contract;
 }
 
 export const sfactoryWeb3 = (chain, signer) => {
-  const contract = new ethers.Contract(address[chain]['sfactory'], SFactory.abi, signer);
+  const contract = new ethers.Contract(address[chain][0]['sfactory'], SFactory.abi, signer);
   return contract;
 }
 
 export const sgenerator = (chain) => {
   const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
-  const contract = new ethers.Contract(address[chain]['sgenerator'], SGenerator.abi, provider);
+  const contract = new ethers.Contract(address[chain][0]['sgenerator'], SGenerator.abi, provider);
   return contract;
 }
 
 export const sgeneratorWeb3 = (chain, signer) => {
-  const contract = new ethers.Contract(address[chain]['sgenerator'], SGenerator.abi, signer);
+  const contract = new ethers.Contract(address[chain][0]['sgenerator'], SGenerator.abi, signer);
   return contract;
 }
 

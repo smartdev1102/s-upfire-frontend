@@ -15,13 +15,13 @@ import { Link } from 'react-router-dom';
 
 
 const chainLogos = {
-  97: bnbIcon,
+  56: bnbIcon,
   43114: avaxIcon,
   4: ethereumIcon
 }
 
 const chainColors = {
-  97: {
+  56: {
     main: '#C88E0D',
     hover: 'darkOrange'
   },
@@ -171,7 +171,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                       background: 'darkOrange'
                     }
                   }}
-                  onClick={() => handleChain(97)}
+                  onClick={() => handleChain(56)}
                 >
                   <img style={{ height: '30px', marginRight: '10px' }} src={bnbIcon} />
                   <Box>Bianance Smart Chain</Box>

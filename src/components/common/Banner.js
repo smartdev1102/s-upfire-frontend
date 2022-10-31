@@ -21,13 +21,13 @@ import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
 
 
 const chainLogos = {
-  97: bnbIcon,
+  56: bnbIcon,
   43114: avaxIcon,
   4: ethereumIcon
 }
 
 const chainColors = {
-  97: {
+  56: {
     main: 'orange',
     hover: 'darkOrange'
   },
@@ -163,7 +163,7 @@ const Banner = ({ setChain, chain }) => {
                     background: 'darkOrange'
                   }
                 }}
-                onClick={() => handleChain(97)}
+                onClick={() => handleChain(56)}
               >
                 <img style={{ height: '30px', marginRight: '10px' }} src={bnbIcon} />
                 <Box>Bianance Smart Chain</Box>

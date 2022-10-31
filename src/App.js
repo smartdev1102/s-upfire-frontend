@@ -25,11 +25,11 @@ import Main from './components/Main';
 import WalletModal from './components/common/WalletModal';
 import { useWeb3React } from '@web3-react/core';
 import backgroundImage from './assets/background.svg';
-import { farmService, pairService } from './services/api.service';
+import { farmService, pairService, poolService } from './services/api.service';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
-  const [chain, setChain] = useState(97);
+  const [chain, setChain] = useState(56);
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
   const [openWalletModal, setOpenWalletModal] = useState(false);
@@ -51,46 +51,7 @@ function App() {
 
   // pool info
   const [stakePools, setStakePools] = useState([]);
-  // useEffect(() => {
-  //   async function getPools() {
-  //     if (!chain || !walletAddress) return;
-  //     const poolsLength = await sfactory(chain).poolsLength();
-  //     let tempPools = [];
-  //     let tempTokens = [];
-  //     let pooltotal = 0;
-  //     for (let i = 0; i < Number(poolsLength); i++) {
-  //       const poolAddress = await sfactory(chain).poolAtIndex(i);
-  //       const rewardToken = await spool(chain, poolAddress).rewardToken();
-  //       const stakeToken = await spool(chain, poolAddress).token();
-  //       const stakeName = await tokenContract(chain, stakeToken).name();
-  //       const apr = await spool(chain, poolAddress).aprPercent();
-  //       const owner = await spool(chain, poolAddress).ownAddr();
-  //       const balance = await spool(chain, poolAddress).balanceOf(walletAddress);
-  //       const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
-  //       const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
-  //       const liq = await tokenContract(chain, rewardToken).balanceOf(poolAddress);
-  //       pooltotal = liq.add(pooltotal);
-  //       setPoolLiq(formatEther(pooltotal));
-  //       tempTokens.push({
-  //         name: stakeName,
-  //         symbol: stakeSymbol,
-  //         address: stakeToken
-  //       });
-  //       setStakeTokens(tempTokens);
-  //       tempPools.push({
-  //         name: `${stakeSymbol}/${rewardSymbol}`,
-  //         apr: Number(apr),
-  //         owner: owner.toLowerCase(),
-  //         balance: formatEther(balance),
-  //         rewardToken: rewardToken,
-  //         stakeToken: stakeToken
-  //       });
-  //       setStakePools(tempPools);
-  //     }
-  //   }
-  //   getPools();
-  // }, [chain, walletAddress]);
-
+  
   // get farms
   useEffect(() => {
     setFarms([]);
@@ -100,8 +61,10 @@ function App() {
     setStakeTokens([]);
     async function getFarms() {
       if (!chain || !walletAddress) return;
-      const res = await farmService.fetchFarms(chain);
-      setFarms(res);      
+      const res1 = await farmService.fetchFarms(chain);
+      setFarms(res1);
+      const res2 = await poolService.fetchPools(chain);
+      setStakePools(res2);      
     }
     getFarms();
   }, [chain, walletAddress]);
@@ -209,6 +172,7 @@ function App() {
                   stakePools={stakePools}
                   poolLiq={poolLiq}
                   setFarms={setFarms}
+                  setPools={setStakePools}
                 />
               }
             />
