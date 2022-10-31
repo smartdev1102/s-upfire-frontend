@@ -16,13 +16,15 @@ import { Link } from 'react-router-dom';
 
 const chainLogos = {
   56: bnbIcon,
+  97: bnbIcon,
   43114: avaxIcon,
   4: ethereumIcon
 }
 
-const chainColors = {
-  56: {
-    main: '#C88E0D',
+const chainColors = process.env.NODE_ENV === 'development' ?
+{
+  97: {
+    main: 'orange',
     hover: 'darkOrange'
   },
   43114: {
@@ -30,7 +32,20 @@ const chainColors = {
     hover: 'hotPink'
   },
   // 4: {
-  //   main: '#7389DF',
+  //   main: 'skyBlue',
+  //   hover: 'lightBlue'
+  // }
+} : {
+  56: {
+    main: 'orange',
+    hover: 'darkOrange'
+  },
+  43114: {
+    main: 'pink',
+    hover: 'hotPink'
+  },
+  // 4: {
+  //   main: 'skyBlue',
   //   hover: 'lightBlue'
   // }
 }

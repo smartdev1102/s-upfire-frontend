@@ -22,24 +22,39 @@ import avaxIcon from '../../assets/tokenIcons/avalanche-avax-logo.png';
 
 const chainLogos = {
   56: bnbIcon,
+  97: bnbIcon,
   43114: avaxIcon,
   4: ethereumIcon
 }
 
-const chainColors = {
-  56: {
-    main: 'orange',
-    hover: 'darkOrange'
-  },
-  43114: {
-    main: 'pink',
-    hover: 'hotPink'
-  },
-  // 4: {
-  //   main: 'skyBlue',
-  //   hover: 'lightBlue'
-  // }
-}
+const chainColors = process.env.NODE_ENV === 'development' ?
+  {
+    97: {
+      main: 'orange',
+      hover: 'darkOrange'
+    },
+    43114: {
+      main: 'pink',
+      hover: 'hotPink'
+    },
+    // 4: {
+    //   main: 'skyBlue',
+    //   hover: 'lightBlue'
+    // }
+  } : {
+    56: {
+      main: 'orange',
+      hover: 'darkOrange'
+    },
+    43114: {
+      main: 'pink',
+      hover: 'hotPink'
+    },
+    // 4: {
+    //   main: 'skyBlue',
+    //   hover: 'lightBlue'
+    // }
+  }
 const Banner = ({ setChain, chain }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = useState();

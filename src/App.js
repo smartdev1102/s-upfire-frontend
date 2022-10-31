@@ -29,7 +29,7 @@ import { farmService, pairService, poolService } from './services/api.service';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState();
-  const [chain, setChain] = useState(56);
+  const [chain, setChain] = useState(process.env.REACT_APP_CHAIN);
   const [referral, setReferral] = useState();
   const [openWalletAlert, setOpenWalletAlert] = useState(false);
   const [openWalletModal, setOpenWalletModal] = useState(false);
@@ -41,8 +41,7 @@ function App() {
   const [farmsv3, setFarmsv3] = useState([]);
   const [farmTokens, setFarmTokens] = useState([]);
   const [stakeTokens, setStakeTokens] = useState([]);
-  const [pairs, setPairs] = useState([]);
-
+  
   const { account, library } = useWeb3React();
 
   useEffect(() => {

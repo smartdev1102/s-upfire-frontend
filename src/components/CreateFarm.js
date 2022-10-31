@@ -5,7 +5,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
 import { pairService } from '../services/api.service';
-import { generator, swapFactory, pair, tokenContract, address } from '../utils/ethers.util';
+import { generator, swapFactory, pair, tokenContract, address, swapFactories } from '../utils/ethers.util';
 import RoundButton from './common/RoundButton';
 
 const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
@@ -33,11 +33,11 @@ const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
 
   useEffect(() => {
     async function getPairs() {
-      if(chain === 56) {
-        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
+      if(chain === Number(process.env.REACT_APP_CHAIN)) {
+        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][0]['uniswap']});
         setPairs(res);
       } else {
-        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][currentSwap]['factory']});
+        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][currentSwap]['uniswap']});
         setPairs(res);
       }
       
@@ -133,7 +133,7 @@ const CreateFarm = ({ walletAddress, chain, create, createPool }) => {
                   )
                 }
                 {
-                  (chain === 56) && (
+                  (chain === Number(process.env.REACT_APP_CHAIN)) && (
                     <Box>
                       <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
                     </Box>

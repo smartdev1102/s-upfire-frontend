@@ -3,7 +3,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import React, { useEffect, useState } from 'react';
-import { address, generator, tokenContract } from '../../utils/ethers.util';
+import { address, generator, swapFactories, tokenContract } from '../../utils/ethers.util';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { Close } from '@mui/icons-material';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -41,11 +41,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
 
   useEffect(() => {
     async function getPairs() {
-      if (chain === 56) {
-        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][0]['factory']});
+      if (chain === Number(process.env.REACT_APP_CHAIN)) {
+        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][0]['uniswap']});
         setPairs(res);
       } else {
-        const res = await pairService.fetchPairs({chain: chain, factory: address[chain][currentSwap]['factory']});
+        const res = await pairService.fetchPairs({chain: chain, factory: swapFactories[chain][currentSwap]['uniswap']});
         setPairs(res);
       }
     }
@@ -229,7 +229,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
           <Box sx={{ width: '100%', height: '100%' }}>
             <PerfectScrollbar style={{ padding: '30px' }}>
               {
-                (chain === 43113) && (
+                (chain === 43114) && (
                   <Box>
                     <RoundButton onClick={() => { setCurrentSwap(0); setLpToken('') }} color={currentSwap !== 0 ? 'secondary' : 'primary'} variant='contained'>Pangolin</RoundButton>
                     <RoundButton onClick={() => { setCurrentSwap(1); setLpToken('') }} color={currentSwap === 1 ? 'primary' : 'secondary'} variant='contained'>Trader Joe</RoundButton>
@@ -249,7 +249,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain}) => {
                 )
               }
               {
-                (chain === 56) && (
+                (chain === Number(process.env.REACT_APP_CHAIN)) && (
                   <Box
                     sx={{
                       mb: '20px'
