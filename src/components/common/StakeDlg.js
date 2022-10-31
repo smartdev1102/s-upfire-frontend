@@ -25,7 +25,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   useEffect(() => {
     async function getPairTokens() {
       if (!farm || !walletAddress) return;
-      if (farm.token0.toLowerCase() == address[chain]['wether'].toLowerCase()) {
+      if (farm.token0.toLowerCase() == address[chain][0]['wether'].toLowerCase()) {
         const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
         const balance = await provider.getBalance(walletAddress);
         setBalance0(balance);
@@ -37,7 +37,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
         setBalance0(balance);
         setSymbol0(symbol);
       }
-      if (farm.token1.toLowerCase() == address[chain]['wether'].toLowerCase()) {
+      if (farm.token1.toLowerCase() == address[chain][0]['wether'].toLowerCase()) {
         const provider = new ethers.providers.JsonRpcProvider(networks[chain].rpcUrls[0]);
         const balance = await provider.getBalance(walletAddress);
         setBalance1(balance);
