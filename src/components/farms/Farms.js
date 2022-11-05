@@ -217,6 +217,7 @@ return (
           >
             <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
           </FormGroup>
+          <Box sx={{ flexGrow: 1 }}></Box>
           <Hidden mdDown>
             <SearchInput
               value={searchKey}
@@ -224,7 +225,6 @@ return (
               placeholder='Search by name, symbol'
             />
           </Hidden>
-          <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
             <RoundButton
               onClick={handleOpenCreateFarm}
