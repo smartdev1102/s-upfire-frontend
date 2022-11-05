@@ -148,7 +148,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         farmToken,
         amountIn,
-        lpToken,
+        lpToken.address,
         rewardBlock,
         startBlock,
         bonusEndBlock,
@@ -160,7 +160,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         farmToken,
         amountIn,
-        lpToken,
+        lpToken.address,
         rewardBlock,
         startBlock,
         bonusEndBlock,
