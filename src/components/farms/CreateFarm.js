@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid } from '@mui/material';
+import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid, List, ListItemButton, ListItemText } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -11,6 +11,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import RoundButton from '../common/RoundButton';
 import loading from '../../assets/loading.svg';
 import { pairService } from '../../services/api.service';
+import Autocomplete from '@mui/material/Autocomplete';
+import LptokenDlg from '../common/LptokenDlg';
 
 const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [startDate, setstartDate] = useState(new Date());
@@ -37,6 +39,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [apy, setApy] = useState(0);
   const [liquidity, setLiquidity] = useState(0);
   const [pairs, setPairs] = useState([]);
+  const [lpname, setLpname] = useState('');
+  const [openList, setOpenList] = useState();
 
 
   useEffect(() => {
@@ -213,6 +217,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
       onClose={handleClose}
       open={open}
     >
+      <LptokenDlg setLpToken={setLpToken} chain={chain} open={openList} onClose={() => setOpenList()} pairs={pairs}/>
       <Box
         sx={{
           border: '2px solid #2494F3',
@@ -400,20 +405,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           </Box>
                         ) : (
                           <Box>
-                            <FormControl size='small' fullWidth>
-                              <Select
-                                value={lpToken}
-                                onChange={e => setLpToken(e.target.value)}
-                              >
-                                {
-                                  pairs.map((pair, i) => (
-                                    <MenuItem key={i} value={pair.address}>
-                                      {pair.symbol1}/{pair.symbol2}
-                                    </MenuItem>
-                                  ))
-                                }
-                              </Select>
-                            </FormControl>
+                            <Box>
+                              <TextField value={!!lpToken ? `${lpToken.symbol1}/${lpToken.symbol2}` : ''} readOnly size='small' onClick={() => setOpenList(true)} />
+                            </Box>
                           </Box>
                         )
                       }
