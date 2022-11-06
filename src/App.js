@@ -65,13 +65,13 @@ function App() {
       const res1 = await farmService.fetchFarms(chain);
       let temp = res1;
       if (walletAddress.toLowerCase !== admin) {
-        temp = res1.filter(item => !item.invisible || item.owner.toLowerCase() === walletAddress.toLowerCase());
+        temp = res1.filter(item => !item.invisible || item.owner === walletAddress);
       }
       setFarms(temp);
       const res2 = await poolService.fetchPools(chain);
       temp = res2;
       if (walletAddress.toLowerCase !== admin) {
-        temp = res2.filter(item => !item.invisible || item.owner.toLowerCase() === walletAddress.toLowerCase());
+        temp = res2.filter(item => !item.invisible || item.owner === walletAddress);
       }
       setStakePools(temp);      
     }

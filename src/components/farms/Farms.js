@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup } from '@mui/material';
+import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup, IconButton } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 
@@ -18,6 +18,8 @@ import FarmCardV3 from '../common/FarmCardV3';
 import { useWeb3React } from '@web3-react/core';
 import SearchInput from '../common/SearchInput';
 import { farmService, pairService } from '../../services/api.service';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity, setFarms }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
@@ -248,6 +250,9 @@ return (
               onChange={e => setSearchKey(e.target.value)}
               placeholder='Search by name, symbol'
             />
+            <IconButton>
+              <SearchIcon/>
+            </IconButton>
           </Hidden>
           <Box>
             <RoundButton

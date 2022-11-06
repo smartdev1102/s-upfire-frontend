@@ -152,7 +152,10 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
             display: 'flex',
             width: '100%',
             alignItems: 'center',
-            px: '40px'
+            px: '40px',
+            py: '10px',
+            background: '#001126',
+            borderRadius: '20px'
           }}
         >
           <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
@@ -184,7 +187,6 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
       </Box>
       <Box
         sx={{
-          bgcolor: 'background.paper',
           mt: '10px',
           p: '20px',
           borderRadius: '20px',
