@@ -29,8 +29,21 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
   const [filterFarm, setFilterFarm] = useState([]);
   const [filterFarmv3, setFilterFarmv3] = useState([]);
   const [searchKey, setSearchKey] = useState('');
+  const [liq, setLiq] = useState();
 
   const { library } = useWeb3React();
+
+  useEffect(() => {
+    async function getLiq() {
+      let temp = 0;
+      farms.map(async ifarm => {
+        const info = await farm(chain, ifarm.address).farmInfo();
+        temp = info.farmableSupply.add(temp);
+        setLiq(temp);
+      });
+    }
+    getLiq();
+  }, [farms]);
 
   const handleVisible = async (id, invisible) => {
     await farmService.setVisible({
@@ -219,7 +232,7 @@ return (
             Total farming liquidity
           </Typography>
           <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-            {!!totalLiquidity ? `$${Math.trunc(totalLiquidity)}` : '0'}
+            {!!liq ? `$${Math.trunc(liq)}` : '0'}
           </Typography>
           <FormGroup
             sx={{

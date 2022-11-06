@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import { Button, Card, FormControlLabel, Grid, Switch, TextField } from '@mui/material';
@@ -6,7 +6,7 @@ import farmIcon from '../../assets/icons/farm.svg';
 import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
 import { farm, farmWeb3, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
-import { parseEther } from 'ethers/lib/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import moment from 'moment';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
@@ -18,6 +18,16 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
+  const [liq, setLiq] = useState('');
+
+  useEffect(() => {
+    async function getLiq() {
+      const info = await farm(chain, farmInfo.address).farmInfo();
+      const supply = info.farmableSupply;
+      setLiq(formatEther(supply));
+    }
+    getLiq();
+  }, [farmInfo]);
 
   const { library } = useWeb3React()
 
@@ -139,7 +149,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 mt: '-2px'
               }}
             >
-              {Math.trunc(farmInfo.supply)}
+              { Math.trunc(liq)}
             </Box>
           </Box>
         </Grid>
