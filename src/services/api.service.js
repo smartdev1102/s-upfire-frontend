@@ -17,6 +17,10 @@ export const farmService = {
   createFarm: async (payload) => {
     const response = await axios.post(`${baseUrl}/farms`, payload);
     return response.data.data;
+  },
+  setVisible: async (payload) => {
+    const response = await axios.put(`${baseUrl}/farms/invisible`, payload);
+    return response.data.data;
   }
 }
 
@@ -27,6 +31,10 @@ export const poolService = {
   },
   createPool: async (payload) => {
     const response = await axios.post(`${baseUrl}/pools`, payload);
+    return response.data.data;
+  }, 
+  setVisible: async (payload) => {
+    const response = await axios.put(`${baseUrl}/pools/invisible`, payload);
     return response.data.data;
   }
 }

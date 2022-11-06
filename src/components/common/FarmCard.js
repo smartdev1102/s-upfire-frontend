@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
-import { Button, Card, Grid, TextField } from '@mui/material';
+import { Button, Card, FormControlLabel, Grid, Switch, TextField } from '@mui/material';
 import farmIcon from '../../assets/icons/farm.svg';
 import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
@@ -12,7 +12,9 @@ import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
-const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
+const admin = process.env.REACT_APP_ADMIN.toLowerCase();
+
+const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddress }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
@@ -107,14 +109,14 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
           >
             <Grid container spacing={2}>
               <Grid item sm={10} md={2}>
-                <DateRangeIcon sx={{color: '#1F8BED', mt: '4px', ml: '20px'}} />
+                <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px', ml: '20px' }} />
               </Grid>
               <Hidden smDown>
-                <Grid sx={{mt: '5px'}} item xs={5}>
+                <Grid sx={{ mt: '5px' }} item xs={5}>
                   {moment(farmInfo.start).format('MMM DD YYYY')}
                 </Grid>
               </Hidden>
-              <Grid sx={{mt: '5px', ml: '-5px'}} item xs={5}>
+              <Grid sx={{ mt: '5px', ml: '-5px' }} item xs={5}>
                 {moment(farmInfo.end).format('MMM DD YYYY')}
               </Grid>
             </Grid>
@@ -190,6 +192,13 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm }) => {
               <Box sx={{ mx: '2%' }}>
                 <Button onClick={withdraw} variant='contained'>withdraw</Button>
               </Box>
+              {
+                (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === farmInfo.owner.toLowerCase()) && (
+                  <Box>
+                    <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide" />
+                  </Box>
+                )
+              }
             </Box>
           </Box>
         )

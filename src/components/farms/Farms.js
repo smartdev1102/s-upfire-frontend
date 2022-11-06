@@ -32,6 +32,17 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
 
   const { library } = useWeb3React();
 
+  const handleVisible = async (id, invisible) => {
+    await farmService.setVisible({
+      id: id,
+      invisible: invisible
+    });
+    const index = farms.findIndex(item => item._id === id);
+    let temp = [...farms];
+    temp[index].invisible = invisible;
+    setFarms(temp);
+  }
+
   const handleOpenCreateFarm = () => {
     if (!walletAddress) {
       openWalletAlert();
@@ -147,7 +158,6 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     const lpsymbol = `${symbol1}-${symbol2}`;
     const length = await factory(chain, index).farmsLength();
     const farmAddress = await factory(chain, index).farmAtIndex(Number(length) - 1);
-    console.log(farmAddress);
     const farminfo = await farm(chain, farmAddress).farmInfo();
     const res = await farmService.createFarm({
       name: lpsymbol,
@@ -162,7 +172,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       rewardToken: farmToken,
       token0: token0,
       token1: token1,
-      chain: chain
+      chain: chain,
+      owner: walletAddress
     });
     setFarms([...farms, res]);
     setOpenCreateFarm(false);
@@ -388,7 +399,7 @@ return (
       >
         {
           filterFarm.map((farm, i) => (
-            <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
+            <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} handleVisible={handleVisible} walletAddress={walletAddress} />
           ))
         }
         {

@@ -4,14 +4,14 @@ import RoundButton from './common/RoundButton';
 import SearchInput from './common/SearchInput';
 import SearchIcon from '@mui/icons-material/Search';
 import PoolDlg from './common/PoolDlg';
-import { address, erc20Abi, generatorWeb3, factory, pool, farm, tokenContract, sgeneratorWeb3, spoolWeb3 } from '../utils/ethers.util';
+import { address, erc20Abi, generatorWeb3, factory, pool, farm, tokenContract, sgeneratorWeb3, spoolWeb3, sfactory, tokenWeb3 } from '../utils/ethers.util';
 import { ethers } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import { poolService } from '../services/api.service';
 
-
+const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
 const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, setPools }) => {
   // const [activeTab, setActiveTab] = useState('mining');
@@ -22,6 +22,17 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
   const [isMyPool, setIsMyPool] = useState(false);
   const [filterdPools, setFilteredPools] = useState([]);
   const [searchKey, setSearchKey] = useState('');
+
+  const handleVisible = async (id, invisible) => {
+    await poolService.setVisible({
+      id: id,
+      invisible: invisible
+    });
+    const index = stakePools.findIndex(item => item._id === id);
+    let temp = [...stakePools];
+    temp[index].invisible = invisible;
+    setPools(temp);
+  }
 
   useEffect(() => {
     if (isMyPool) {
@@ -51,28 +62,34 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
   }
 
   const createPool = async (rewardToken, stakeToken, apr, amountIn) => {
-    const contract = new ethers.Contract(rewardToken, erc20Abi, library.getSigner());
-    await contract.approve(address[chain]['sgenerator'], parseEther(amountIn));
-    contract.once("Approval", async () => {
-      const address = await sgeneratorWeb3(chain, library.getSigner()).createPool(
-        rewardToken,
-        stakeToken,
-        apr,
-        parseEther(amountIn)
-      );
-      const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
-      const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
-      const res = await poolService.createPool({
-        name: `${stakeSymbol}/${rewardSymbol}`,
-        apr: Number(apr),
-        owner: walletAddress,
-        rewardToken: rewardToken,
-        stakeToken: stakeToken,
-        address: address
-      });
-      setPools([...stakePools, res]);
-      setOpenDlg(false);
+    const allowance = await tokenContract(chain, rewardToken).allowance(walletAddress, address[chain][0]['sgenerator']);
+    if (allowance < parseEther(amountIn)) {
+      const tx = await tokenWeb3(rewardToken, library.getSigner()).approve(address[chain][0]['sgenerator'], parseEther(amountIn));
+      await tx.wait();
+    }
+    const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
+      rewardToken,
+      stakeToken,
+      apr,
+      parseEther(amountIn)
+    );
+    await tx.wait();
+
+    const length = await sfactory(chain).poolsLength();
+    const poolAddress = await sfactory(chain).poolAtIndex(Number(length) - 1);
+    const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
+    const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+    const res = await poolService.createPool({
+      name: `${stakeSymbol}/${rewardSymbol}`,
+      apr: Number(apr),
+      owner: walletAddress,
+      rewardToken: rewardToken,
+      stakeToken: stakeToken,
+      address: poolAddress,
+      chain: chain
     });
+    setPools([...stakePools, res]);
+    setOpenDlg(false);
   }
 
 
@@ -145,7 +162,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
             {!!poolLiq ? `$${Math.trunc(poolLiq)}` : '0'}
           </Typography>
           <Box>
-            <FormGroup sx={{mx: '10px'}}>
+            <FormGroup sx={{ mx: '10px' }}>
               <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
             </FormGroup>
           </Box>
@@ -164,6 +181,33 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
             </IconButton>
           </Hidden>
         </Box>
+      </Box>
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          mt: '10px',
+          p: '20px',
+          borderRadius: '20px',
+          cursor: 'pointer',
+          background: '#001126'
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            #
+          </Grid>
+          <Grid item xs={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              name
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            Apr
+          </Grid>
+          <Grid item xs={4}>
+            balance
+          </Grid>
+        </Grid>
       </Box>
       {/* pools */}
       <Box
@@ -184,7 +228,8 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
                   mt: '10px',
                   p: '20px',
                   borderRadius: '20px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  border: '1px solid white'
                 }}
               >
                 <Grid container spacing={2}>
@@ -236,6 +281,13 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
                       <Box sx={{ mx: '40px' }}>
                         <Button onClick={() => harvest(pool.address)} variant='contained'>Harvest</Button>
                       </Box>
+                      {
+                        (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === pool.owner.toLowerCase()) && (
+                          <Box>
+                            <FormControlLabel control={<Switch checked={!pool.invisible} onChange={e => handleVisible(pool._id, !e.target.checked)} />} label="show/hide" />
+                          </Box>
+                        )
+                      }
                     </Box>
                   </Box>
                 )

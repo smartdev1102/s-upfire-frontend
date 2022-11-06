@@ -27,6 +27,8 @@ import { useWeb3React } from '@web3-react/core';
 import backgroundImage from './assets/background.svg';
 import { farmService, pairService, poolService } from './services/api.service';
 
+const admin = process.env.REACT_APP_ADMIN.toLowerCase();
+
 function App() {
   const [walletAddress, setWalletAddress] = useState();
   const [chain, setChain] = useState(Number(process.env.REACT_APP_CHAIN));
@@ -61,9 +63,17 @@ function App() {
     async function getFarms() {
       if (!chain || !walletAddress) return;
       const res1 = await farmService.fetchFarms(chain);
-      setFarms(res1);
+      let temp = res1;
+      if (walletAddress.toLowerCase !== admin) {
+        temp = res1.filter(item => !item.invisible || item.owner.toLowerCase() === walletAddress.toLowerCase());
+      }
+      setFarms(temp);
       const res2 = await poolService.fetchPools(chain);
-      setStakePools(res2);      
+      temp = res2;
+      if (walletAddress.toLowerCase !== admin) {
+        temp = res2.filter(item => !item.invisible || item.owner.toLowerCase() === walletAddress.toLowerCase());
+      }
+      setStakePools(temp);      
     }
     getFarms();
   }, [chain, walletAddress]);
