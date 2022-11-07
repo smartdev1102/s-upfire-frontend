@@ -41,7 +41,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       farms.map(async ifarm => {
         const info = await farm(chain, ifarm.address).farmInfo();
         temp = info.farmableSupply.add(temp);
-        setLiq(temp);
+        setLiq(formatEther(temp));
       });
     }
     getLiq();
@@ -188,7 +188,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       token0: token0,
       token1: token1,
       chain: chain,
-      owner: walletAddress
+      owner: walletAddress,
+      invisible: false
     });
     setFarms([...farms, res]);
     setOpenCreateFarm(false);

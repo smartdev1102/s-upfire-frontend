@@ -25,7 +25,7 @@ const LptokenDlg = ({ onClose, open, pairs, setLpToken, chain }) => {
         })
       } else {
         setShowList(true);
-        const temp = pairs.filter(pair => pair.symbol1.toLowerCase().includes(lpname) || pair.symbol2.toLowerCase().includes(lpname));
+        const temp = pairs.filter(pair => pair.symbol1.toLowerCase().includes(lpname.toLowerCase()) || pair.symbol2.toLowerCase().includes(lpname.toLowerCase()));
         setFilteredPairs(temp);
       }
     }
@@ -44,16 +44,17 @@ const LptokenDlg = ({ onClose, open, pairs, setLpToken, chain }) => {
           p: '20px',
           position: 'relative',
           minHeight: '400px',
-          width: '300px',
+          width: '290px',
           overflow: 'hidden'
         }}
       >
         <Box
           sx={{
             position: 'fixed',
+            width: '250px'
           }}
         >
-          <TextField value={lpname} onChange={e => setLpname(e.target.value)} size='small' />
+          <TextField placeholder='Input name or address' value={lpname} onChange={e => setLpname(e.target.value)} size='small' fullWidth />
         </Box>
         <Box
           sx={{
