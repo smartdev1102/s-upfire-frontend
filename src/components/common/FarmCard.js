@@ -203,7 +203,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 <Button onClick={withdraw} variant='contained'>withdraw</Button>
               </Box>
               {
-                (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === farmInfo.owner.toLowerCase()) && (
+                (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === String(farmInfo.owner).toLowerCase()) && (
                   <Box>
                     <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide" />
                   </Box>
