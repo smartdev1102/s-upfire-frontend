@@ -35,15 +35,6 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
     setSelectedFarm(farmInfo);
   }
 
-  const stake = async () => {
-    await tokenWeb3(farmInfo.lptoken).approve(farmInfo.address, parseEther(amountIn));
-    tokenWeb3(farmInfo.lptoken, library.getSigner()).once("Approval", async () => {
-      const tx = await farmWeb3(farmInfo.address, library.getSigner()).deposit(parseEther(amountIn));
-      await tx.wait();
-      window.alert("Deposit.");
-    });
-  }
-
   const withdraw = async () => {
     const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(parseEther(amountIn));
     await tx.wait();
@@ -190,12 +181,6 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
               <Box sx={{ mx: '2%' }}>
                 <Button onClick={handleSelectedFarm} variant='contained'>add liquidity and stake</Button>
               </Box>
-              {/* <Box>
-                <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="amount" xs={6} fullWidth />
-              </Box>
-              <Box sx={{ mx: '20px' }}>
-                <Button onClick={stake} variant='contained'>stake</Button>
-              </Box> */}
               <Box>
                 <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} fullWidth />
               </Box>
@@ -203,7 +188,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 <Button onClick={withdraw} variant='contained'>withdraw</Button>
               </Box>
               {
-                (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === String(farmInfo.owner).toLowerCase()) && (
+                (String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === String(farmInfo.owner).toLowerCase()) && (
                   <Box>
                     <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide" />
                   </Box>

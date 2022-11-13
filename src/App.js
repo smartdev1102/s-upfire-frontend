@@ -61,18 +61,21 @@ function App() {
     setFarmTokens([]);
     setStakeTokens([]);
     async function getFarms() {
-      if (!chain || !walletAddress) return;
+      if (!chain) return;
       const res1 = await farmService.fetchFarms(chain);
       let temp = res1;
-      console.log(walletAddress.toLowerCase(), admin);
-      if (walletAddress.toLowerCase() != admin) {
-        temp = res1.filter(item => !item.invisible || String(item.owner).toLowerCase() === walletAddress.toLowerCase());
+
+      if (String(walletAddress).toLowerCase() != admin) {
+        temp = res1.filter(item => !item.invisible || String(item.owner).toLowerCase() === String(walletAddress).toLowerCase());
+      }
+      if (!walletAddress) {
+        temp = res1.filter(item => !item.invisible);
       }
       setFarms(temp);
       const res2 = await poolService.fetchPools(chain);
       temp = res2;
-      if (walletAddress.toLowerCase() != admin) {
-        temp = res2.filter(item => !item.invisible || String(item.owner).toLowerCase() === walletAddress.toLowerCase());
+      if (String(walletAddress).toLowerCase() != admin) {
+        temp = res2.filter(item => !item.invisible || String(item.owner).toLowerCase() === String(walletAddress).toLowerCase());
       }
       setStakePools(temp);      
     }

@@ -148,11 +148,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     isV3,
     index
   ) => {
-    const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
-    if (allowance < parseEther(amountIn)) {
-      const tx = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
-      await tx.wait();
-    }
+    // const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
+    // if (Number(allowance) < Number(parseEther(amountIn))) {
+      const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
+      await tx1.wait();
+    // }
     const tx = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
       farmToken,
       parseEther(amountIn),

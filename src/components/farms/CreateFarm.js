@@ -217,7 +217,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
       onClose={handleClose}
       open={open}
     >
-      <LptokenDlg setLpToken={setLpToken} chain={chain} open={openList} onClose={() => setOpenList()} pairs={pairs}/>
+      <LptokenDlg setLpToken={setLpToken} chain={chain} open={openList} onClose={() => setOpenList()} pairs={pairs} />
       <Box
         sx={{
           border: '2px solid #2494F3',
@@ -292,90 +292,124 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       Farm which token?
                     </StepLabel>
                     <StepContent>
+                      <Box sx={{ color: 'text.secondary', mb: '5px' }}>
+                        Paste token address
+                      </Box>
+                      <Box>
+                        <TextField size='small' value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
+                      </Box>
+                      <Box>
+                        <Box
+                          sx={{
+                            mt: '20px',
+                            position: 'relative',
+                            display: 'flex'
+                          }}
+                        >
+                          {/* <Box sx={{ flexGrow: 1 }}></Box> */}
+                          <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                          <button
+                            onClick={() => setAmountIn(farmBalance)}
+                            style={{
+                              position: 'absolute',
+                              left: '170px',
+                              bottom: '1px',
+                              padding: '5px',
+                              cursor: 'pointer',
+                              background: '#266d7a',
+                              outline: 'none'
+                            }}
+                            variant='contained'
+                            size='small'
+                          >
+                            Max
+                          </button>
+                        </Box>
+                      </Box>
                       {
-                        tokenLoading ? (
-                          <img src={loading} />
-                        ) :
-                          !!farmSymbol ? (
-                            <Box>
-                              <Box
-                                sx={{
-                                  p: '10px',
-                                  border: '1px solid green',
-                                  borderRadius: '10px'
-                                }}
-                              >
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    alignItems: 'center'
-                                  }}
-                                >
-                                  <Box
-                                    sx={{
-                                      pl: '10px',
-                                      fontSize: '28px',
-                                    }}
-                                  >
-                                    {farmTokenName}
-                                  </Box>
-                                  <Box sx={{ flexGrow: 1 }}></Box>
-                                  <Box>
-                                    <IconButton onClick={() => setFarmToken('')}>
-                                      <Close />
-                                    </IconButton>
-                                  </Box>
-                                </Box>
-                                <Box>
-                                  {farmToken}
-                                </Box>
-                                <Box>
-                                  Symbol: {farmSymbol}
-                                </Box>
-                                <Box>
-                                  Decimals: {farmDecimals}
-                                </Box>
-                                <Box>
-                                  Your raw balance: {farmBalance}
-                                </Box>
-                              </Box>
-                              <Box
-                                sx={{
-                                  mt: '20px',
-                                  position: 'relative',
-                                  display: 'flex'
-                                }}
-                              >
-                                <Box sx={{ flexGrow: 1 }}></Box>
-                                <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${farmBalance} ${farmSymbol}`} variant='filled' focused />
-                                <button
-                                  onClick={() => setAmountIn(farmBalance)}
-                                  style={{
-                                    position: 'absolute',
-                                    right: '1px',
-                                    bottom: '1px',
-                                    padding: '5px',
-                                    cursor: 'pointer',
-                                    background: '#266d7a',
-                                    outline: 'none'
-                                  }}
-                                  variant='contained'
-                                  size='small'
-                                >
-                                  Max
-                                </button>
-                              </Box>
-                            </Box>
-                          ) : (
-                            <>
-                              <Box sx={{ color: 'text.secondary', mb: '5px' }}>
-                                Paste token address
-                              </Box>
-                              <Box>
-                                <TextField size='small' value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
-                              </Box>
-                            </>
-                          )
+                        // tokenLoading ? (
+                        //   <img src={loading} />
+                        // ) :
+                        //   !!farmSymbol ? (
+                        //     <Box>
+                        //       <Box
+                        //         sx={{
+                        //           p: '10px',
+                        //           border: '1px solid green',
+                        //           borderRadius: '10px'
+                        //         }}
+                        //       >
+                        //         <Box
+                        //           sx={{
+                        //             display: 'flex',
+                        //             alignItems: 'center'
+                        //           }}
+                        //         >
+                        //           <Box
+                        //             sx={{
+                        //               pl: '10px',
+                        //               fontSize: '28px',
+                        //             }}
+                        //           >
+                        //             {farmTokenName}
+                        //           </Box>
+                        //           <Box sx={{ flexGrow: 1 }}></Box>
+                        //           <Box>
+                        //             <IconButton onClick={() => setFarmToken('')}>
+                        //               <Close />
+                        //             </IconButton>
+                        //           </Box>
+                        //         </Box>
+                        //         <Box>
+                        //           {farmToken}
+                        //         </Box>
+                        //         <Box>
+                        //           Symbol: {farmSymbol}
+                        //         </Box>
+                        //         <Box>
+                        //           Decimals: {farmDecimals}
+                        //         </Box>
+                        //         <Box>
+                        //           Your raw balance: {farmBalance}
+                        //         </Box>
+                        //       </Box>
+                        //       <Box
+                        //         sx={{
+                        //           mt: '20px',
+                        //           position: 'relative',
+                        //           display: 'flex'
+                        //         }}
+                        //       >
+                        //         <Box sx={{ flexGrow: 1 }}></Box>
+                        //         <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${farmBalance} ${farmSymbol}`} variant='filled' focused />
+                        //         <button
+                        //           onClick={() => setAmountIn(farmBalance)}
+                        //           style={{
+                        //             position: 'absolute',
+                        //             right: '1px',
+                        //             bottom: '1px',
+                        //             padding: '5px',
+                        //             cursor: 'pointer',
+                        //             background: '#266d7a',
+                        //             outline: 'none'
+                        //           }}
+                        //           variant='contained'
+                        //           size='small'
+                        //         >
+                        //           Max
+                        //         </button>
+                        //       </Box>
+                        //     </Box>
+                        //   ) : (
+                        //     <>
+                        //       <Box sx={{ color: 'text.secondary', mb: '5px' }}>
+                        //         Paste token address
+                        //       </Box>
+                        //       <Box>
+                        //         <TextField size='small' value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
+                        //       </Box>
+                        //     </>
+                        //   )
                       }
                       <Hidden smDown>
                         <Box sx={{ width: '480px' }}></Box>
@@ -405,8 +439,25 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           </Box>
                         ) : (
                           <Box>
-                            <Box>
+                            <Box
+                              sx={{
+                                position: 'relative'
+                              }}
+                            >
                               <TextField value={!!lpToken ? `${lpToken.symbol1}/${lpToken.symbol2}` : ''} readOnly size='small' onClick={() => setOpenList(true)} />
+                              {
+                                !!lpToken && (
+                                  <IconButton
+                                    onClick={() => setLpToken()}
+                                    sx={{
+                                      position: 'absolute',
+                                      left: '175px'
+                                    }}
+                                  >
+                                    <Close />
+                                  </IconButton>
+                                )
+                              }
                             </Box>
                           </Box>
                         )
@@ -426,7 +477,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                   {/* step 2 */}
                   <Step>
                     <StepLabel onClick={() => setActiveStep(2)}>
-                      Start Block
+                      Start Date
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: 'text.secondary', mb: '10px' }}>
@@ -456,7 +507,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           mt: '20px'
                         }}
                       >
-                        Block
+                        Block Number
                       </Box>
                       <Box>
                         <TextField size='small' value={startBlock} onChange={e => setStartBlock(e.target.value)} />
@@ -476,54 +527,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                   {/* step 3 */}
                   <Step>
                     <StepLabel onClick={() => setActiveStep(3)}>
-                      {multiplier}x Bonus
-                    </StepLabel>
-                    <StepContent>
-                      <Box sx={{ color: 'text.secondary' }}>
-                        Multiplier ({multiplier}x)
-                      </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '10px' }}>
-                        {
-                          `Bonus periods start at the start block and end at the below specified block. For no bonus period set the multiplier to '1' and the bonus end block to ${now}`
-                        }
-                      </Box>
-                      <Box>
-                        <TextField size='small' value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
-                      </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
-                        Bonus end date
-                      </Box>
-                      <Box>
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
-                          <DateTimePicker
-                            value={bonusEndDate}
-                            onChange={(newValue) => { setBonusEndDate(newValue) }}
-                            renderInput={(params) => <TextField size='small' {...params} />}
-                          />
-                        </LocalizationProvider>
-                      </Box>
-                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
-                        Bonus end block
-                      </Box>
-                      <Box>
-                        <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
-                      </Box>
-                      <Box sx={{ color: 'text.secondary', my: '10px' }}>
-                        {`* must be >= ${now}`}
-                      </Box>
-                      <Box
-                        sx={{
-                          mt: '10px'
-                        }}
-                      >
-                        <Button onClick={() => setActiveStep(4)} variant='contained' size='small'>Continue</Button>
-                      </Box>
-                    </StepContent>
-                  </Step>
-                  {/* step 4 */}
-                  <Step>
-                    <StepLabel onClick={() => setActiveStep(4)}>
-                      End Block
+                      End Date
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: 'text.secondary', mb: '5px' }}>
@@ -555,7 +559,60 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           mt: '10px'
                         }}
                       >
-                        <Button onClick={() => setActiveStep(5)} variant='contained' size='small'>Finish</Button>
+                        <Button onClick={() => setActiveStep(4)} variant='contained' size='small'>Finish</Button>
+                      </Box>
+                    </StepContent>
+                  </Step>
+                  {/* step 4 */}
+                  <Step>
+                    <StepLabel onClick={() => setActiveStep(4)}>
+                      Bonus Periods (Optional)
+                    </StepLabel>
+                    <StepContent>
+                      <Box sx={{ color: 'text.secondary' }}>
+                        Multiplier ({multiplier}x)
+                      </Box>
+                      <Box sx={{ color: 'text.secondary', mb: '10px' }}>
+                        {
+                          `Bonus periods start at the start block and end at the below specified block. For no bonus period set the multiplier to '1' and the bonus end block to ${now}`
+                        }
+                      </Box>
+                      <Box>
+                        <TextField size='small' value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
+                      </Box>
+                      <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
+                        Bonus end date
+                      </Box>
+                      <Box>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                          <DateTimePicker
+                            value={bonusEndDate}
+                            onChange={(newValue) => { setBonusEndDate(newValue) }}
+                            renderInput={(params) => <TextField size='small' {...params} />}
+                          />
+                        </LocalizationProvider>
+                      </Box>
+                      {
+                        (bonusBlock != startBlock) && (
+                          <>
+                            <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
+                              Block Number
+                            </Box>
+                            <Box>
+                              <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
+                            </Box>
+                            <Box sx={{ color: 'text.secondary', my: '10px' }}>
+                              {`* must be >= ${now}`}
+                            </Box>
+                          </>
+                        )
+                      }
+                      <Box
+                        sx={{
+                          mt: '10px'
+                        }}
+                      >
+                        <Button onClick={() => setActiveStep(5)} variant='contained' size='small'>Continue</Button>
                       </Box>
                     </StepContent>
                   </Step>
