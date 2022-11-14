@@ -697,7 +697,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: '25px'
                           }}
                         >
-                          {apy}%
+                          {apy.toFixed(2)}%
                         </Box>
                       </Grid>
                     </Grid>

@@ -11,6 +11,7 @@ import moment from 'moment';
 import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import loading from '../../assets/loading.svg';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -140,7 +141,9 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 mt: '-2px'
               }}
             >
-              { Math.trunc(liq)}
+              {liq == 0 ? (
+                <img style={{height: '20PX'}} src={loading} />
+              ) : Math.trunc(liq)}
             </Box>
           </Box>
         </Grid>

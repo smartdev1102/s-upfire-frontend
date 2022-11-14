@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup, IconButton } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
+import loading from '../../assets/loading.svg';
 
 import CreateFarm from './CreateFarm';
 import { address, erc20Abi, factory, farm, generatorWeb3, pair, tokenContract, tokenWeb3 } from '../../utils/ethers.util';
@@ -235,7 +236,11 @@ return (
             Total farming liquidity
           </Typography>
           <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-            {!!liq ? `$${Math.trunc(liq)}` : '0'}
+            {!!liq ? `$${Math.trunc(liq)}` : (
+              <Box>
+                <img style={{height: '24px', paddingLeft: '20px'}} src={loading} />
+              </Box>
+            )}
           </Typography>
           <FormGroup
             sx={{
