@@ -25,22 +25,29 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [boostPeriod, setBoostPeriod] = useState();
   const [boostNum, setBoostNum] = useState(0);
   const [boostx, setBoostx] = useState(1);
+  const [userBalance, setUserBalance] = useState();
 
   useEffect(() => {
     async function getLiq() {
       const info = await farm(chain, farmInfo.address).farmInfo();
       const supply = info.farmableSupply;
       const period = info.lockPeriod;
-      console.log(period);
       setLockPeriod(Number(period));
       setLiq(formatEther(supply));
     }
+
+    async function getUserInfo() {
+      if (!walletAddress) return;
+      const userinfo = await farm(chain, farmInfo.address).userInfo(walletAddress);
+      setUserBalance(formatEther(userinfo.amount));
+    }
     getLiq();
-  }, [farmInfo]);
+    getUserInfo();
+  }, [farmInfo, walletAddress]);
 
   useEffect(() => {
     let period;
-    if(lockUnit === 'day') {
+    if (lockUnit === 'day') {
       period = boostNum * 86400;
     } else if (lockUnit === 'week') {
       period = boostNum * 86400 * 7;
@@ -223,44 +230,48 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 )
               }
             </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                mt: '20px'
-              }}
-            >
-              <Box
-                sx={{
-                  width: '480px',
-                }}
-              >
-                <Box>
-                  Boost {boostx === 0 || !boostx ? 1 : boostx}x
+            {
+              userBalance > 0 && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mt: '20px'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: '480px',
+                    }}
+                  >
+                    <Box>
+                      Boost {boostx === 0 || !boostx ? 1 : boostx.toFixed(1)}x
+                    </Box>
+                    <Grid container spacing={2}>
+                      <Grid item xs={4}>
+                        <TextField size='small' value={boostNum} onChange={e => setBoostNum(e.target.value)} />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <FormControl fullWidth>
+                          <Select
+                            value={lockUnit}
+                            onChange={e => setLockUnit(e.target.value)}
+                            size='small'
+                          >
+                            <MenuItem value='day'>days</MenuItem>
+                            <MenuItem value='week'>weeks</MenuItem>
+                            <MenuItem value='month'>months</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Button onClick={lock} variant='contained' size='small'>Lock</Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
                 </Box>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <TextField size='small' value={boostNum} onChange={e=>setBoostNum(e.target.value)} />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl fullWidth>
-                      <Select
-                        value={lockUnit}
-                        onChange={e => setLockUnit(e.target.value)}
-                        size='small'
-                      >
-                        <MenuItem value='day'>days</MenuItem>
-                        <MenuItem value='week'>weeks</MenuItem>
-                        <MenuItem value='month'>months</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Button onClick={lock} variant='contained' size='small'>Lock</Button>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Box>
+              )
+            }
           </Box>
         )
       }
