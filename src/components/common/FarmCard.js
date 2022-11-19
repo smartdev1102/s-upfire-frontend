@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Typography from '@mui/material/Typography';
-import { Button, Card, FormControlLabel, Grid, Switch, TextField } from '@mui/material';
+import { Button, Card, FormControl, FormControlLabel, Grid, MenuItem, Select, Switch, TextField } from '@mui/material';
 import farmIcon from '../../assets/icons/farm.svg';
 import airdropIcon from '../../assets/icons/airdrop.svg';
 import accountIcon from '../../assets/icons/account.svg';
@@ -20,20 +20,45 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [amountIn, setAmountIn] = useState('0');
   const [amountOut, setAmountOut] = useState('0');
   const [liq, setLiq] = useState('');
+  const [lockUnit, setLockUnit] = useState('month');
+  const [lockPeriod, setLockPeriod] = useState();
+  const [boostPeriod, setBoostPeriod] = useState();
+  const [boostNum, setBoostNum] = useState(0);
+  const [boostx, setBoostx] = useState(1);
 
   useEffect(() => {
     async function getLiq() {
       const info = await farm(chain, farmInfo.address).farmInfo();
       const supply = info.farmableSupply;
+      const period = info.lockPeriod;
+      console.log(period);
+      setLockPeriod(Number(period));
       setLiq(formatEther(supply));
     }
     getLiq();
   }, [farmInfo]);
 
+  useEffect(() => {
+    let period;
+    if(lockUnit === 'day') {
+      period = boostNum * 86400;
+    } else if (lockUnit === 'week') {
+      period = boostNum * 86400 * 7;
+    } else {
+      period = boostNum * 86400 * 30;
+    }
+    setBoostPeriod(period);
+    setBoostx(period / lockPeriod);
+  }, [boostNum, lockUnit]);
+
   const { library } = useWeb3React()
 
   const handleSelectedFarm = () => {
     setSelectedFarm(farmInfo);
+  }
+
+  const lock = async () => {
+    await farmWeb3(farmInfo.address, library.getSigner()).lock(boostPeriod);
   }
 
   const withdraw = async () => {
@@ -142,7 +167,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
               }}
             >
               {liq == 0 ? (
-                <img style={{height: '20PX'}} src={loading} />
+                <img style={{ height: '20PX' }} src={loading} />
               ) : Math.trunc(liq)}
             </Box>
           </Box>
@@ -197,6 +222,44 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                   </Box>
                 )
               }
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                mt: '20px'
+              }}
+            >
+              <Box
+                sx={{
+                  width: '480px',
+                }}
+              >
+                <Box>
+                  Boost {boostx === 0 || !boostx ? 1 : boostx}x
+                </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <TextField size='small' value={boostNum} onChange={e=>setBoostNum(e.target.value)} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl fullWidth>
+                      <Select
+                        value={lockUnit}
+                        onChange={e => setLockUnit(e.target.value)}
+                        size='small'
+                      >
+                        <MenuItem value='day'>days</MenuItem>
+                        <MenuItem value='week'>weeks</MenuItem>
+                        <MenuItem value='month'>months</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button onClick={lock} variant='contained' size='small'>Lock</Button>
+                  </Grid>
+                </Grid>
+              </Box>
             </Box>
           </Box>
         )

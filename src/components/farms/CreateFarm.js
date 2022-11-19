@@ -40,7 +40,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [liquidity, setLiquidity] = useState(0);
   const [pairs, setPairs] = useState([]);
   const [lpname, setLpname] = useState('');
-  const [openList, setOpenList] = useState();
+  const [openList, setOpenList] = useState(false);
+  const [lockUnit, setLockUnit] = useState('month');
+  const [periodPerx, setPeriodPerx] = useState(0);
 
 
   useEffect(() => {
@@ -144,6 +146,16 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const createFarm = () => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
+    let unit;
+    if(lockUnit === 'day') {
+      unit = 3600 * 24;
+    } else if(lockUnit === 'week') {
+      unit = 3600 * 24 * 7;
+    } else {
+      unit = 3600 * 24 * 30;
+    }
+    const lockPeriod = periodPerx * unit;
+
     if (chain === Number(process.env.REACT_APP_CHAIN)) {
       create(
         farmToken,
@@ -153,6 +165,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
         startBlock,
         bonusEndBlock,
         multiplier,
+        lockPeriod,
         false,
         0
       );
@@ -217,7 +230,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
       onClose={handleClose}
       open={open}
     >
-      <LptokenDlg setLpToken={setLpToken} chain={chain} open={openList} onClose={() => setOpenList()} pairs={pairs} />
+      <LptokenDlg setLpToken={setLpToken} chain={chain} open={openList} onClose={() => setOpenList(false)} pairs={pairs} />
       <Box
         sx={{
           border: '2px solid #2494F3',
@@ -559,7 +572,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           mt: '10px'
                         }}
                       >
-                        <Button onClick={() => setActiveStep(4)} variant='contained' size='small'>Finish</Button>
+                        <Button onClick={() => setActiveStep(4)} variant='contained' size='small'>continue</Button>
                       </Box>
                     </StepContent>
                   </Step>
@@ -613,6 +626,39 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                         }}
                       >
                         <Button onClick={() => setActiveStep(5)} variant='contained' size='small'>Continue</Button>
+                      </Box>
+                    </StepContent>
+                  </Step>
+                  {/* step 5 */}
+                  <Step>
+                    <StepLabel onClick={() => setActiveStep(5)}>
+                      Lock Period (Optional)
+                    </StepLabel>
+                    <StepContent>
+                      <Grid sx={{width: '480px'}} container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <FormControl fullWidth>
+                            <Select
+                              value={lockUnit}
+                              onChange={e => setLockUnit(e.target.value)}
+                              size='small'
+                            >
+                              <MenuItem value='day'>days</MenuItem>
+                              <MenuItem value='week'>weeks</MenuItem>
+                              <MenuItem value='month'>months</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                      <Box
+                        sx={{
+                          mt: '10px'
+                        }}
+                      >
+                        <Button onClick={() => setActiveStep(6)} variant='contained' size='small'>finish</Button>
                       </Box>
                     </StepContent>
                   </Step>

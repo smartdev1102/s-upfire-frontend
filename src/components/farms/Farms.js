@@ -146,6 +146,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     startBlock,
     bonusEndBlock,
     bonus,
+    lockPeriod,
     isV3,
     index
   ) => {
@@ -154,6 +155,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
       await tx1.wait();
     // }
+    console.log(lockPeriod);
     const tx = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
       farmToken,
       parseEther(amountIn),
@@ -162,6 +164,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       startBlock,
       bonusEndBlock,
       bonus,
+      lockPeriod,
       false
     );
     await tx.wait();

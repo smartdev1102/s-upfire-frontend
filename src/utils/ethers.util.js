@@ -27,8 +27,8 @@ export const address = {
   },
   97: {
     0: {
-      factory: "0xE9f8B70CeE3cb8a22B68766Ba5429B23F2ECF1d9",
-      generator: "0x587a39A679994B9E6BA1F6e29Eb0ebA20Df42abF",
+      factory: "0x9fe582f9e7D02d5096375A1FE294f394a0B9D578",
+      generator: "0x9B9DbFAedF69EF47870D6745D10f20a1ef57c426",
       rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
       wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       sfactory: '0x8c600cAa998B007f3EA81046d5710d2D502edC0E',
