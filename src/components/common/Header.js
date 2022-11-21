@@ -270,66 +270,73 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
       <Hidden mdUp>
         {/* mobile wallet connect button */}
         {/* wallet connect button */}
-        {
-          !walletAddress ? (
-            <Box>
-              <RoundButton
-                sx={{
-                  background: '#7389DF',
-                  ":hover": {
-                    background: 'lightBlue'
-                  }
-                }}
-                onClick={connectWallet}
-                size='large'
-                variant='contained'
-              >
-                connect wallet
-              </RoundButton>
-            </Box>
-          ) : (
-            <Box>
-              <RoundButton
-                sx={{
-                  background: '#7389DF',
-                  ":hover": {
-                    background: 'lightBlue'
-                  }
-                }}
-                id="wallet-button"
-                aria-controls={open2 ? 'wallet-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open2 ? 'true' : undefined}
-                onClick={e => setAnchorEl2(e.currentTarget)}
-                variant='contained'
-                size='large'
-              >
-                {optimizeAddress(walletAddress)}
-              </RoundButton>
-              <Menu
-                id="wallet-menu"
-                anchorEl={anchorEl2}
-                open={open2}
-                onClose={() => setAnchorEl2(null)}
-                MenuListProps={{
-                  'aria-labelledby': 'wallet-button',
-                }}
-                PaperProps={{
-                  sx: {
-                    width: '120px',
-                    background: '#030927',
-                  }
-                }}
-              >
-                <MenuItem
-                  onClick={() => deactivate()}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          {
+            !walletAddress ? (
+              <Box>
+                <RoundButton
+                  sx={{
+                    background: '#7389DF',
+                    ":hover": {
+                      background: 'lightBlue'
+                    }
+                  }}
+                  onClick={connectWallet}
+                  size='large'
+                  variant='contained'
                 >
-                  log out
-                </MenuItem>
-              </Menu>
-            </Box>
-          )
-        }
+                  connect wallet
+                </RoundButton>
+              </Box>
+            ) : (
+              <Box>
+                <RoundButton
+                  sx={{
+                    background: '#7389DF',
+                    ":hover": {
+                      background: 'lightBlue'
+                    }
+                  }}
+                  id="wallet-button"
+                  aria-controls={open2 ? 'wallet-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open2 ? 'true' : undefined}
+                  onClick={e => setAnchorEl2(e.currentTarget)}
+                  variant='contained'
+                  size='large'
+                >
+                  {optimizeAddress(walletAddress)}
+                </RoundButton>
+                <Menu
+                  id="wallet-menu"
+                  anchorEl={anchorEl2}
+                  open={open2}
+                  onClose={() => setAnchorEl2(null)}
+                  MenuListProps={{
+                    'aria-labelledby': 'wallet-button',
+                  }}
+                  PaperProps={{
+                    sx: {
+                      width: '120px',
+                      background: '#030927',
+                    }
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => deactivate()}
+                  >
+                    log out
+                  </MenuItem>
+                </Menu>
+              </Box>
+            )
+          }
+        </Box>
       </Hidden>
     </Box>
   )

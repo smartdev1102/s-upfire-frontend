@@ -152,8 +152,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
   ) => {
     // const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
     // if (Number(allowance) < Number(parseEther(amountIn))) {
-      const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
-      await tx1.wait();
+    const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
+    await tx1.wait();
     // }
     console.log(lockPeriod);
     const tx = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
@@ -168,7 +168,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       false
     );
     await tx.wait();
-  
+
     const rewardSymbol = await tokenContract(chain, farmToken).symbol();
     const token0 = await pair(chain, lptoken).token0();
     const token1 = await pair(chain, lptoken).token1();
@@ -197,255 +197,260 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
     });
     setFarms([...farms, res]);
     setOpenCreateFarm(false);
-}
+  }
 
-return (
-  <Box
-    sx={{
-      p: '1%'
-    }}
-  >
-    <StakeDlg onClose={() => setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
-    {/* create farm */}
-    <CreateFarm pairs={pairs} chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress} />
-    {/* total farming liquidity */}
+  return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center'
+        p: '1%'
       }}
     >
+      <StakeDlg onClose={() => setSelectedFarm()} farm={selectedFarm} chain={chain} walletAddress={walletAddress} />
+      {/* create farm */}
+      <CreateFarm pairs={pairs} chain={chain} open={openCreateFarm} onClose={() => setOpenCreateFarm(false)} create={createFarm} walletAddress={walletAddress} />
+      {/* total farming liquidity */}
       <Box
         sx={{
-          width: '100%',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
+          justifyContent: 'center'
         }}
       >
-
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
             width: '100%',
-            px: '40px',
-            background: '#001126',
-            py: '10px',
-            borderRadius: '15px'
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
-          <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
-            Total farming liquidity
-          </Typography>
-          <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-            {!!liq ? `$${Math.trunc(liq)}` : (
-              <Box>
-                <img style={{height: '24px', paddingLeft: '20px'}} src={loading} />
-              </Box>
-            )}
-          </Typography>
-          <FormGroup
+
+          <Box
             sx={{
-              mx: '10px'
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              px: '40px',
+              background: '#001126',
+              py: '10px',
+              borderRadius: '15px'
             }}
           >
-            <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
-          </FormGroup>
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <Hidden mdDown>
-            <SearchInput
-              value={searchKey}
-              onChange={e => setSearchKey(e.target.value)}
-              placeholder='Search by name, symbol'
-            />
-            <IconButton>
-              <SearchIcon/>
-            </IconButton>
-          </Hidden>
-          <Box>
-            <RoundButton
-              onClick={handleOpenCreateFarm}
+            <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
+              Total farming liquidity
+            </Typography>
+            <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
+              {!!liq ? `$${Math.trunc(liq)}` : (
+                <Box>
+                  <img style={{ height: '24px', paddingLeft: '20px' }} src={loading} />
+                </Box>
+              )}
+            </Typography>
+            <FormGroup
               sx={{
-                color: 'text.primary',
-                border: '1px solid white',
-              }}
-              variant='outlined'
-            >
-              Create farm
-            </RoundButton>
-          </Box>
-          <Box>
-            <RoundButton
-              sx={{
-                color: 'text.primary',
-                border: '1px solid white',
-                mx: '10%'
-              }}
-              variant='outlined'
-              id="filter-button"
-              aria-controls={open ? 'filter-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={e => setAnchorEl(e.currentTarget)}
-            >
-              <MenuIcon />
-              {/* <ExpandMoreIcon /> */}
-            </RoundButton>
-            <Menu
-              id="filter-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={() => setAnchorEl(null)}
-              MenuListProps={{
-                'aria-labelledby': 'filter-button',
+                mx: '10px'
               }}
             >
-              <MenuItem>
-                Filtered By
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={() => handleFilter('apr')}>
-                APR
-              </MenuItem>
-              <MenuItem onClick={() => handleFilter('liq')}>
-                Liquidity
-              </MenuItem>
-              <MenuItem onClick={() => handleFilter('alpha')}>
-                Alphabetic
-              </MenuItem>
-            </Menu>
+              <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
+            </FormGroup>
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <Hidden mdDown>
+              <SearchInput
+                value={searchKey}
+                onChange={e => setSearchKey(e.target.value)}
+                placeholder='Search by name, symbol'
+              />
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </Hidden>
+            <Box>
+              <RoundButton
+                onClick={handleOpenCreateFarm}
+                sx={{
+                  color: 'text.primary',
+                  border: '1px solid white',
+                }}
+                variant='outlined'
+              >
+                Create farm
+              </RoundButton>
+            </Box>
+            <Box>
+              <RoundButton
+                sx={{
+                  color: 'text.primary',
+                  border: '1px solid white',
+                  mx: '10%'
+                }}
+                variant='outlined'
+                id="filter-button"
+                aria-controls={open ? 'filter-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={e => setAnchorEl(e.currentTarget)}
+              >
+                <MenuIcon />
+                {/* <ExpandMoreIcon /> */}
+              </RoundButton>
+              <Menu
+                id="filter-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+                MenuListProps={{
+                  'aria-labelledby': 'filter-button',
+                }}
+              >
+                <MenuItem>
+                  Filtered By
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={() => handleFilter('apr')}>
+                  APR
+                </MenuItem>
+                <MenuItem onClick={() => handleFilter('liq')}>
+                  Liquidity
+                </MenuItem>
+                <MenuItem onClick={() => handleFilter('alpha')}>
+                  Alphabetic
+                </MenuItem>
+              </Menu>
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        px: '40px',
-        background: '#001126',
-        py: '10px',
-        borderRadius: '15px',
-        mt: '10px'
-      }}
-    >
-      <Grid
-        sx={{
-          cursor: 'pointer'
-        }}
-        container
-        spacing={2}
-      >
-        <Grid item xs={5}>
-          <Box
-            sx={{
-              height: '100%',
-              py: '10px',
-              px: '20px',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <Box>
-              <Box sx={{ pt: '5px' }}>
-                Name
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={3}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              height: '100%'
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item sm={10} md={2}>
-              </Grid>
-              <Hidden smDown>
-                <Grid sx={{ mt: '5px' }} item xs={5}>
-                  Start Date
-                </Grid>
-              </Hidden>
-              <Grid sx={{ mt: '5px' }} item xs={5}>
-                End Date
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              display: 'flex',
-              height: '100%',
-              alignItems: 'center',
-              pt: '5px'
-            }}
-          >
-            <Box sx={{ mx: '10px' }}>
-            </Box>
-            <Box>
-              Liquidity
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              display: 'flex',
-              height: '100%',
-              alignItems: 'center'
-            }}
-          >
-            <Box sx={{ mx: '10px' }}>
-            </Box>
-            <Box sx={{ mt: '5px' }}>
-              Farmers
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>
-    {/* farms */}
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        width: '100%'
-      }}
-    >
       <Box
         sx={{
-          minHeight: '50vh',
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          px: '40px',
+          background: '#001126',
+          py: '10px',
+          borderRadius: '15px',
+          mt: '10px'
+        }}
+      >
+        <Grid
+          sx={{
+            cursor: 'pointer'
+          }}
+          container
+          spacing={2}
+        >
+          <Grid item xs={3}>
+            <Box
+              sx={{
+                height: '100%',
+                py: '10px',
+                px: '20px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Box>
+                <Box sx={{ pt: '5px', pl: '20px' }}>
+                  Name
+                </Box>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <Box sx={{ml: '-20px'}}>
+              Reward
+            </Box>
+          </Grid>
+          <Grid item xs={3}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%'
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item sm={10} md={2}>
+                </Grid>
+                <Hidden smDown>
+                  <Grid sx={{ mt: '5px' }} item xs={5}>
+                    Start Date
+                  </Grid>
+                </Hidden>
+                <Grid sx={{ mt: '5px' }} item xs={5}>
+                  End Date
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                height: '100%',
+                alignItems: 'center',
+                pt: '5px'
+              }}
+            >
+              <Box sx={{ mx: '10px' }}>
+              </Box>
+              <Box>
+                Liquidity
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={2}>
+            <Box
+              sx={{
+                display: 'flex',
+                height: '100%',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ mx: '10px' }}>
+              </Box>
+              <Box sx={{ mt: '5px' }}>
+                Farmers
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      {/* farms */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
           width: '100%'
         }}
       >
-        {
-          filterFarm.map((farm, i) => (
-            <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} handleVisible={handleVisible} walletAddress={walletAddress} />
-          ))
-        }
-        {
-          filterFarmv3.map((farm, i) => (
-            <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
-          ))
-        }
+        <Box
+          sx={{
+            minHeight: '50vh',
+            width: '100%'
+          }}
+        >
+          {
+            filterFarm.map((farm, i) => (
+              <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} handleVisible={handleVisible} walletAddress={walletAddress} />
+            ))
+          }
+          {
+            filterFarmv3.map((farm, i) => (
+              <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
+            ))
+          }
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        {/* <Pagination count={10} variant='outlined'/> */}
       </Box>
     </Box>
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center'
-      }}
-    >
-      {/* <Pagination count={10} variant='outlined'/> */}
-    </Box>
-  </Box>
-)
+  )
 }
 
 export default Farms;

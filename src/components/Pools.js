@@ -204,7 +204,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
             </Box>
           </Grid>
           <Grid item xs={2}>
-            Apr
+            APR
           </Grid>
           <Grid item xs={4}>
             balance

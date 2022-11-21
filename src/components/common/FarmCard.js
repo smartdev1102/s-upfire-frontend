@@ -13,6 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import loading from '../../assets/loading.svg';
 
+
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
 const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddress }) => {
@@ -80,19 +81,20 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         borderRadius: '20px',
         border: '1px solid #2494F3',
         fontFamily: 'Exo',
-        pt: '15px',
+        py: '15px',
         my: '10px'
       }}
     >
       <Grid
         onClick={() => setOpenStake(!openStake)}
         sx={{
-          cursor: 'pointer'
+          cursor: 'pointer',
+          alignItems: 'center'
         }}
         container
         spacing={2}
       >
-        <Grid item xs={5}>
+        <Grid item xs={3}>
           <Box
             sx={{
               height: '100%',
@@ -102,11 +104,22 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
               alignItems: 'center'
             }}
           >
-            <Box>
-              <Box sx={{ mb: 0 }}>
-                {`Farm ${farmInfo.name.toUpperCase()}/${farmInfo.baseToken}`}
+            <Box
+              sx={{
+                display: 'flex'
+              }}
+            >
+              <Box
+                sx={{
+                  width: '50px'
+                }}
+              >
+                
               </Box>
-              <Box sx={{ fontSize: '12px' }}>
+              <Box sx={{ mb: 0 }}>
+                {`${farmInfo.name.toUpperCase()}`}
+              </Box>
+              {/* <Box sx={{ fontSize: '12px' }}>
                 {
                   farmInfo.start > new Date() && (
                     <Box sx={{ color: 'skyBlue' }}>
@@ -128,9 +141,12 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                     </Box>
                   )
                 }
-              </Box>
+              </Box> */}
             </Box>
           </Box>
+        </Grid>
+        <Grid item xs={2}>
+          {`${farmInfo.baseToken}`}
         </Grid>
         <Grid item xs={3}>
           <Box
@@ -142,9 +158,11 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
             }}
           >
             <Grid container spacing={2}>
-              <Grid item sm={10} md={2}>
-                <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px', ml: '20px' }} />
-              </Grid>
+              <Hidden lgDown>
+                <Grid item sm={10} md={2}>
+                  <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px', ml: '20px' }} />
+                </Grid>
+              </Hidden>
               <Hidden smDown>
                 <Grid sx={{ mt: '5px' }} item xs={5}>
                   {moment(farmInfo.start).format('MMM DD YYYY')}
@@ -223,9 +241,9 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                 <Button onClick={withdraw} variant='contained'>withdraw</Button>
               </Box>
               {
-                (String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === String(farmInfo.owner).toLowerCase()) && (
+                ((String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === String(farmInfo.owner).toLowerCase()) && !!walletAddress) && (
                   <Box>
-                    <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide" />
+                    <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide from site" />
                   </Box>
                 )
               }
