@@ -12,6 +12,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link } from 'react-router-dom';
+import { useWeb3React } from '@web3-react/core';
 
 
 const chainLogos = {
@@ -22,37 +23,42 @@ const chainLogos = {
 }
 
 const chainColors = process.env.NODE_ENV === 'development' ?
-{
-  97: {
-    main: 'orange',
-    hover: 'darkOrange'
-  },
-  43114: {
-    main: 'pink',
-    hover: 'hotPink'
-  },
-  // 4: {
-  //   main: 'skyBlue',
-  //   hover: 'lightBlue'
-  // }
-} : {
-  56: {
-    main: 'orange',
-    hover: 'darkOrange'
-  },
-  43114: {
-    main: 'pink',
-    hover: 'hotPink'
-  },
-  // 4: {
-  //   main: 'skyBlue',
-  //   hover: 'lightBlue'
-  // }
-}
+  {
+    97: {
+      main: 'orange',
+      hover: 'darkOrange'
+    },
+    43114: {
+      main: 'pink',
+      hover: 'hotPink'
+    },
+    // 4: {
+    //   main: 'skyBlue',
+    //   hover: 'lightBlue'
+    // }
+  } : {
+    56: {
+      main: 'orange',
+      hover: 'darkOrange'
+    },
+    43114: {
+      main: 'pink',
+      hover: 'hotPink'
+    },
+    // 4: {
+    //   main: 'skyBlue',
+    //   hover: 'lightBlue'
+    // }
+  }
 
 const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl2, setAnchorEl2] = useState(null);
   const open = Boolean(anchorEl);
+  const open2 = Boolean(anchorEl2);
+
+  const { deactivate } = useWeb3React();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   }
@@ -98,7 +104,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
         }}
       >
         <Box
-          onClick={() => window.location.href='/main?tab=1'}
+          onClick={() => window.location.href = '/main?tab=1'}
           sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
         >
           <img style={{ height: '80px' }} src={logo} />
@@ -196,6 +202,76 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
             <Box>
               <RoundButton color='primary' size='large' onClick={handleReferral} variant='contained'>Create referral link</RoundButton>
             </Box>
+            {/* wallet connect button */}
+            {
+              !walletAddress ? (
+                <Box>
+                  <RoundButton
+                    sx={{
+                      background: '#7389DF',
+                      ":hover": {
+                        background: 'lightBlue'
+                      }
+                    }}
+                    onClick={connectWallet}
+                    size='large'
+                    variant='contained'
+                  >
+                    connect wallet
+                  </RoundButton>
+                </Box>
+              ) : (
+                <Box>
+                  <RoundButton
+                    sx={{
+                      background: '#7389DF',
+                      ":hover": {
+                        background: 'lightBlue'
+                      }
+                    }}
+                    id="wallet-button"
+                    aria-controls={open2 ? 'wallet-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open2 ? 'true' : undefined}
+                    onClick={e => setAnchorEl2(e.currentTarget)}
+                    variant='contained'
+                    size='large'
+                  >
+                    {optimizeAddress(walletAddress)}
+                  </RoundButton>
+                  <Menu
+                    id="wallet-menu"
+                    anchorEl={anchorEl2}
+                    open={open2}
+                    onClose={() => setAnchorEl2(null)}
+                    MenuListProps={{
+                      'aria-labelledby': 'wallet-button',
+                    }}
+                    PaperProps={{
+                      sx: {
+                        width: '120px',
+                        background: '#030927',
+                      }
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => deactivate()}
+                    >
+                      log out
+                    </MenuItem>
+                  </Menu>
+                </Box>
+              )
+            }
+          </Box>
+        </Hidden>
+
+      </Box>
+      <Hidden mdUp>
+        {/* mobile wallet connect button */}
+        {/* wallet connect button */}
+        {
+          !walletAddress ? (
             <Box>
               <RoundButton
                 sx={{
@@ -208,34 +284,52 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 size='large'
                 variant='contained'
               >
-                {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
+                connect wallet
               </RoundButton>
             </Box>
-          </Box>
-        </Hidden>
-
-      </Box>
-      <Hidden mdUp>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
-          <RoundButton
-            sx={{
-              background: '#7389DF',
-              ":hover": {
-                background: 'lightBlue'
-              }
-            }}
-            onClick={connectWallet}
-            size='large'
-            variant='contained'
-          >
-            {!!walletAddress ? optimizeAddress(walletAddress) : 'connect wallet'}
-          </RoundButton>
-        </Box>
+          ) : (
+            <Box>
+              <RoundButton
+                sx={{
+                  background: '#7389DF',
+                  ":hover": {
+                    background: 'lightBlue'
+                  }
+                }}
+                id="wallet-button"
+                aria-controls={open2 ? 'wallet-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open2 ? 'true' : undefined}
+                onClick={e => setAnchorEl2(e.currentTarget)}
+                variant='contained'
+                size='large'
+              >
+                {optimizeAddress(walletAddress)}
+              </RoundButton>
+              <Menu
+                id="wallet-menu"
+                anchorEl={anchorEl2}
+                open={open2}
+                onClose={() => setAnchorEl2(null)}
+                MenuListProps={{
+                  'aria-labelledby': 'wallet-button',
+                }}
+                PaperProps={{
+                  sx: {
+                    width: '120px',
+                    background: '#030927',
+                  }
+                }}
+              >
+                <MenuItem
+                  onClick={() => deactivate()}
+                >
+                  log out
+                </MenuItem>
+              </Menu>
+            </Box>
+          )
+        }
       </Hidden>
     </Box>
   )

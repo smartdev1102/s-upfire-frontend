@@ -102,7 +102,7 @@ const WalletModal = ({ open, onClose, chain }) => {
                 borderRadius: '10px'
               }}
             >
-              By connecting a wallet, you agree to Uniswap Lab's Terms of Service and acknowledge taht you ahve read and understand the Uniswap Protocol Disclaimer.
+              By connecting a wallet you understand that you are responsible for all of your own actions on the site, and accept the risks that come with using smart contract platforms.
             </Box>
           </ListItem>
         </List>

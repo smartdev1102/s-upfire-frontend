@@ -129,11 +129,9 @@ function App() {
   }
 
   const connectWallet = async () => {
-    setOpenWalletModal(true);
-    // if (typeof window.ethereum !== 'undefined') {
-    //   const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });  // connect wallet
-    //   setWalletAddress(account);
-    // }
+    if(!walletAddress) {
+      setOpenWalletModal(true);
+    }
   }
 
   const handleReferral = () => {
