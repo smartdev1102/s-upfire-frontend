@@ -272,8 +272,8 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
         {/* wallet connect button */}
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center'
+            width: '100%',
+            px: '10px'
           }}
         >
           {
@@ -282,6 +282,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                 <RoundButton
                   sx={{
                     background: '#7389DF',
+                    mx: 0,
                     ":hover": {
                       background: 'lightBlue'
                     }
@@ -289,6 +290,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   onClick={connectWallet}
                   size='large'
                   variant='contained'
+                  fullWidth
                 >
                   connect wallet
                 </RoundButton>
@@ -300,7 +302,8 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                     background: '#7389DF',
                     ":hover": {
                       background: 'lightBlue'
-                    }
+                    },
+                    mx: 0
                   }}
                   id="wallet-button"
                   aria-controls={open2 ? 'wallet-menu' : undefined}
@@ -309,6 +312,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   onClick={e => setAnchorEl2(e.currentTarget)}
                   variant='contained'
                   size='large'
+                  fullWidth
                 >
                   {optimizeAddress(walletAddress)}
                 </RoundButton>
@@ -322,7 +326,7 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
                   }}
                   PaperProps={{
                     sx: {
-                      width: '120px',
+                      width: '100%',
                       background: '#030927',
                     }
                   }}

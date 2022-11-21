@@ -356,7 +356,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             </Box>
           </Grid>
           <Grid item xs={2}>
-            <Box sx={{ml: '-20px'}}>
+            <Box sx={{ml: '-20px', pt: '15px'}}>
               Reward
             </Box>
           </Grid>
@@ -369,14 +369,12 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               }}
             >
               <Grid container spacing={2}>
-                <Grid item sm={10} md={2}>
-                </Grid>
                 <Hidden smDown>
-                  <Grid sx={{ mt: '5px' }} item xs={5}>
+                  <Grid sx={{ mt: '5px', pl: '10px' }} item xs={6}>
                     Start Date
                   </Grid>
                 </Hidden>
-                <Grid sx={{ mt: '5px' }} item xs={5}>
+                <Grid sx={{ mt: '5px' }} item xs={6}>
                   End Date
                 </Grid>
               </Grid>

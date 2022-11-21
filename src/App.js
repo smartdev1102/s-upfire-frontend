@@ -161,7 +161,8 @@ function App() {
         <WalletAlert open={openWalletAlert} onClose={() => setOpenWalletAlert(false)} />
         <Box
           sx={{
-            mt: '20px'
+            my: '20px',
+            width: '100%'
           }}
         >
           <Banner chain={chain} setChain={setChain} />

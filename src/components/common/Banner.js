@@ -93,14 +93,13 @@ const Banner = ({ setChain, chain }) => {
   }
 
   return (
-    <Box>
+    <Box sx={{width: '100%'}}>
       {/* tab buttons */}
       <Hidden mdUp>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
             width: '100%',
+            px: '10px'
           }}
         >
           <Box>
@@ -110,7 +109,8 @@ const Banner = ({ setChain, chain }) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              sx={{ width: '220px', background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
+              sx={{ mx:0, background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
+              fullWidth
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img style={{ marginRight: '20px', height: '30px' }} src={chainLogos[chain]} />
@@ -130,7 +130,7 @@ const Banner = ({ setChain, chain }) => {
               }}
               PaperProps={{
                 sx: {
-                  width: '220px',
+                  width: '100%',
                   background: '#030927',
                 }
               }}

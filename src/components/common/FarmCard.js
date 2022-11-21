@@ -12,6 +12,7 @@ import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import loading from '../../assets/loading.svg';
+import defaultIcon from '../../assets/defaultIcon.svg';
 
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
@@ -106,15 +107,17 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
           >
             <Box
               sx={{
-                display: 'flex'
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
               <Box
                 sx={{
-                  width: '50px'
+                  width: '50px',
+                  pt: '5px'
                 }}
               >
-                
+                <img style={{width: '30px'}} src={defaultIcon} />
               </Box>
               <Box sx={{ mb: 0 }}>
                 {`${farmInfo.name.toUpperCase()}`}
@@ -158,17 +161,21 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
             }}
           >
             <Grid container spacing={2}>
-              <Hidden lgDown>
-                <Grid item sm={10} md={2}>
-                  <DateRangeIcon sx={{ color: '#1F8BED', mt: '4px', ml: '20px' }} />
-                </Grid>
-              </Hidden>
               <Hidden smDown>
-                <Grid sx={{ mt: '5px' }} item xs={5}>
-                  {moment(farmInfo.start).format('MMM DD YYYY')}
+                <Grid sx={{ mt: '5px' }} item xs={6}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mt: '-2px'
+                    }}
+                  >
+                    <DateRangeIcon sx={{ color: '#1F8BED', ml: '-20px', mr: '10px' }} />
+                    {moment(farmInfo.start).format('MMM DD YYYY')}
+                  </Box>
                 </Grid>
               </Hidden>
-              <Grid sx={{ mt: '5px', ml: '-5px' }} item xs={5}>
+              <Grid sx={{ mt: '5px', ml: '-5px' }} item xs={6}>
                 {moment(farmInfo.end).format('MMM DD YYYY')}
               </Grid>
             </Grid>
