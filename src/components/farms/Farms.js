@@ -350,7 +350,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             >
               <Box>
                 <Box sx={{ pt: '5px', pl: '20px' }}>
-                  Name
+                  LP
                 </Box>
               </Box>
             </Box>
