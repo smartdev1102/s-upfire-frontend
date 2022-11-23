@@ -316,21 +316,23 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           sx={{
                             mt: '20px',
                             position: 'relative',
-                            display: 'flex'
+                            display: 'flex',
+                            justifyContent: 'end'
                           }}
                         >
                           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
-                          <TextField size='small' value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                          <TextField size='small' sx={{width: '50%'}} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
                           <button
                             onClick={() => setAmountIn(farmBalance)}
                             style={{
                               position: 'absolute',
-                              left: '170px',
-                              bottom: '1px',
+                              right: '5px',
+                              bottom: '3px',
                               padding: '5px',
                               cursor: 'pointer',
                               background: '#266d7a',
-                              outline: 'none'
+                              outline: 'none',
+                              border: 'none'
                             }}
                             variant='contained'
                             size='small'
@@ -457,14 +459,14 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                                 position: 'relative'
                               }}
                             >
-                              <TextField value={!!lpToken ? `${lpToken.symbol1}/${lpToken.symbol2}` : ''} readOnly size='small' onClick={() => setOpenList(true)} />
+                              <TextField fullWidth value={!!lpToken ? `${lpToken.symbol1}/${lpToken.symbol2}` : ''} readOnly size='small' onClick={() => setOpenList(true)} />
                               {
                                 !!lpToken && (
                                   <IconButton
                                     onClick={() => setLpToken()}
                                     sx={{
                                       position: 'absolute',
-                                      left: '175px'
+                                      right: '10px'
                                     }}
                                   >
                                     <Close />

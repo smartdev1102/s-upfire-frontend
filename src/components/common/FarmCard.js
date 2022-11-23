@@ -28,6 +28,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [boostNum, setBoostNum] = useState(0);
   const [boostx, setBoostx] = useState(1);
   const [userBalance, setUserBalance] = useState();
+  const [farmers, setFarmers] = useState(0);
 
   useEffect(() => {
     async function getLiq() {
@@ -36,6 +37,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
       const period = info.lockPeriod;
       setLockPeriod(Number(period));
       setLiq(formatEther(supply));
+      setFarmers(Number(info.numFarmers));
     }
 
     async function getUserInfo() {
@@ -83,7 +85,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         border: '1px solid #2494F3',
         fontFamily: 'Exo',
         py: '15px',
-        my: '10px'
+        my: '10px',
       }}
     >
       <Grid
@@ -117,11 +119,11 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                   pt: '5px'
                 }}
               >
-                <img style={{width: '30px'}} src={defaultIcon} />
+                <img style={{ width: '30px' }} src={defaultIcon} />
               </Box>
-              <Box sx={{ mb: 0 }}>
+              <Typography variant='h3' component='h3'>
                 {`${farmInfo.name.toUpperCase()}`}
-              </Box>
+              </Typography>
               {/* <Box sx={{ fontSize: '12px' }}>
                 {
                   farmInfo.start > new Date() && (
@@ -149,7 +151,9 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
           </Box>
         </Grid>
         <Grid item xs={2}>
-          {`${farmInfo.baseToken}`}
+          <Typography variant='h3' component='h3'>
+            {`${farmInfo.baseToken}`}
+          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Box
@@ -162,21 +166,24 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
           >
             <Grid container spacing={2}>
               <Hidden smDown>
-                <Grid sx={{ mt: '5px' }} item xs={6}>
+                <Grid item xs={6}>
                   <Box
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
-                      mt: '-2px'
                     }}
                   >
                     <DateRangeIcon sx={{ color: '#1F8BED', ml: '-20px', mr: '10px' }} />
-                    {moment(farmInfo.start).format('MMM DD YYYY')}
+                    <Typography variant='h3' component='h3'>
+                      {moment(farmInfo.start).format('MMM DD YYYY')}
+                    </Typography>
                   </Box>
                 </Grid>
               </Hidden>
-              <Grid sx={{ mt: '5px', ml: '-5px' }} item xs={6}>
-                {moment(farmInfo.end).format('MMM DD YYYY')}
+              <Grid item xs={6}>
+                <Typography variant='h3' component='h3'>
+                  {moment(farmInfo.end).format('MMM DD YYYY')}
+                </Typography>
               </Grid>
             </Grid>
           </Box>
@@ -190,34 +197,34 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
               ml: '-5px'
             }}
           >
-            <Box sx={{ mx: '10px', mt: '3px' }}>
+            <Box sx={{ mx: '10px', mt: '5px' }}>
               <img src={airdropIcon} />
             </Box>
-            <Box
-              sx={{
-                mt: '-2px'
-              }}
-            >
-              {liq == 0 ? (
-                <img style={{ height: '20PX' }} src={loading} />
-              ) : Math.trunc(liq)}
-            </Box>
+            {
+              liq == 0 ? (
+                <img style={{ height: '20px' }} src={loading} />
+              ) : (
+                <Typography variant='h3' component='div'>
+                  {Math.trunc(liq)}
+                </Typography>
+              )
+            }
           </Box>
         </Grid>
         <Grid item xs={2}>
           <Box
             sx={{
               display: 'flex',
-              height: '100%',
-              alignItems: 'center'
             }}
           >
-            <Box sx={{ mx: '10px' }}>
-              <img style={{ height: '20px' }} src={accountIcon} />
-            </Box>
-            <Box sx={{ marginBottom: '4px' }}>
-              {farmInfo.numFarmers}
-            </Box>
+            <Hidden smDown>
+              <Box sx={{ mx: '10px' }}>
+                <img style={{ height: '20px' }} src={accountIcon} />
+              </Box>
+            </Hidden>
+            <Typography variant='h3' component='h3'>
+              {farmers}
+            </Typography>
           </Box>
         </Grid>
       </Grid>
@@ -301,7 +308,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         )
       }
 
-    </Card>
+    </Card >
   );
 }
 

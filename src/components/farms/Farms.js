@@ -235,9 +235,11 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               borderRadius: '15px'
             }}
           >
-            <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
-              Total farming liquidity
-            </Typography>
+            <Hidden smDown>
+              <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
+                Total farming liquidity
+              </Typography>
+            </Hidden>
             <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
               {!!liq ? `$${Math.trunc(liq)}` : (
                 <Box>
@@ -275,47 +277,49 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 Create farm
               </RoundButton>
             </Box>
-            <Box>
-              <RoundButton
-                sx={{
-                  color: 'text.primary',
-                  border: '1px solid white',
-                  mx: '10%'
-                }}
-                variant='outlined'
-                id="filter-button"
-                aria-controls={open ? 'filter-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={e => setAnchorEl(e.currentTarget)}
-              >
-                <MenuIcon />
-                {/* <ExpandMoreIcon /> */}
-              </RoundButton>
-              <Menu
-                id="filter-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                  'aria-labelledby': 'filter-button',
-                }}
-              >
-                <MenuItem>
-                  Filtered By
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={() => handleFilter('apr')}>
-                  APR
-                </MenuItem>
-                <MenuItem onClick={() => handleFilter('liq')}>
-                  Liquidity
-                </MenuItem>
-                <MenuItem onClick={() => handleFilter('alpha')}>
-                  Alphabetic
-                </MenuItem>
-              </Menu>
-            </Box>
+            <Hidden smDown>
+              <Box>
+                <RoundButton
+                  sx={{
+                    color: 'text.primary',
+                    border: '1px solid white',
+                    mx: '10%'
+                  }}
+                  variant='outlined'
+                  id="filter-button"
+                  aria-controls={open ? 'filter-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={e => setAnchorEl(e.currentTarget)}
+                >
+                  <MenuIcon />
+                  {/* <ExpandMoreIcon /> */}
+                </RoundButton>
+                <Menu
+                  id="filter-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={() => setAnchorEl(null)}
+                  MenuListProps={{
+                    'aria-labelledby': 'filter-button',
+                  }}
+                >
+                  <MenuItem>
+                    Filtered By
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={() => handleFilter('apr')}>
+                    APR
+                  </MenuItem>
+                  <MenuItem onClick={() => handleFilter('liq')}>
+                    Liquidity
+                  </MenuItem>
+                  <MenuItem onClick={() => handleFilter('alpha')}>
+                    Alphabetic
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </Hidden>
           </Box>
         </Box>
       </Box>
@@ -333,7 +337,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
       >
         <Grid
           sx={{
-            cursor: 'pointer'
+            cursor: 'pointer',
+            alignItems: 'center'
           }}
           container
           spacing={2}
@@ -349,16 +354,16 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
               }}
             >
               <Box>
-                <Box sx={{ pt: '5px', pl: '20px' }}>
+                <Typography variant='h3' component='h3'>
                   LP
-                </Box>
+                </Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={2}>
-            <Box sx={{ml: '-20px', pt: '15px'}}>
+            <Typography sx={{ ml: '-20px' }} variant='h3' component='h3'>
               Reward
-            </Box>
+            </Typography>
           </Grid>
           <Grid item xs={3}>
             <Box
@@ -370,46 +375,29 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
             >
               <Grid container spacing={2}>
                 <Hidden smDown>
-                  <Grid sx={{ mt: '5px', pl: '10px' }} item xs={6}>
-                    Start Date
+                  <Grid sx={{ pl: '10px' }} item xs={6}>
+                    <Typography variant='h3' component='h3'>
+                      Start Date
+                    </Typography>
                   </Grid>
                 </Hidden>
-                <Grid sx={{ mt: '5px' }} item xs={6}>
-                  End Date
+                <Grid item xs={6}>
+                  <Typography variant='h3' component='h3'>
+                    End Date
+                  </Typography>
                 </Grid>
               </Grid>
             </Box>
           </Grid>
           <Grid item xs={2}>
-            <Box
-              sx={{
-                display: 'flex',
-                height: '100%',
-                alignItems: 'center',
-                pt: '5px'
-              }}
-            >
-              <Box sx={{ mx: '10px' }}>
-              </Box>
-              <Box>
-                Liquidity
-              </Box>
-            </Box>
+            <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+              Liquidity
+            </Typography>
           </Grid>
           <Grid item xs={2}>
-            <Box
-              sx={{
-                display: 'flex',
-                height: '100%',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ mx: '10px' }}>
-              </Box>
-              <Box sx={{ mt: '5px' }}>
-                Farmers
-              </Box>
-            </Box>
+            <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+              Farmers
+            </Typography>
           </Grid>
         </Grid>
       </Box>

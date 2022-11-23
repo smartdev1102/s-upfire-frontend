@@ -159,6 +159,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
             <Box
               sx={{
                 display: 'flex',
+                mb: '5px'
               }}
             >
               Balance: {Number(formatEther(balance0)).toFixed(1)} {symbol0}
@@ -172,7 +173,8 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
           <Grid item xs={12} md={4}>
             <Box
               sx={{
-                display: 'flex'
+                display: 'flex',
+                mb: '5px'
               }}
             >
               Balance: {Number(formatEther(balance1)).toFixed(1)} {symbol1}
@@ -183,7 +185,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
               <TextField size='small' value={amountIn1} onChange={e => setAmountIn1(e.target.value)} fullWidth />
             </Box>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
             <Box>
               {
                 isApproved ? (
@@ -204,7 +206,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
           </Box>
           <Grid container spacing={2} sx={{ alignItems: 'center', fontSize: '14px' }}>
             <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex' }}>
+              <Box sx={{ display: 'flex', mb: '5px' }}>
                 Balance: {Number(formatEther(lpBalance)).toFixed(1)}
                 <Box sx={{ flexGrow: 1 }}></Box>
                 <button onClick={() => setAmountIn(formatEther(lpBalance))} style={{ cursor: 'pointer', background: '#2494F3', color: 'white', border: 'none', borderRadius: '5px' }}>Max</button>

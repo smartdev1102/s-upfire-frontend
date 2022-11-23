@@ -18,6 +18,17 @@ const getLibrary = (provider) => {
 }
 
 const myTheme = createTheme(theme);
+myTheme.typography.h3 = {
+  fontSize: '1.2rem',
+  '@media (min-width:300px)': {
+    fontSize: '12px',
+    fontWeight: 'normal',
+  },
+  [myTheme.breakpoints.up('md')]: {
+    fontSize: '18px',
+    fontWeight: 'normal',
+  },
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
