@@ -247,13 +247,15 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 </Box>
               )}
             </Typography>
-            <FormGroup
-              sx={{
-                mx: '10px'
-              }}
-            >
-              <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
-            </FormGroup>
+            <Hidden smDown>
+              <FormGroup
+                sx={{
+                  mx: '10px'
+                }}
+              >
+                <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
+              </FormGroup>
+            </Hidden>
             <Box sx={{ flexGrow: 1 }}></Box>
             <Hidden mdDown>
               <SearchInput
@@ -274,7 +276,9 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
                 }}
                 variant='outlined'
               >
-                Create farm
+                <Typography variant='h3' component='h3'>
+                  Create Farm
+                </Typography>
               </RoundButton>
             </Box>
             <Hidden smDown>
@@ -343,61 +347,63 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, t
           container
           spacing={2}
         >
-          <Grid item xs={3}>
-            <Box
-              sx={{
-                height: '100%',
-                py: '10px',
-                px: '20px',
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <Box>
+          <Grid item xs={5}>
+            <Grid container spacing={2}>
+              <Hidden smDown>
+                <Grid item xs={2}>
+                </Grid>
+              </Hidden>
+              <Grid item xs={4}>
                 <Typography variant='h3' component='h3'>
                   LP
                 </Typography>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ ml: '-20px' }} variant='h3' component='h3'>
-              Reward
-            </Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                height: '100%'
-              }}
-            >
-              <Grid container spacing={2}>
-                <Hidden smDown>
-                  <Grid sx={{ pl: '10px' }} item xs={6}>
-                    <Typography variant='h3' component='h3'>
-                      Start Date
-                    </Typography>
-                  </Grid>
-                </Hidden>
-                <Grid item xs={6}>
-                  <Typography variant='h3' component='h3'>
-                    End Date
+              </Grid>
+              <Hidden smDown>
+                <Grid item xs={4}>
+                  <Typography sx={{ ml: '-30px' }} variant='h3' component='h3'>
+                    Reward
                   </Typography>
                 </Grid>
+              </Hidden>
+              <Grid item xs={2}>
+                <Typography sx={{ ml: '-10px' }} variant='h3' component='h3'>
+                  APY
+                </Typography>
               </Grid>
-            </Box>
+            </Grid>
+          </Grid>
+          <Grid item xs={5}>
+            <Grid container spacing={2}>
+              <Hidden smDown>
+                <Grid xs={2} item></Grid>
+                <Grid sx={{ pl: '10px' }} item xs={5}>
+                  <Typography variant='h3' component='h3'>
+                    Start Date
+                  </Typography>
+                </Grid>
+              </Hidden>
+              <Grid item xs={5}>
+                <Typography sx={{ pr: '6px' }} variant='h3' component='h3'>
+                  End Date
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={2}>
-            <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
-              Liquidity
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
-              Farmers
-            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+                  Liquidity
+                </Typography>
+              </Grid>
+              <Hidden smDown>
+                <Grid item xs={6}>
+                  <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+                    Farmers
+                  </Typography>
+                </Grid>
+              </Hidden>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

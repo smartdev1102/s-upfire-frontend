@@ -29,6 +29,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [boostx, setBoostx] = useState(1);
   const [userBalance, setUserBalance] = useState();
   const [farmers, setFarmers] = useState(0);
+  const [apy, setApy] = useState(0);
 
   useEffect(() => {
     async function getLiq() {
@@ -38,6 +39,8 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
       setLockPeriod(Number(period));
       setLiq(formatEther(supply));
       setFarmers(Number(info.numFarmers));
+      const blockReward = info.blockReward.mul(86400 * 365);
+      setApy(Number(formatEther(blockReward)).toFixed(1));
     }
 
     async function getUserInfo() {
@@ -86,6 +89,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         fontFamily: 'Exo',
         py: '15px',
         my: '10px',
+        px: '20px'
       }}
     >
       <Grid
@@ -97,135 +101,93 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         container
         spacing={2}
       >
-        <Grid item xs={3}>
-          <Box
-            sx={{
-              height: '100%',
-              py: '10px',
-              px: '20px',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <Box
-                sx={{
-                  width: '50px',
-                  pt: '5px'
-                }}
-              >
-                <img style={{ width: '30px' }} src={defaultIcon} />
-              </Box>
+        <Grid item xs={5}>
+          <Grid sx={{ alignItems: 'center' }} container spacing={2}>
+            <Hidden smDown>
+              <Grid item xs={2}>
+                <img style={{ width: '30px', marginTop: '5px' }} src={defaultIcon} />
+              </Grid>
+            </Hidden>
+            <Grid item xs={4}>
               <Typography variant='h3' component='h3'>
                 {`${farmInfo.name.toUpperCase()}`}
               </Typography>
-              {/* <Box sx={{ fontSize: '12px' }}>
-                {
-                  farmInfo.start > new Date() && (
-                    <Box sx={{ color: 'skyBlue' }}>
-                      Farming is not started.
-                    </Box>
-                  )
-                }
-                {
-                  (farmInfo.start < new Date() && farmInfo.end > new Date()) && (
-                    <Box sx={{ color: 'skyBlue' }}>
-                      Farming is active.
-                    </Box>
-                  )
-                }
-                {
-                  farmInfo.bonusEndBlock < new Date() && (
-                    <Box sx={{ color: 'skyBlue' }}>
-                      Farming has finished.
-                    </Box>
-                  )
-                }
-              </Box> */}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Typography variant='h3' component='h3'>
-            {`${farmInfo.baseToken}`}
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              height: '100%',
-              ml: '-5px'
-            }}
-          >
-            <Grid container spacing={2}>
-              <Hidden smDown>
-                <Grid item xs={6}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <DateRangeIcon sx={{ color: '#1F8BED', ml: '-20px', mr: '10px' }} />
-                    <Typography variant='h3' component='h3'>
-                      {moment(farmInfo.start).format('MMM DD YYYY')}
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Hidden>
-              <Grid item xs={6}>
+            </Grid>
+            <Hidden smDown>
+              <Grid item xs={4}>
                 <Typography variant='h3' component='h3'>
-                  {moment(farmInfo.end).format('MMM DD YYYY')}
+                  {`${farmInfo.baseToken}`}
                 </Typography>
               </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              display: 'flex',
-              height: '100%',
-              alignItems: 'center',
-              ml: '-5px'
-            }}
-          >
-            <Box sx={{ mx: '10px', mt: '5px' }}>
-              <img src={airdropIcon} />
-            </Box>
-            {
-              liq == 0 ? (
-                <img style={{ height: '20px' }} src={loading} />
-              ) : (
-                <Typography variant='h3' component='div'>
-                  {Math.trunc(liq)}
-                </Typography>
-              )
-            }
-          </Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              display: 'flex',
-            }}
-          >
-            <Hidden smDown>
-              <Box sx={{ mx: '10px' }}>
-                <img style={{ height: '20px' }} src={accountIcon} />
-              </Box>
             </Hidden>
-            <Typography variant='h3' component='h3'>
-              {farmers}
-            </Typography>
-          </Box>
+            <Grid item xs={2}>
+              <Typography variant='h3' component='h3'>
+                {`${apy}%`}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={5}>
+          <Grid sx={{ alignItems: 'center' }} container spacing={2}>
+            <Hidden smDown>
+              <Grid sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} item xs={2}>
+                <DateRangeIcon sx={{ color: '#1F8BED' }} />
+              </Grid>
+              <Grid item xs={5}>
+                <Typography variant='h3' component='h3'>
+                  {moment(farmInfo.start).format('MMM DD YYYY')}
+                </Typography>
+              </Grid>
+            </Hidden>
+            <Grid item xs={5}>
+              <Typography variant='h3' component='h3'>
+                {moment(farmInfo.end).format('MMM DD YYYY')}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  height: '100%',
+                  alignItems: 'center',
+                }}
+              >
+                <Box sx={{ mx: '10px', mt: '5px' }}>
+                  <img src={airdropIcon} />
+                </Box>
+                {
+                  liq == 0 ? (
+                    <img style={{ height: '20px' }} src={loading} />
+                  ) : (
+                    <Typography variant='h3' component='div'>
+                      {Math.trunc(liq)}
+                    </Typography>
+                  )
+                }
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <Hidden smDown>
+                  <Box sx={{ mr: '10px', mt: '5px' }}>
+                    <img style={{ height: '20px' }} src={accountIcon} />
+                  </Box>
+                  <Typography variant='h3' component='h3'>
+                    {farmers}
+                  </Typography>
+                </Hidden>
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       {/* stake */}
