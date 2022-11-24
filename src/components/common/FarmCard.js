@@ -196,34 +196,35 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
           <Box
             sx={{
               background: '#020826',
-              px: '3%',
-              py: '1%'
+              alignItems: 'center'
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Box sx={{ mx: '2%' }}>
-                <Button onClick={handleSelectedFarm} variant='contained'>add liquidity and stake</Button>
-              </Box>
-              <Box>
-                <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} fullWidth />
-              </Box>
-              <Box sx={{ mx: '2%' }}>
-                <Button onClick={withdraw} variant='contained'>withdraw</Button>
-              </Box>
-              {
-                ((String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === String(farmInfo.owner).toLowerCase()) && !!walletAddress) && (
-                  <Box>
-                    <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide from site" />
-                  </Box>
-                )
-              }
-            </Box>
+            <Grid sx={{ alignItems: 'center', px: '30px', py: '10px' }} container spacing={2}>
+              <Hidden smDown>
+                <Grid item xs={1}></Grid>
+              </Hidden>
+              <Grid item md={3} xs={12}>
+                <Button onClick={handleSelectedFarm} fullWidth variant='contained'>
+                  add LQ & stake
+                </Button>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <TextField size='small' fullWidth value={amountOut} onChange={e => setAmountOut(e.target.value)} label="amount" xs={6} />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <Button fullWidth onClick={withdraw} variant='contained'>withdraw</Button>
+              </Grid>
+              <Hidden smDown>
+                <Grid item xs={1}></Grid>
+              </Hidden>
+            </Grid>
+            {
+              ((String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === String(farmInfo.owner).toLowerCase()) && !!walletAddress) && (
+                <Box>
+                  <FormControlLabel control={<Switch checked={!farmInfo.invisible} onChange={e => handleVisible(farmInfo._id, !e.target.checked)} />} label="show/hide from site" />
+                </Box>
+              )
+            }
             {
               userBalance > 0 && (
                 <Box

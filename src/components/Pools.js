@@ -13,7 +13,7 @@ import { poolService } from '../services/api.service';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
-const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, setPools }) => {
+const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
   const [amountIn, setAmountIn] = useState('0');
@@ -22,7 +22,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
   const [isMyPool, setIsMyPool] = useState(false);
   const [filterdPools, setFilteredPools] = useState([]);
   const [searchKey, setSearchKey] = useState('');
-
+  
   const handleVisible = async (id, invisible) => {
     await poolService.setVisible({
       id: id,
@@ -33,6 +33,8 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
     temp[index].invisible = invisible;
     setPools(temp);
   }
+
+
 
   useEffect(() => {
     if (isMyPool) {
@@ -158,20 +160,28 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
             borderRadius: '20px'
           }}
         >
-          <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
-            Total Pool liquidity
-          </Typography>
+          <Hidden smDown>
+            <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
+              Total Pool liquidity
+            </Typography>
+          </Hidden>
           <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-            {!!poolLiq ? `$${Math.trunc(poolLiq)}` : '0'}
+            
           </Typography>
-          <Box>
-            <FormGroup sx={{ mx: '10px' }}>
-              <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
-            </FormGroup>
-          </Box>
+          <Hidden smDown>
+            <Box>
+              <FormGroup sx={{ mx: '10px' }}>
+                <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
+              </FormGroup>
+            </Box>
+          </Hidden>
           <Box sx={{ flexGrow: 1 }}></Box>
           <Box>
-            <RoundButton onClick={handleCreatePool} variant='contained'>create pool</RoundButton>
+            <RoundButton onClick={handleCreatePool} variant='contained'>
+              <Typography variant='h3' component='h3'>
+                Create Pool
+              </Typography>
+            </RoundButton>
           </Box>
           <Hidden mdDown>
             <SearchInput
@@ -196,18 +206,24 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
       >
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            #
+            <Typography variant='h3' component='h3'>
+              #
+            </Typography>
           </Grid>
           <Grid item xs={4}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant='h3' component='h3'>
               name
-            </Box>
+            </Typography>
           </Grid>
           <Grid item xs={2}>
-            APR
+            <Typography variant='h3' component='h3'>
+              APR
+            </Typography>
           </Grid>
           <Grid item xs={4}>
-            balance
+            <Typography variant='h3' component='h3'>
+              Liquidity
+            </Typography>
           </Grid>
         </Grid>
       </Box>
@@ -231,18 +247,20 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
                   p: '20px',
                   borderRadius: '20px',
                   cursor: 'pointer',
-                  border: '1px solid white'
+                  border: '1px solid white',
+                  alignItems: 'center'
                 }}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={2}>
-                    {i + 1}
+                    <Typography variant='h3' component='h3'>
+                      {i + 1}
+                    </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      {/* <img style={{ marginRight: '10px' }} src={deeznutsIcon} /> */}
+                    <Typography variant='h3' component='h3'>
                       {pool.name}
-                    </Box>
+                    </Typography>
                   </Grid>
                   <Grid item xs={2}>
                     {`${pool.apr}%`}
@@ -251,49 +269,57 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, poolLiq, set
                     {pool.balance}
                   </Grid>
                 </Grid>
-              </Box>
-              {
-                openIndex.includes(i) && (
-                  <Box
-                    sx={{
-                      background: '#020826',
-                      px: '30px',
-                      py: '10px'
-                    }}
-                  >
+                {
+                  openIndex.includes(i) && (
                     <Box
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
+                        background: '#020826',
+                        px: '30px',
+                        py: '10px'
                       }}
                     >
-                      <Box>
-                        <TextField value={amountIn} onChange={e => setAmountIn(e.target.value)} label="Stake Amount" />
-                      </Box>
-                      <Box sx={{ mx: '20px' }}>
-                        <Button onClick={() => stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
-                      </Box>
-                      <Box>
-                        <TextField value={amountOut} onChange={e => setAmountOut(e.target.value)} label="Unstake Amount" />
-                      </Box>
-                      <Box sx={{ mx: '20px' }}>
-                        <Button onClick={() => unstake(pool.address)} variant='contained'>Unstake</Button>
-                      </Box>
-                      <Box sx={{ mx: '40px' }}>
-                        <Button onClick={() => harvest(pool.address)} variant='contained'>Harvest</Button>
-                      </Box>
-                      {
-                        (walletAddress.toLowerCase() === admin || walletAddress.toLowerCase() === pool.owner.toLowerCase()) && (
-                          <Box>
-                            <FormControlLabel control={<Switch checked={!pool.invisible} onChange={e => handleVisible(pool._id, !e.target.checked)} />} label="show/hide" />
-                          </Box>
-                        )
-                      }
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={8}>
+                              <TextField size='small' fullWidth value={amountIn} onChange={e => setAmountIn(e.target.value)} label="Stake Amount" />
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Button fullWidth onClick={() => stake(pool.rewardToken, pool.address)} variant='contained'>Stake</Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={8}>
+                              <TextField size='small' fullWidth value={amountOut} onChange={e => setAmountOut(e.target.value)} label="Unstake Amount" />
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Button fullWidth onClick={() => unstake(pool.address)} variant='contained'>Unstake</Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                              <Button fullWidth onClick={() => harvest(pool.address)} variant='contained'>Harvest</Button>
+                            </Grid>
+                            <Grid item xs={8}>
+                              {
+                                (String(walletAddress).toLowerCase() === admin || String(walletAddress).toLowerCase() === pool.owner.toLowerCase()) && (
+                                  <Box>
+                                    <FormControlLabel control={<Switch checked={!pool.invisible} onChange={e => handleVisible(pool._id, !e.target.checked)} />} label="show/hide" />
+                                  </Box>
+                                )
+                              }
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Box>
-                  </Box>
-                )
-              }
+                  )
+                }
+              </Box>
             </Box>
           ))
         }

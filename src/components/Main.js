@@ -14,11 +14,9 @@ const Main = ({
   farms,
   farmsv3,
   pairs,
-  totalLiquidity,
   farmTokens,
   stakeTokens,
   stakePools,
-  poolLiq,
   setFarms,
   setPools
 }) => {
@@ -93,7 +91,6 @@ const Main = ({
                 farms={farms}
                 farmsv3={farmsv3}
                 pairs={pairs}
-                totalLiquidity={totalLiquidity}
                 chain={chain}
                 setFarms={setFarms}
               />
@@ -106,7 +103,6 @@ const Main = ({
                 walletAddress={walletAddress}
                 stakePools={stakePools}
                 openWalletAlert={openWalletAlert}
-                poolLiq={poolLiq}
                 setPools={setPools}
               />
             )

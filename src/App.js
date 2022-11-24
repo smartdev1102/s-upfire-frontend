@@ -37,8 +37,6 @@ function App() {
   const [openWalletModal, setOpenWalletModal] = useState(false);
 
   // farm info
-  const [farmLiq, setFarmLiq] = useState(0);
-  const [poolLiq, setPoolLiq] = useState(0);
   const [farms, setFarms] = useState([]);
   const [farmsv3, setFarmsv3] = useState([]);
   const [farmTokens, setFarmTokens] = useState([]);
@@ -56,7 +54,6 @@ function App() {
   // get farms
   useEffect(() => {
     setFarms([]);
-    setFarmLiq(0);
     setFarmsv3([]);
     setFarmTokens([]);
     setStakeTokens([]);
@@ -178,11 +175,9 @@ function App() {
                   chain={chain}
                   farms={farms}
                   farmsv3={farmsv3}
-                  totalLiquidity={farmLiq}
                   farmTokens={farmTokens}
                   stakeTokens={stakeTokens}
                   stakePools={stakePools}
-                  poolLiq={poolLiq}
                   setFarms={setFarms}
                   setPools={setStakePools}
                 />

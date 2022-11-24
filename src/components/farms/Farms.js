@@ -22,7 +22,7 @@ import { farmService, pairService } from '../../services/api.service';
 import SearchIcon from '@mui/icons-material/Search';
 
 
-const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, totalLiquidity, setFarms }) => {
+const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, setFarms }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
