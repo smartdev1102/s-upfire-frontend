@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid, List, ListItemButton, ListItemText } from '@mui/material';
+import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid, List, ListItemButton, ListItemText, FormControlLabel, Checkbox } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -43,6 +43,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [openList, setOpenList] = useState(false);
   const [lockUnit, setLockUnit] = useState('month');
   const [periodPerx, setPeriodPerx] = useState(0);
+  const [isBonus, setIsBonus] = useState(false);
+  console.log("🚀 ~ file: CreateFarm.js ~ line 47 ~ CreateFarm ~ isBonus", isBonus)
 
 
   useEffect(() => {
@@ -147,9 +149,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
     let unit;
-    if(lockUnit === 'day') {
+    if (lockUnit === 'day') {
       unit = 3600 * 24;
-    } else if(lockUnit === 'week') {
+    } else if (lockUnit === 'week') {
       unit = 3600 * 24 * 7;
     } else {
       unit = 3600 * 24 * 30;
@@ -321,7 +323,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           }}
                         >
                           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
-                          <TextField size='small' sx={{width: '50%'}} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                          <TextField size='small' sx={{ width: '50%' }} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
                           <button
                             onClick={() => setAmountIn(farmBalance)}
                             style={{
@@ -583,7 +585,31 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     <StepLabel onClick={() => setActiveStep(4)}>
                       Bonus Periods (Optional)
                     </StepLabel>
-                    <StepContent>
+                    <StepContent
+                      sx={{
+                        position: 'relative',
+                      }}
+                    >
+                      <Box>
+                        <FormControlLabel control={<Checkbox checked={isBonus} onChange={() => setIsBonus(!isBonus)} />} label="Enable/Disable" />
+                      </Box>
+                      {
+                        isBonus ?
+                          null
+                          : <Box
+                            className='checkOverlay'
+                            sx={{
+                              top: "37px",
+                              width: '98%',
+                              height: '90%',
+                              position: 'absolute',
+                              backgroundColor: '#ffffff3b',
+                              left: '10px',
+                              zIndex: '9'
+                            }}
+                          ></Box>
+                      }
+
                       <Box sx={{ color: 'text.secondary' }}>
                         Multiplier ({multiplier}x)
                       </Box>
@@ -637,7 +663,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       Lock Period (Optional)
                     </StepLabel>
                     <StepContent>
-                      <Grid sx={{width: '480px'}} container spacing={2}>
+                      <Grid sx={{ width: '480px' }} container spacing={2}>
                         <Grid item xs={6}>
                           <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
                         </Grid>
