@@ -227,6 +227,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     setBonusEndDate(startDate);
   }, [startDate]);
 
+  console.log('chainnnnn', chain)
+
   return (
     <Dialog
       onClose={handleClose}
@@ -443,11 +445,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                   {/* step 1 */}
                   <Step>
                     <StepLabel onClick={() => setActiveStep(1)}>
-                      Select uniswap pair
+                      {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: 'text.secondary', mb: '5px' }}>
-                        {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
+                      {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
                       </Box>
                       {
                         isV3 ? (
@@ -480,7 +482,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                         )
                       }
                       <Box sx={{ color: 'text.secondary', mt: '10px' }}>
-                        This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
+                        This MUST be a valid AMM pair. The contract checks this is a AMM pair on farm creation. If it is not the script will revert
                       </Box>
                       <Box
                         sx={{

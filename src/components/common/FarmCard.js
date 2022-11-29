@@ -12,7 +12,7 @@ import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import loading from '../../assets/loading.svg';
-import defaultIcon from '../../assets/defaultIcon.svg';
+import defaultIcon from '../../assets/defaultIcon.png';
 
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
