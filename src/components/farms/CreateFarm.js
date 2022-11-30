@@ -290,7 +290,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       mb: '20px'
                     }}
                   >
-                    <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
+                    <RoundButton color='primary' variant='contained'>Pancakeswap</RoundButton>
                   </Box>
                 )
               }
