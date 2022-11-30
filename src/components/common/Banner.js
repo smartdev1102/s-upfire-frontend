@@ -109,13 +109,13 @@ const Banner = ({ setChain, chain }) => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              sx={{ mx:0, background: chainColors[chain].main, ":hover": { background: chainColors[chain].hover } }} variant='contained'
+              sx={{ mx:0, background: chainColors[chain]?.main, ":hover": { background: chainColors[chain]?.hover } }} variant='contained'
               fullWidth
             >
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img style={{ marginRight: '20px', height: '30px' }} src={chainLogos[chain]} />
                 <Box sx={{ flexGrow: 1 }}></Box>
-                {networks[chain].chainName}
+                {networks[chain]?.chainName}
                 <Box sx={{ flexGrow: 1 }}></Box>
                 <ExpandMoreIcon />
               </Box>

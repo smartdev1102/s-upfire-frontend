@@ -32,8 +32,8 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [apy, setApy] = useState(0);
 
   const chainsName = {
-    56 : "smartchain",
-    43114 : "avalanchec"
+    56: "smartchain",
+    43114: "avalanchec"
   }
 
   useEffect(() => {
@@ -108,34 +108,54 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
       >
         <Grid item xs={5}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
-            <Hidden smDown>
-              <Grid item xs={2}>
-                <img style={{ width: '30px', marginTop: '5px' }}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token0}/logo.png`}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = defaultIcon;
-                  }}
-                />
-                <img style={{ width: '30px', marginTop: '5px' }}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token1}/logo.png`}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = defaultIcon;
-                  }}
-                />
-              </Grid>
-            </Hidden>
+            {/* <Hidden smDown> */}
+            <Grid xs={2} sx={{
+              display: 'flex', marginRight: {
+                md: '0px',
+                sm: '0px',
+                xs: '10px'
+              }
+            }}>
+              <img style={{
+                marginTop: '5px', zIndex: '9', borderRadius: '100%'
+              }}
+                className={'dualImg'}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token0}/logo.png`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = defaultIcon;
+                }}
+              />
+              <img style={{
+                marginTop: '5px', borderRadius: '100%', marginLeft: '-15px'
+              }}
+                className={'dualImg'}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token1}/logo.png`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = defaultIcon;
+                }}
+              />
+            </Grid>
+            {/* </Hidden> */}
 
             <Grid item xs={3}>
-              <Typography variant='h3' component='h3'>
+              <Typography variant='h3' component='h4'>
                 {`${farmInfo.name.toUpperCase()}`}
               </Typography>
             </Grid>
 
             <Hidden smDown>
-              <Grid item xs={1}>
-                <img style={{ width: '30px' }}
+              <Grid item xs={1} sx={{
+                marginRight: {
+                  md: '10px',
+                  sm: '10px',
+                  xs: '10px'
+                }
+              }}>
+                <img style={{
+                  width: '30px'
+                }}
                   src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.address}/logo.png`}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
@@ -147,19 +167,25 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
 
             <Hidden smDown>
               <Grid item xs={2}>
-                <Typography variant='h3' component='h3'>
+                <Typography variant='h3' component='h3' className='asdasda'>
                   {`${farmInfo.baseToken}`}
                 </Typography>
               </Grid>
             </Hidden>
 
             <Hidden smDown>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
               </Grid>
             </Hidden>
 
             <Grid item xs={2}>
-              <Typography variant='h3' component='h3'>
+              <Typography variant='h3' component='h3' sx={{
+                marginLeft: {
+                  md: '0px',
+                  sm: '10px',
+                  xs: '10px'
+                }
+              }}>
                 {`${apy}%`}
               </Typography>
             </Grid>
@@ -227,7 +253,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid >
       {/* stake */}
       {
         openStake && (
