@@ -135,7 +135,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
 
             <Hidden smDown>
               <Grid item xs={1}>
-                <img style={{ width: '30px' }}
+                <img style={{ width: '30px', marginTop: '5px' }}
                   src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.address}/logo.png`}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
