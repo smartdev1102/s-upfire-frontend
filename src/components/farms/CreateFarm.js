@@ -44,6 +44,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [lockUnit, setLockUnit] = useState('month');
   const [periodPerx, setPeriodPerx] = useState(0);
   const [isBonus, setIsBonus] = useState(false);
+  const [isBonus1, setIsBonus1] = useState(false);
   console.log("🚀 ~ file: CreateFarm.js ~ line 47 ~ CreateFarm ~ isBonus", isBonus)
 
 
@@ -449,7 +450,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: 'text.secondary', mb: '5px' }}>
-                      {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
+                        {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
                       </Box>
                       {
                         isV3 ? (
@@ -593,7 +594,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       }}
                     >
                       <Box>
-                        <FormControlLabel control={<Checkbox checked={isBonus} onChange={() => setIsBonus(!isBonus)} />} label="Enable/Disable" />
+                        <FormControlLabel control={<Checkbox checked={isBonus} onChange={() => setIsBonus(!isBonus)} />} sx={{ color: `${isBonus ? 'white' : 'gray'}` }} label="Enable" />
                       </Box>
                       {
                         isBonus ?
@@ -607,7 +608,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                               position: 'absolute',
                               backgroundColor: '#ffffff3b',
                               left: '10px',
-                              zIndex: '9'
+                              zIndex: '9',
+                              cursor: 'no-drop',
+                              borderRadius: '5px'
                             }}
                           ></Box>
                       }
@@ -664,7 +667,35 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     <StepLabel onClick={() => setActiveStep(5)}>
                       Lock Period (Optional)
                     </StepLabel>
-                    <StepContent>
+                    <StepContent
+                      sx={{
+                        position: 'relative',
+                        ml: '0px',
+                        mb: `${activeStep == 5 ? '10px' : '0px'}`
+                      }}
+                      className="checkOverlay1111212"
+                    >
+                      <Box>
+                        <FormControlLabel control={<Checkbox checked={isBonus1} onChange={() => setIsBonus1(!isBonus1)} />} sx={{ color: `${isBonus1 ? 'white' : 'gray'}` }} label="Enable" />
+                      </Box>
+                      {
+                        isBonus1 ?
+                          null
+                          : <Box
+                            className='checkOverlay111'
+                            sx={{
+                              top: "37px",
+                              width: '98%',
+                              height: '75%',
+                              position: 'absolute',
+                              backgroundColor: '#ffffff3b',
+                              left: '13px',
+                              zIndex: '9',
+                              cursor: 'no-drop',
+                              borderRadius: '5px'
+                            }}
+                          ></Box>
+                      }
                       <Grid sx={{ width: '480px' }} container spacing={2}>
                         <Grid item xs={6}>
                           <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
