@@ -358,31 +358,38 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
               container
               spacing={2}
             >
-              <Grid item xs={5}>
+              <Grid item md={5} sm={8} xs={8}>
                 <Grid container spacing={2}>
                   <Hidden smDown>
                     <Grid item xs={2}>
                     </Grid>
                   </Hidden>
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <Typography variant='h3' component='h3'>
                       LP
                     </Typography>
                   </Grid>
-                  <Hidden smDown>
-                    <Grid item xs={4}>
-                      <Typography sx={{ ml: '-30px' }} variant='h3' component='h3'>
+                  {/* <Hidden smDown> */}
+                    <Grid item xs={2}>
+                      <Typography sx={{
+                      ml: '-20px',
+                      marginLeft: {
+                        md: '0px',
+                        sm: '0px',
+                        xs: '5px'
+                      }
+                    }} variant='h3' component='h3'>
                         Reward
                       </Typography>
                     </Grid>
-                  </Hidden>
+                  {/* </Hidden> */}
                   <Grid item xs={2}>
                     <Typography sx={{
                       ml: '-10px',
                       marginLeft: {
-                        md: '0px',
-                        sm: '0px',
-                        xs: '25px'
+                        md: '30px',
+                        sm: '30px',
+                        xs: '55px'
                       }
                     }} variant='h3' component='h3' className='asdasd'>
                       APY
@@ -390,7 +397,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={5}>
+              <Grid item md={5} sm={2} xs={2} >
                 <Grid container spacing={2}>
                   <Hidden smDown>
                     <Grid xs={2} item></Grid>
