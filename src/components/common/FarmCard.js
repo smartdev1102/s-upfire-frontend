@@ -106,15 +106,17 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         container
         spacing={2}
       >
-        <Grid item md={5} sm={8} xs={8}>
+        <Grid item md={6} sm={7} xs={8}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
             {/* <Hidden smDown> */}
-            <Grid xs={1.5} sx={{
+            <Grid md={4} sm={4} xs={4} sx={{
               display: 'flex', marginRight: {
                 md: '0px',
                 sm: '0px',
                 xs: '0px'
-              }
+              },
+              display: 'flex',
+              alignItems: 'center'
             }}>
               <img style={{
                 marginTop: '5px', zIndex: '9', borderRadius: '100%'
@@ -136,25 +138,25 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                   currentTarget.src = defaultIcon;
                 }}
               />
-            </Grid>
-            {/* </Hidden> */}
-
-            <Grid item xs={{ md: 2, sx: 2, xs: 4.5 }}>
-              <Typography variant='h3' component='h4'>
+              <Typography variant='h3' component='h4' sx={{ marginTop: '5px', marginLeft: '10px' }}>
                 {`${farmInfo.name.toUpperCase()}`}
               </Typography>
             </Grid>
 
+
             {/* <Hidden smDown> */}
-            <Grid item xs={1} sx={{
+            <Grid item md={4} sm={4} xs={4} sx={{
               marginLeft: {
-                md: '20px',
-                sm: '20px',
-                xs: '20px'
-              }
-            }}>
+                md: '0px',
+                sm: '0px',
+                xs: '0px'
+              },
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            >
               <img style={{
-                marginTop: '5px', borderRadius: '100%', marginLeft: '-15px'
+                marginTop: '5px', borderRadius: '100%', marginRight: '10px'
               }}
                 className={'dualImg'}
                 src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.address}/logo.png`}
@@ -163,23 +165,17 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
                   currentTarget.src = defaultIcon;
                 }}
               />
-            </Grid>
-            {/* </Hidden> */}
-
-            {/* <Hidden smDown> */}
-            <Grid item xs={1}>
-              <Typography variant='h3' component='h3' className='asdasda'>
+              <Typography variant='h3' component='h3' className='asdasda' sx={{ marginTop: '5px' }}>
                 {`${farmInfo.baseToken}`}
               </Typography>
             </Grid>
-            {/* </Hidden> */}
 
             {/* <Hidden smDown> */}
-            <Grid item xs={1}>
-            </Grid>
+            {/* <Grid item xs={1}>
+            </Grid> */}
             {/* </Hidden> */}
 
-            <Grid item xs={2}>
+            <Grid item md={4} sm={4} xs={4}>
               <Typography variant='h3' component='h3' sx={{
                 marginLeft: {
                   md: '0px',
@@ -192,19 +188,19 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={5} sm={2} xs={2}>
+        <Grid item md={4} sm={3} xs={2}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
             <Hidden smDown>
               <Grid sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} item xs={2}>
                 <DateRangeIcon sx={{ color: '#1F8BED' }} />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item md={5} sm={5} xs={5}>
                 <Typography variant='h3' component='h3'>
                   {moment(farmInfo.start).format('MMM DD YYYY')}
                 </Typography>
               </Grid>
             </Hidden>
-            <Grid item md={5} xs={12}>
+            <Grid item md={5} sm={5} xs={12}>
               <Typography variant='h3' component='h3'>
                 {moment(farmInfo.end).format('MMM DD YYYY')}
               </Typography>
