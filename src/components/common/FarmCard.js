@@ -12,7 +12,7 @@ import Hidden from '@mui/material/Hidden';
 import { useWeb3React } from '@web3-react/core';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import loading from '../../assets/loading.svg';
-import defaultIcon from '../../assets/defaultIcon.svg';
+import defaultIcon from '../../assets/defaultIcon.png';
 
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
@@ -30,6 +30,11 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
   const [userBalance, setUserBalance] = useState();
   const [farmers, setFarmers] = useState(0);
   const [apy, setApy] = useState(0);
+
+  const chainsName = {
+    56: "smartchain",
+    43114: "avalanchec"
+  }
 
   useEffect(() => {
     async function getLiq() {
@@ -101,45 +106,101 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         container
         spacing={2}
       >
-        <Grid item xs={5}>
+        <Grid item md={6} sm={7} xs={8}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
-            <Hidden smDown>
-              <Grid item xs={2}>
-                <img style={{ width: '30px', marginTop: '5px' }} src={defaultIcon} />
-              </Grid>
-            </Hidden>
-            <Grid item xs={4}>
-              <Typography variant='h3' component='h3'>
+            {/* <Hidden smDown> */}
+            <Grid md={4} sm={4} xs={4} sx={{
+              display: 'flex', marginRight: {
+                md: '0px',
+                sm: '0px',
+                xs: '0px'
+              },
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <img style={{
+                marginTop: '5px', zIndex: '9', borderRadius: '100%'
+              }}
+                className={'dualImg'}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token0}/logo.png`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = defaultIcon;
+                }}
+              />
+              <img style={{
+                marginTop: '5px', borderRadius: '100%', marginLeft: '-15px'
+              }}
+                className={'dualImg'}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.token1}/logo.png`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = defaultIcon;
+                }}
+              />
+              <Typography variant='h3' component='h4' sx={{ marginTop: '5px', marginLeft: '10px' }}>
                 {`${farmInfo.name.toUpperCase()}`}
               </Typography>
             </Grid>
-            <Hidden smDown>
-              <Grid item xs={4}>
-                <Typography variant='h3' component='h3'>
-                  {`${farmInfo.baseToken}`}
-                </Typography>
-              </Grid>
-            </Hidden>
-            <Grid item xs={2}>
-              <Typography variant='h3' component='h3'>
+
+
+            {/* <Hidden smDown> */}
+            <Grid item md={4} sm={4} xs={4} sx={{
+              marginLeft: {
+                md: '0px',
+                sm: '0px',
+                xs: '0px'
+              },
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            >
+              <img style={{
+                marginTop: '5px', borderRadius: '100%', marginRight: '10px'
+              }}
+                className={'dualImg'}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]}/assets/${farmInfo.address}/logo.png`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = defaultIcon;
+                }}
+              />
+              <Typography variant='h3' component='h3' className='asdasda' sx={{ marginTop: '5px' }}>
+                {`${farmInfo.baseToken}`}
+              </Typography>
+            </Grid>
+
+            {/* <Hidden smDown> */}
+            {/* <Grid item xs={1}>
+            </Grid> */}
+            {/* </Hidden> */}
+
+            <Grid item md={4} sm={4} xs={4}>
+              <Typography variant='h3' component='h3' sx={{
+                marginLeft: {
+                  md: '0px',
+                  sm: '0px',
+                  xs: '0px'
+                }
+              }}>
                 {`${apy}%`}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item md={4} sm={3} xs={2}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
             <Hidden smDown>
               <Grid sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }} item xs={2}>
                 <DateRangeIcon sx={{ color: '#1F8BED' }} />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item md={5} sm={5} xs={5}>
                 <Typography variant='h3' component='h3'>
                   {moment(farmInfo.start).format('MMM DD YYYY')}
                 </Typography>
               </Grid>
             </Hidden>
-            <Grid item xs={5}>
+            <Grid item md={5} sm={5} xs={12}>
               <Typography variant='h3' component='h3'>
                 {moment(farmInfo.end).format('MMM DD YYYY')}
               </Typography>
@@ -189,7 +250,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid >
       {/* stake */}
       {
         openStake && (

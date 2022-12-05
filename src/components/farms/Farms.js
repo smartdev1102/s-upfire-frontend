@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import RoundButton from '../common/RoundButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup, IconButton } from '@mui/material';
+import { FormControlLabel, Grid, Hidden, Menu, MenuItem, Switch, FormGroup, IconButton, Stack } from '@mui/material';
 // import Pagination from '@mui/material/Pagination';
 import Divider from '@mui/material/Divider';
 import loading from '../../assets/loading.svg';
@@ -327,110 +327,137 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
           </Box>
         </Box>
       </Box>
-      <Box
+
+      <Box className='stackss11'
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          px: '40px',
-          background: '#001126',
-          py: '10px',
-          borderRadius: '15px',
-          mt: '10px'
+          // overflowX: 'auto'
         }}
       >
-        <Grid
+        <Box className='stackss'
           sx={{
-            cursor: 'pointer',
-            alignItems: 'center'
+            // minWidth: '620px'
           }}
-          container
-          spacing={2}
         >
-          <Grid item xs={5}>
-            <Grid container spacing={2}>
-              <Hidden smDown>
-                <Grid item xs={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              px: '40px',
+              background: '#001126',
+              py: '10px',
+              borderRadius: '15px',
+              mt: '10px'
+            }}
+          >
+            <Grid
+              sx={{
+                cursor: 'pointer',
+                alignItems: 'center'
+              }}
+              container
+              spacing={2}
+            >
+              <Grid item md={6} sm={7} xs={8}>
+                <Grid container spacing={2}>
+                  {/* <Hidden smDown>
+                    <Grid item xs={2}>
+                    </Grid>
+                  </Hidden> */}
+                  <Grid item md={4} sm={4} xs={4}>
+                    <Typography variant='h3' component='h3'>
+                      LP
+                    </Typography>
+                  </Grid>
+                  {/* <Hidden smDown> */}
+                    <Grid item md={4} sm={4} xs={4}>
+                      <Typography sx={{
+                      ml: '-20px',
+                      marginLeft: {
+                        md: '0px',
+                        sm: '0px',
+                        xs: '5px'
+                      }
+                    }} variant='h3' component='h3'>
+                        Reward
+                      </Typography>
+                    </Grid>
+                  {/* </Hidden> */}
+                  <Grid item md={4} sm={4} xs={4}>
+                    <Typography sx={{
+                      ml: '-10px',
+                      marginLeft: {
+                        md: '0px',
+                        sm: '10px',
+                        xs: '20px'
+                      }
+                    }} variant='h3' component='h3' className='asdasd'>
+                      APY
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Hidden>
-              <Grid item xs={4}>
-                <Typography variant='h3' component='h3'>
-                  LP
-                </Typography>
               </Grid>
-              <Hidden smDown>
-                <Grid item xs={4}>
-                  <Typography sx={{ ml: '-30px' }} variant='h3' component='h3'>
-                    Reward
-                  </Typography>
+              <Grid item md={4} sm={3} xs={2} >
+                <Grid container spacing={2}>
+                  <Hidden smDown>
+                    <Grid xs={2} item></Grid>
+                    <Grid sx={{ pl: '10px' }} item xs={5}>
+                      <Typography variant='h3' component='h3'>
+                        Start Date
+                      </Typography>
+                    </Grid>
+                  </Hidden>
+                  <Grid item xs={5}>
+                    <Typography sx={{ pr: '6px' }} variant='h3' component='h3'>
+                      End Date
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Hidden>
+              </Grid>
               <Grid item xs={2}>
-                <Typography sx={{ ml: '-10px' }} variant='h3' component='h3'>
-                  APY
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={5}>
-            <Grid container spacing={2}>
-              <Hidden smDown>
-                <Grid xs={2} item></Grid>
-                <Grid sx={{ pl: '10px' }} item xs={5}>
-                  <Typography variant='h3' component='h3'>
-                    Start Date
-                  </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+                      Liquidity
+                    </Typography>
+                  </Grid>
+                  <Hidden smDown>
+                    <Grid item xs={6}>
+                      <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
+                        Farmers
+                      </Typography>
+                    </Grid>
+                  </Hidden>
                 </Grid>
-              </Hidden>
-              <Grid item xs={5}>
-                <Typography sx={{ pr: '6px' }} variant='h3' component='h3'>
-                  End Date
-                </Typography>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={2}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
-                  Liquidity
-                </Typography>
-              </Grid>
-              <Hidden smDown>
-                <Grid item xs={6}>
-                  <Typography sx={{ ml: '20px' }} variant='h3' component='h3'>
-                    Farmers
-                  </Typography>
-                </Grid>
-              </Hidden>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-      {/* farms */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%'
-        }}
-      >
-        <Box
-          sx={{
-            minHeight: '50vh',
-            width: '100%'
-          }}
-        >
-          {
-            filterFarm.map((farm, i) => (
-              <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} handleVisible={handleVisible} walletAddress={walletAddress} />
-            ))
-          }
-          {
-            filterFarmv3.map((farm, i) => (
-              <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
-            ))
-          }
+          </Box>
+          {/* farms */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%'
+            }}
+          >
+            <Box
+              sx={{
+                minHeight: '50vh',
+                width: '100%'
+              }}
+            >
+              {
+                filterFarm.map((farm, i) => (
+                  <FarmCard key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} handleVisible={handleVisible} walletAddress={walletAddress} />
+                ))
+              }
+              {
+                filterFarmv3.map((farm, i) => (
+                  <FarmCardV3 key={i} setSelectedFarm={setSelectedFarm} chain={chain} farmInfo={farm} />
+                ))
+              }
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Box

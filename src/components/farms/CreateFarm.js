@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid, List, ListItemButton, ListItemText } from '@mui/material';
+import { Dialog, DialogTitle, TextField, Box, Typography, Button, FormControl, Select, MenuItem, IconButton, Stepper, Step, StepLabel, StepContent, Hidden, Grid, List, ListItemButton, ListItemText, FormControlLabel, Checkbox } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -43,6 +43,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [openList, setOpenList] = useState(false);
   const [lockUnit, setLockUnit] = useState('month');
   const [periodPerx, setPeriodPerx] = useState(0);
+  const [isBonus, setIsBonus] = useState(false);
+  const [isBonus1, setIsBonus1] = useState(false);
+  console.log("🚀 ~ file: CreateFarm.js ~ line 47 ~ CreateFarm ~ isBonus", isBonus)
 
 
   useEffect(() => {
@@ -147,9 +150,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
     const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
     let unit;
-    if(lockUnit === 'day') {
+    if (lockUnit === 'day') {
       unit = 3600 * 24;
-    } else if(lockUnit === 'week') {
+    } else if (lockUnit === 'week') {
       unit = 3600 * 24 * 7;
     } else {
       unit = 3600 * 24 * 30;
@@ -225,6 +228,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     setBonusEndDate(startDate);
   }, [startDate]);
 
+  console.log('chainnnnn', chain)
+
   return (
     <Dialog
       onClose={handleClose}
@@ -285,7 +290,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       mb: '20px'
                     }}
                   >
-                    <RoundButton color='primary' variant='contained'>Pancake Swap</RoundButton>
+                    <RoundButton color='primary' variant='contained'>Pancakeswap</RoundButton>
                   </Box>
                 )
               }
@@ -321,7 +326,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                           }}
                         >
                           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
-                          <TextField size='small' sx={{width: '50%'}} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                          <TextField size='small' sx={{ width: '50%' }} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
                           <button
                             onClick={() => setAmountIn(farmBalance)}
                             style={{
@@ -441,11 +446,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                   {/* step 1 */}
                   <Step>
                     <StepLabel onClick={() => setActiveStep(1)}>
-                      Select uniswap pair
+                      {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: 'text.secondary', mb: '5px' }}>
-                        {isV3 ? 'Input uniswapV3 pool' : 'Select uniswap pair'}
+                        {chain == process.env.REACT_APP_CHAIN ? "Select Pancakeswap pair" : chain == 43114 ? currentSwap == 0 ? "Select Pangolin pair" : "Select Trader joe pair" : "Select AMM pair"}
                       </Box>
                       {
                         isV3 ? (
@@ -478,7 +483,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                         )
                       }
                       <Box sx={{ color: 'text.secondary', mt: '10px' }}>
-                        This MUST be a valid uniswap v2 pair. The contract checks this is a uniswap pair on farm creation. If it is not the script will revert
+                        This MUST be a valid AMM pair. The contract checks this is a AMM pair on farm creation. If it is not the script will revert
                       </Box>
                       <Box
                         sx={{
@@ -583,7 +588,33 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     <StepLabel onClick={() => setActiveStep(4)}>
                       Bonus Periods (Optional)
                     </StepLabel>
-                    <StepContent>
+                    <StepContent
+                      sx={{
+                        position: 'relative',
+                      }}
+                    >
+                      <Box>
+                        <FormControlLabel control={<Checkbox checked={isBonus} onChange={() => setIsBonus(!isBonus)} />} sx={{ color: `${isBonus ? 'white' : 'gray'}` }} label="Enable" />
+                      </Box>
+                      {
+                        isBonus ?
+                          null
+                          : <Box
+                            className='checkOverlay'
+                            sx={{
+                              top: "37px",
+                              width: '98%',
+                              height: '90%',
+                              position: 'absolute',
+                              backgroundColor: '#ffffff3b',
+                              left: '10px',
+                              zIndex: '9',
+                              cursor: 'no-drop',
+                              borderRadius: '5px'
+                            }}
+                          ></Box>
+                      }
+
                       <Box sx={{ color: 'text.secondary' }}>
                         Multiplier ({multiplier}x)
                       </Box>
@@ -636,8 +667,36 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     <StepLabel onClick={() => setActiveStep(5)}>
                       Lock Period (Optional)
                     </StepLabel>
-                    <StepContent>
-                      <Grid sx={{width: '480px'}} container spacing={2}>
+                    <StepContent
+                      sx={{
+                        position: 'relative',
+                        ml: '0px',
+                        mb: `${activeStep == 5 ? '10px' : '0px'}`
+                      }}
+                      className="checkOverlay1111212"
+                    >
+                      <Box>
+                        <FormControlLabel control={<Checkbox checked={isBonus1} onChange={() => setIsBonus1(!isBonus1)} />} sx={{ color: `${isBonus1 ? 'white' : 'gray'}` }} label="Enable" />
+                      </Box>
+                      {
+                        isBonus1 ?
+                          null
+                          : <Box
+                            className='checkOverlay111'
+                            sx={{
+                              top: "37px",
+                              width: '98%',
+                              height: '75%',
+                              position: 'absolute',
+                              backgroundColor: '#ffffff3b',
+                              left: '13px',
+                              zIndex: '9',
+                              cursor: 'no-drop',
+                              borderRadius: '5px'
+                            }}
+                          ></Box>
+                      }
+                      <Grid sx={{ width: '480px' }} container spacing={2}>
                         <Grid item xs={6}>
                           <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
                         </Grid>
