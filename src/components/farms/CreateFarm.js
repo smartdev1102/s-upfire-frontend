@@ -93,7 +93,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
 
   // calculate apy with rewardBlock
   useEffect(() => {
-    // if (rewardBlock <= 0) return;
+    if (rewardBlock <= 0) return;
     console.log(rewardBlock)
     const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 / amountIn;
     setApy(tempapy * tokenPrice / liquidity);
@@ -219,13 +219,17 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     }
     if (!!amountIn && multiplier > 0) {
       determineBlockReward();
+      console.log('check calll', determineBlockReward());
     }
-  }, [amountIn, startDate, bonusEndDate, multiplier, endDate, walletAddress])
+  }, [amountIn, startDate, bonusEndDate, multiplier, endDate, walletAddress, liquidity, tokenPrice])
 
   useEffect(() => {
     if (startDate <= bonusEndDate) return;
     setBonusEndDate(startDate);
   }, [startDate]);
+
+
+
 
   return (
     <Dialog
@@ -752,10 +756,10 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                   <Box>
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
-                        <TextField size='small' value={tokenPrice} onChange={e => setTokenPrice(e.target.value)} label='Expected token price' />
+                        <TextField type="number" size='small' value={tokenPrice} onChange={e => setTokenPrice(e.target.value)} label='Expected token price' />
                       </Grid>
                       <Grid item xs={6}>
-                        <TextField size='small' value={liquidity} onChange={e => setLiquidity(e.target.value)} label='Expected liquidity' />
+                        <TextField type="number" size='small' value={liquidity} onChange={e => setLiquidity(e.target.value)} label='Expected liquidity' />
                       </Grid>
                     </Grid>
                   </Box>
