@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, Grid, Select, MenuItem, FormControl } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -8,6 +8,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { parseEther } from 'ethers/lib/utils';
+import { tokenContract } from '../../utils/ethers.util';
+import { formatEther } from 'ethers/lib/utils';
+
 
 const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [rewardToken, setRewardToken] = useState('');
@@ -21,14 +24,131 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [lockUnit, setLockUnit] = useState('month');
   const [periodPerx, setPeriodPerx] = useState(0);
 
+  const [farmBalance, setFarmBalance] = useState();
+  const [farmSymbol, setFarmSymbol] = useState();
+  const [farmToken, setFarmToken] = useState('');
+  const [tokenLoading, setTokenLoading] = useState();
+  const [farmDecimals, setFarmDecimals] = useState();
+  const [farmTokenName, setFarmTokenName] = useState();
+
+
+  const [startDate, setstartDate] = useState(new Date());
+  const [startBlock, setStartBlock] = useState(0);
+  const [endDate, setEndDate] = useState(new Date());
+  const [endBlock, setEndBlock] = useState(0);
+
   const createPool = () => {
-    create(
-      rewardToken,
-      stakeToken,
-      apr,
-      amountIn
-    );
+
+
+    // create(
+    //   rewardToken,
+    //   stakeToken,
+    //   apr,
+    //   amountIn,
+    //   startDate,
+    //   endDate
+    // );
+
+    const startBlock = Math.floor(new Date(startDate).getTime() / 1000);
+    // const bonusEndBlock = Math.floor(new Date(bonusEndDate).getTime() / 1000);
+    let unit;
+    if (lockUnit === 'day') {
+      unit = 3600 * 24;
+    } else if (lockUnit === 'week') {
+      unit = 3600 * 24 * 7;
+    } else {
+      unit = 3600 * 24 * 30;
+    }
+    // const lockPeriod = periodPerx * unit;
+
+    if (chain === Number(process.env.REACT_APP_CHAIN)) {
+      create(
+        rewardToken,
+        stakeToken,
+        apr,
+        amountIn,
+        startBlock,
+        // bonusEndBlock,
+        // multiplier,
+        // lockPeriod,
+        // false,
+        0
+      );
+    } else {
+      create(
+        rewardToken,
+        stakeToken,
+        apr,
+        amountIn,
+        startBlock,
+        // bonusEndBlock,
+        // multiplier,
+        // false,
+        // currentSwap
+      );
+    }
   }
+
+  // Start Date ====================
+
+  // calculate start block when change start date
+  useEffect(() => {
+    const block = Math.floor(new Date(startDate).getTime() / 1000);
+    setStartBlock(block);
+  }, [startDate]);
+
+  // formate current block when open
+  useEffect(() => {
+    if (open) {
+      const block = Math.floor(new Date().getTime() / 1000);
+      setNow(block);
+    }
+  }, [open]);
+  // Start Date ====================
+
+  // calculate end date when changing end block
+  useEffect(() => {
+    if (endBlock <= 0) return;
+    const date = new Date(endBlock * 1000);
+    setEndDate(date);
+  }, [endBlock]);
+  // calculate end block when changing end date
+  useEffect(() => {
+    const block = Math.floor(new Date(endDate).getTime() / 1000);
+    setEndBlock(block);
+  }, [endDate])
+
+
+
+  useEffect(() => {
+    async function getFarmToken() {
+      if (farmToken.length === 42) {
+        setTokenLoading(true);
+        const symbol = await tokenContract(chain, farmToken).symbol();
+        setFarmSymbol(symbol);
+        const decimals = await tokenContract(chain, farmToken).decimals();
+        setFarmDecimals(decimals);
+        const balance = await tokenContract(chain, farmToken).balanceOf(walletAddress);
+        setFarmBalance(formatEther(balance));
+        const name = await tokenContract(chain, farmToken).name();
+        setFarmTokenName(name);
+        setTokenLoading(false);
+      } else {
+        setFarmSymbol();
+        setFarmDecimals();
+        setFarmBalance();
+        setFarmTokenName();
+      }
+    }
+    getFarmToken();
+  }, [farmToken]);
+
+  const handleClose = () => {
+    setFarmToken('');
+    setFarmSymbol();
+    onClose();
+  }
+
 
   return (
     <Dialog
@@ -90,6 +210,35 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
               </Box>
               <Box
                 sx={{
+                  mt: '20px',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'start',
+                  width: '100%'
+                }}
+              >
+                {/* <Box sx={{ flexGrow: 1 }}></Box> */}
+                <TextField size='small' sx={{ width: '100%' }} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                <button
+                  onClick={() => setAmountIn(farmBalance)}
+                  style={{
+                    position: 'absolute',
+                    right: '5px',
+                    bottom: '5px',
+                    padding: '5px',
+                    cursor: 'pointer',
+                    background: '#266d7a',
+                    outline: 'none',
+                    border: 'none',
+                  }}
+                  variant='contained'
+                  size='small'
+                >
+                  Max
+                </button>
+              </Box>
+              <Box
+                sx={{
                   mt: '20px'
                 }}
               >
@@ -133,6 +282,101 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                 Create must deposit token to create pool.
                 Pool end time is calculated with this amount and apr.
               </Box>
+
+
+              {/* =============== Dates ===================== */}
+              {/* Start Date */}
+              <Box sx={{
+                mt: '20px'
+              }}>
+                <Typography variant='h6' component='h6'>
+                  Start Date
+                </Typography>
+                <Box sx={{ color: 'text.secondary', mb: '10px', fontSize: '13px' }}>
+                  We reccommend a start block at least 24 hours in advance to give people time to get ready to farm.
+                </Box>
+                <Box
+                  sx={{
+                    color: 'text.secondary',
+                    mb: '5px'
+                  }}
+                >
+                  Date
+                </Box>
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DateTimePicker
+                      value={startDate}
+                      onChange={(newValue) => { setstartDate(newValue) }}
+                      renderInput={(params) => <TextField size='small' {...params} />}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                <Box
+                  sx={{
+                    color: 'text.secondary',
+                    mb: '5px',
+                    mt: '20px'
+                  }}
+                >
+                  Block Number
+                </Box>
+                <Box>
+                  <TextField size='small' value={startBlock} onChange={e => setStartBlock(e.target.value)} />
+                </Box>
+                <Box sx={{ color: 'text.secondary', my: '10px', fontSize: '13px' }}>
+                  {`* must be above ${now}`}
+                </Box>
+                <Box
+                  sx={{
+                    mt: '10px'
+                  }}
+                >
+                  {/* <Button onClick={() => setActiveStep(3)} variant='contained' size='small'>Continue</Button> */}
+                </Box>
+              </Box>
+
+              {/* End Date  */}
+
+              <Box sx={{
+                mt: '20px'
+              }}>
+                <Typography variant='h6' component='h6'>
+                  End Date
+                </Typography>
+                <Box sx={{ color: 'text.secondary', mb: '5px' }}>
+                  Date
+                </Box>
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DateTimePicker
+                      value={endDate}
+                      onChange={(newValue) => { setEndDate(newValue) }}
+                      renderInput={(params) => <TextField size='small' {...params} />}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
+                  Block number
+                </Box>
+                <Box>
+                  <TextField size='small' value={endBlock} onChange={e => setEndBlock(e.target.value)} />
+                </Box>
+                <Box sx={{ color: 'text.secondary', my: '10px' }}>
+                  {`* must be >= ${now}`}
+                </Box>
+                <Box
+                  sx={{
+                    mt: '10px'
+                  }}
+                >
+                  {/* <Button onClick={() => setActiveStep(4)} variant='contained' size='small'>continue</Button> */}
+                </Box>
+              </Box>
+
+              {/* =============== Dates ===================== */}
+
+
               <Box
                 sx={{
                   mt: '20px'
@@ -145,7 +389,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
               <Box sx={{ color: 'text.secondary' }}>
                 Multiplier ({multiplier}x)
               </Box>
-              <Box 
+              <Box
                 sx={{
                   my: '5px',
                   textAlign: 'left',
@@ -172,20 +416,20 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                 </LocalizationProvider>
               </Box>
               <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
-                  Block Number
-                </Box>
-                <Box>
-                  <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
-                </Box>
-                <Box 
+                Block Number
+              </Box>
+              <Box>
+                <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
+              </Box>
+              <Box
                 sx={{
                   my: '5px',
                   textAlign: 'left',
                   fontSize: '14px',
                   color: 'text.secondary'
                 }}>
-                  {`* must be >= ${now}`}
-                </Box>
+                {`* must be >= ${now}`}
+              </Box>
               <Box
                 sx={{
                   mt: '20px'

@@ -93,7 +93,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
 
   // calculate apy with rewardBlock
   useEffect(() => {
-    if (rewardBlock <= 0) return;
+    // if (rewardBlock <= 0) return;
     console.log(rewardBlock)
     const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 / amountIn;
     setApy(tempapy);
@@ -313,23 +313,26 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       <Box>
                         <TextField size='small' value={farmToken} onChange={e => setFarmToken(e.target.value)} placeholder='0x...' fullWidth />
                       </Box>
-                      <Box>
+                      <Box
+                        sx={{ width: '100%' }}
+                      >
                         <Box
                           sx={{
                             mt: '20px',
                             position: 'relative',
                             display: 'flex',
-                            justifyContent: 'end'
+                            justifyContent: 'start',
+                            width: '50%'
                           }}
                         >
                           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
-                          <TextField size='small' sx={{ width: '50%' }} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
+                          <TextField size='small' sx={{ width: '100%' }} value={amountIn} onChange={e => setAmountIn(e.target.value)} label={`Balance: ${!!farmBalance ? farmBalance : 0} ${!!farmSymbol ? farmSymbol : ''}`} variant='filled' focused />
                           <button
                             onClick={() => setAmountIn(farmBalance)}
                             style={{
                               position: 'absolute',
                               right: '5px',
-                              bottom: '3px',
+                              bottom: '7px',
                               padding: '5px',
                               cursor: 'pointer',
                               background: '#266d7a',
