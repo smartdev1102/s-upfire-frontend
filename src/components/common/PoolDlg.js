@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Grid, Select, MenuItem, FormControl } from '@mui/material';
+import { Dialog, DialogTitle, Grid, Select, MenuItem, FormControl, FormControlLabel, Checkbox } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -24,6 +24,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [lockUnit, setLockUnit] = useState('month');
   const [periodPerx, setPeriodPerx] = useState(0);
 
+  const [isBonus, setIsBonus] = useState(false);
+  const [isBonus1, setIsBonus1] = useState(false);
   const [farmBalance, setFarmBalance] = useState();
   const [farmSymbol, setFarmSymbol] = useState();
   const [farmToken, setFarmToken] = useState('');
@@ -376,87 +378,144 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
 
               {/* =============== Dates ===================== */}
 
+              <Box
+                sx={{
+                  position: 'relative'
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: '20px',
+                  }}
+                >
+                  <Typography variant='h6' component='h6'>
+                    Bonus Periods (Optional)
+                    <FormControlLabel control={<Checkbox checked={isBonus} onChange={() => setIsBonus(!isBonus)} />} sx={{ color: `${isBonus ? 'white' : 'gray'}`, ml: '0px' }} label="Enable" />
+                  </Typography>
+                </Box>
+                {
+                  isBonus ?
+                    null
+                    : <Box
+                      className='checkOverlay'
+                      sx={{
+                        top: "35px",
+                        width: '100%',
+                        height: '92%',
+                        position: 'absolute',
+                        backgroundColor: '#ffffff3b',
+                        left: '-7px',
+                        zIndex: '9',
+                        cursor: 'no-drop',
+                        borderRadius: '5px'
+                      }}
+                    ></Box>
+                }
+                <Box sx={{ color: 'text.secondary' }}>
+                  Multiplier ({multiplier}x)
+                </Box>
+                <Box
+                  sx={{
+                    my: '5px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    color: 'text.secondary'
+                  }}>
+                  {
+                    `Bonus periods start at the start block and end at the below specified block. For no bonus period set the multiplier to '1' and the bonus end block to ${now}`
+                  }
+                </Box>
+                <Box sx={{ pr: '15px' }}>
+                  <TextField size='small' value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
+                </Box>
+                <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
+                  Bonus end date
+                </Box>
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DateTimePicker
+                      value={bonusEndDate}
+                      onChange={(newValue) => { setBonusEndDate(newValue) }}
+                      renderInput={(params) => <TextField size='small' {...params} />}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
+                  Block Number
+                </Box>
+                <Box>
+                  <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
+                </Box>
+                <Box
+                  sx={{
+                    my: '5px',
+                    textAlign: 'left',
+                    fontSize: '14px',
+                    color: 'text.secondary'
+                  }}>
+                  {`* must be >= ${now}`}
+                </Box>
+
+              </Box>
+
+
+
+
+
+
 
               <Box
                 sx={{
-                  mt: '20px'
+                  position: 'relative'
                 }}
               >
-                <Typography variant='h6' component='h6'>
-                  Bonus Periods
-                </Typography>
-              </Box>
-              <Box sx={{ color: 'text.secondary' }}>
-                Multiplier ({multiplier}x)
-              </Box>
-              <Box
-                sx={{
-                  my: '5px',
-                  textAlign: 'left',
-                  fontSize: '14px',
-                  color: 'text.secondary'
-                }}>
+                <Box
+                  sx={{
+                    mt: '20px'
+                  }}
+                >
+                  <Typography variant='h6' component='h6'>
+                    Lock Periods (Optional)
+                    <FormControlLabel control={<Checkbox checked={isBonus1} onChange={() => setIsBonus1(!isBonus1)} />} sx={{ color: `${isBonus1 ? 'white' : 'gray'}`, ml: '0px' }} label="Enable" />
+                  </Typography>
+                </Box>
                 {
-                  `Bonus periods start at the start block and end at the below specified block. For no bonus period set the multiplier to '1' and the bonus end block to ${now}`
+                  isBonus1 ?
+                    null
+                    : <Box
+                      className='checkOverlay'
+                      sx={{
+                        top: "35px",
+                        width: '100%',
+                        height: '68%',
+                        position: 'absolute',
+                        backgroundColor: '#ffffff3b',
+                        left: '-7px',
+                        zIndex: '9',
+                        cursor: 'no-drop',
+                        borderRadius: '5px'
+                      }}
+                    ></Box>
                 }
-              </Box>
-              <Box>
-                <TextField size='small' value={multiplier} onChange={e => setMultiplier(e.target.value)} fullWidth />
-              </Box>
-              <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
-                Bonus end date
-              </Box>
-              <Box>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                  <DateTimePicker
-                    value={bonusEndDate}
-                    onChange={(newValue) => { setBonusEndDate(newValue) }}
-                    renderInput={(params) => <TextField size='small' {...params} />}
-                  />
-                </LocalizationProvider>
-              </Box>
-              <Box sx={{ color: 'text.secondary', mb: '5px', mt: '10px' }}>
-                Block Number
-              </Box>
-              <Box>
-                <TextField size='small' value={bonusBlock} onChange={e => setBonusBlock(e.target.value)} />
-              </Box>
-              <Box
-                sx={{
-                  my: '5px',
-                  textAlign: 'left',
-                  fontSize: '14px',
-                  color: 'text.secondary'
-                }}>
-                {`* must be >= ${now}`}
-              </Box>
-              <Box
-                sx={{
-                  mt: '20px'
-                }}
-              >
-                <Typography variant='h6' component='h6'>
-                  Lock Periods
-                </Typography>
-              </Box>
-              <Grid sx={{ width: '480px' }} container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
+                <Grid sx={{ width: '480px' }} container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField size='small' value={periodPerx} onChange={e => setPeriodPerx(e.target.value)} />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <Select
+                        value={lockUnit}
+                        onChange={e => setLockUnit(e.target.value)}
+                        size='small'
+                      >
+                        <MenuItem value='day'>days</MenuItem>
+                        <MenuItem value='week'>weeks</MenuItem>
+                        <MenuItem value='month'>months</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <Select
-                      value={lockUnit}
-                      onChange={e => setLockUnit(e.target.value)}
-                      size='small'
-                    >
-                      <MenuItem value='day'>days</MenuItem>
-                      <MenuItem value='week'>weeks</MenuItem>
-                      <MenuItem value='month'>months</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
+              </Box>
             </PerfectScrollbar>
           </Box>
         </Box>
