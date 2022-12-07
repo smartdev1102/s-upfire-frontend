@@ -96,8 +96,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     // if (rewardBlock <= 0) return;
     console.log(rewardBlock)
     const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 / amountIn;
-    setApy(tempapy);
-  }, [rewardBlock]);
+    setApy(tempapy * tokenPrice / liquidity);
+  }, [rewardBlock , tokenPrice , liquidity]);
 
 
   // calculate start block when change start date
