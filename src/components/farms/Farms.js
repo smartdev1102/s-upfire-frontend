@@ -74,8 +74,8 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
 
   useEffect(() => {
     if (!!searchKey) {
-      const temp = farms.filter(pool => pool.name.includes(searchKey));
-      const tempv3 = farmsv3.filter(pool => pool.name.includes(searchKey));
+      const temp = farms.filter(pool => pool.name.toLowerCase().includes(searchKey.toLowerCase()));
+      const tempv3 = farmsv3.filter(pool => pool.name.toLowerCase().includes(searchKey.toLowerCase()));
       setFilterFarm(temp);
       setFilterFarmv3(tempv3);
     } else {
@@ -150,53 +150,76 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
     isV3,
     index
   ) => {
-    // const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
-    // if (Number(allowance) < Number(parseEther(amountIn))) {
-    const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
-    await tx1.wait();
-    // }
-    console.log(lockPeriod);
-    const tx = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
-      farmToken,
-      parseEther(amountIn),
-      lptoken,
-      Number(blockReward),
-      startBlock,
-      bonusEndBlock,
-      bonus,
-      lockPeriod,
-      false
-    );
-    await tx.wait();
+    console.log('farmToken: ', farmToken)
+    console.log('amountIn: ', amountIn)
+    console.log('lptoken: ', lptoken)
+    console.log('blockReward: ', blockReward)
+    console.log('startBlock: ', startBlock)
+    console.log('bonusEndBlock: ', bonusEndBlock)
+    console.log('bonus: ', bonus)
+    console.log('lockPeriod: ', bonus)
+    console.log('isV3: ', isV3)
+    console.log('index: ', index)
+      try {
+      // const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
+      // if (Number(allowance) < Number(parseEther(amountIn))) {
+      const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(address[chain][index]['generator'], parseEther(amountIn));
+      await tx1.wait();
+      // }
+      console.log(lockPeriod);
+      const tx = await generatorWeb3(chain, library.getSigner(), index).createFarmV2(
+        farmToken,
+        parseEther(amountIn),
+        lptoken,
+        Number(blockReward),
+        startBlock,
+        bonusEndBlock,
+        bonus,
+        lockPeriod,
+        false
+      );
+      await tx.wait();
 
-    const rewardSymbol = await tokenContract(chain, farmToken).symbol();
-    const token0 = await pair(chain, lptoken).token0();
-    const token1 = await pair(chain, lptoken).token1();
-    const symbol1 = await tokenContract(chain, token0).symbol();
-    const symbol2 = await tokenContract(chain, token1).symbol();
-    const lpsymbol = `${symbol1}-${symbol2}`;
-    const length = await factory(chain, index).farmsLength();
-    const farmAddress = await factory(chain, index).farmAtIndex(Number(length) - 1);
-    const farminfo = await farm(chain, farmAddress).farmInfo();
-    const res = await farmService.createFarm({
-      name: lpsymbol,
-      baseToken: rewardSymbol,
-      symbol: lpsymbol,
-      start: new Date(startBlock * 1000),
-      end: new Date(farminfo.endBlock * 1000),
-      supply: formatEther(farminfo.farmableSupply),
-      blockReward: blockReward,
-      address: farmAddress,
-      lptoken: lptoken,
-      rewardToken: farmToken,
-      token0: token0,
-      token1: token1,
-      chain: chain,
-      owner: walletAddress,
-      invisible: false
-    });
-    setFarms([...farms, res]);
-    setOpenCreateFarm(false);
+      const rewardSymbol = await tokenContract(chain, farmToken).symbol();
+      console.log('rewardSymbol: ', rewardSymbol)
+      const token0 = await pair(chain, lptoken).token0();
+      console.log('token0: ', token0)
+      const token1 = await pair(chain, lptoken).token1();
+      console.log('token1: ', token1)
+      const symbol1 = await tokenContract(chain, token0).symbol();
+      console.log('symbol1: ', symbol1)
+      const symbol2 = await tokenContract(chain, token1).symbol();
+      console.log('symbol2: ', symbol2)
+      const lpsymbol = `${symbol1}-${symbol2}`;
+      console.log('lpsymbol: ', lpsymbol)
+      const length = await factory(chain, index).farmsLength();
+      console.log('length: ', length)
+      const farmAddress = await factory(chain, index).farmAtIndex(Number(length) - 1);
+      console.log('farmAddress: ', farmAddress)
+      const farminfo = await farm(chain, farmAddress).farmInfo();
+      console.log('farminfo: ', farminfo)
+      const res = await farmService.createFarm({
+        name: lpsymbol,
+        baseToken: rewardSymbol,
+        symbol: lpsymbol,
+        start: new Date(startBlock * 1000),
+        end: new Date(farminfo.endBlock * 1000),
+        supply: formatEther(farminfo.farmableSupply),
+        blockReward: blockReward,
+        address: farmAddress,
+        lptoken: lptoken,
+        rewardToken: farmToken,
+        token0: token0,
+        token1: token1,
+        chain: chain,
+        owner: walletAddress,
+        invisible: false
+      });
+      setFarms([...farms, res]);
+      setOpenCreateFarm(false);
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -229,65 +252,63 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
               display: 'flex',
               alignItems: 'center',
               width: '100%',
-              px: '40px',
+              px: {xs: '10px', sm: '40px'},
               background: '#001126',
               py: '10px',
               borderRadius: '15px'
             }}
+            flexDirection={{sm: 'row', xs:'column'}}
           >
-            <Hidden smDown>
-              <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
-                Total farming liquidity
-              </Typography>
-            </Hidden>
-            <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-              {!!liq ? `$${Math.trunc(liq)}` : (
-                <Box>
-                  <img style={{ height: '24px', paddingLeft: '20px' }} src={loading} />
-                </Box>
-              )}
-            </Typography>
-            <Hidden smDown>
+            <Box display='flex' alignItems='center' justifyContent='space-between' width='100%'>
+              <Box display='flex' alignItems='center'>
+                <Typography sx={{ mt: '7px' }} variant="h6" gutterBottom component="h6" textTransform={'capitalize'}>
+                  Total farming liquidity
+                </Typography>
+                <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
+                  {!!liq ? `$${Math.trunc(liq)}` : (
+                    <Box>
+                      <img style={{ height: '24px', paddingLeft: '20px' }} src={loading} />
+                    </Box>
+                  )}
+                </Typography>
+              </Box>
               <FormGroup
                 sx={{
-                  mx: '10px'
+                  mx: {sm: '10px'}
                 }}
               >
                 <FormControlLabel control={<Switch checked={isMyFarm} onChange={e => setIsMyFarm(e.target.checked)} />} label="My Farms" />
               </FormGroup>
-            </Hidden>
-            <Box sx={{ flexGrow: 1 }}></Box>
-            <Hidden mdDown>
-              <SearchInput
-                value={searchKey}
-                onChange={e => setSearchKey(e.target.value)}
-                placeholder='Search by name, symbol'
-              />
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            </Hidden>
-            <Box>
-              <RoundButton
-                onClick={handleOpenCreateFarm}
-                sx={{
-                  color: 'text.primary',
-                  border: '1px solid white',
-                }}
-                variant='outlined'
-              >
-                <Typography variant='h3' component='h3'>
-                  Create Farm
-                </Typography>
-              </RoundButton>
             </Box>
-            <Hidden smDown>
-              <Box>
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <Box display='flex' alignItems='center' justifyContent='space-between' width='100%'>
+              <Box position={'relative'}>
+                <SearchInput
+                  value={searchKey}
+                  onChange={e => setSearchKey(e.target.value)}
+                  placeholder='Search by name, symbol'
+                />
+                <IconButton sx={{position: 'absolute', top: '2px', right: '3px'}}>
+                  <SearchIcon />
+                </IconButton>
+              </Box>
+              <Box display='flex' alignItems='center'>
+                <RoundButton
+                  onClick={handleOpenCreateFarm}
+                  sx={{
+                    color: 'text.primary',
+                    border: '1px solid white',
+                  }}
+                  variant='outlined'
+                >
+                  <Typography variant='h3' component='h3'>
+                    Create Farm
+                  </Typography>
+                </RoundButton>
                 <RoundButton
                   sx={{
                     color: 'text.primary',
                     border: '1px solid white',
-                    mx: '10%'
                   }}
                   variant='outlined'
                   id="filter-button"
@@ -323,7 +344,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
                   </MenuItem>
                 </Menu>
               </Box>
-            </Hidden>
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -400,7 +421,7 @@ const Farms = ({ walletAddress, chain, openWalletAlert, farms, farmsv3, pairs, s
               <Grid item md={4} sm={3} xs={2} >
                 <Grid container spacing={2}>
                   <Hidden smDown>
-                    <Grid xs={2} item></Grid>
+                    <Grid item xs={2} ></Grid>
                     <Grid sx={{ pl: '10px' }} item xs={5}>
                       <Typography variant='h3' component='h3'>
                         Start Date

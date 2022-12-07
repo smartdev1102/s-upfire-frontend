@@ -109,7 +109,7 @@ const FarmCard = ({ farmInfo, chain, setSelectedFarm, handleVisible, walletAddre
         <Grid item md={6} sm={7} xs={8}>
           <Grid sx={{ alignItems: 'center' }} container spacing={2}>
             {/* <Hidden smDown> */}
-            <Grid md={4} sm={4} xs={4} sx={{
+            <Grid item md={4} sm={4} xs={4} sx={{
               display: 'flex', marginRight: {
                 md: '0px',
                 sm: '0px',

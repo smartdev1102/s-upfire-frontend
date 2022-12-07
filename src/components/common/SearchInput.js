@@ -6,13 +6,12 @@ const SearchInput = styled(InputBase)(({ theme }) => ({
     marginTop: theme.spacing(3),
   },
   '& .MuiInputBase-input': {
-    borderRadius: '20px',
+    borderRadius: '50rem',
     position: 'relative',
     backgroundColor:  'secondary',
     border: '1px solid #ced4da',
     fontSize: 16,
-    width: '300px',
-    padding: '10px 12px',
+    padding: '10px 40px 10px 12px',
     transition: theme.transitions.create([
       'border-color',
       'background-color',

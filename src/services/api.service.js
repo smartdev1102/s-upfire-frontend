@@ -30,6 +30,7 @@ export const poolService = {
     return response.data.data;
   },
   createPool: async (payload) => {
+    console.log('--------Create Pool Axios--------', payload)
     const response = await axios.post(`${baseUrl}/pools`, payload);
     return response.data.data;
   }, 

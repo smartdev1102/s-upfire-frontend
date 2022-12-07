@@ -56,19 +56,29 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   }, [farm]);
 
   const handleApprove = async () => {
-    if (isEther !== 0) {
-      const tx = await tokenWeb3(farm.token0, library.getSigner()).approve(swapFactories[chain]['router'], parseEther(amountIn0));
-      await tx.wait();
+    try {
+      if (isEther !== 0) {
+        const tx = await tokenWeb3(farm.token0, library.getSigner()).approve(swapFactories[chain][0]['router'], parseEther(amountIn0));
+        await tx.wait();
+      }
+      if (isEther !== 1) {
+        const tx = await tokenWeb3(farm.token1, library.getSigner()).approve(swapFactories[chain][0]['router'], parseEther(amountIn1));
+        await tx.wait();
+      }
+      setIsApproved(true);
+    } catch (err) {
+      console.log(err)
     }
-    if (isEther !== 1) {
-      const tx = await tokenWeb3(farm.token1, library.getSigner()).approve(swapFactories[chain]['router'], parseEther(amountIn1));
-      await tx.wait();
-    }
-    setIsApproved(true);
   }
 
   const addLiquidity = async () => {
-    const deadline = Math.round(Date.now() / 1000) + 10;
+    const deadline = Math.round(Date.now() / 1000) + 100;
+    console.log('------Add Liquidity-------')
+    console.log('token0: ', farm.token0);
+    console.log('token1: ', farm.token1);
+    console.log('walletAddress: ', walletAddress);
+    console.log('amountIn0: ', amountIn0);
+    console.log('amountIn1: ', amountIn1);
     if (isEther == 0) {
       const tx = await routerWeb3(chain, library.getSigner()).addLiquidityETH(
         farm.token1,
@@ -107,13 +117,18 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
   }
 
   const stake = async () => {
-    await tokenWeb3(farm.lptoken, library.getSigner()).approve(farm.address, parseEther(amountIn));
-    tokenWeb3(farm.lptoken).once("Approval", async () => {
-      const tx = await farmWeb3.apply(farm.address, library.getSigner()).deposit(parseEther(amountIn));
+    try {
+      const approveTx = await tokenWeb3(farm.lptoken, library.getSigner()).approve(farm.address, parseEther(amountIn));
+      await approveTx.wait();
+
+      const tx = await farmWeb3(farm.address, library.getSigner()).deposit(parseEther(amountIn));
       await tx.wait();
       window.alert("Deposit.");
-    });
-    onClose();
+
+      onClose();
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return !!farm && (

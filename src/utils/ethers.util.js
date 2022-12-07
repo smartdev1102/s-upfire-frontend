@@ -27,12 +27,12 @@ export const address = {
   },
   97: {
     0: {
-      factory: "0x9fe582f9e7D02d5096375A1FE294f394a0B9D578",
-      generator: "0x9B9DbFAedF69EF47870D6745D10f20a1ef57c426",
-      rewardToken: "0x2A84A252b129489Bc7834B483a4Ba370cA403F19",
+      factory: "0xde5acb34431d907d7D018a6f027A57F8Ca3d9280",
+      generator: "0x0C7E46f2c0940c6248bB3bFA99723EdaDdC0a1a1",
+      rewardToken: "0xcb2c9c2CF13e193F634c84879F375B524e4A73C3",
       wether: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
-      sfactory: '0x8c600cAa998B007f3EA81046d5710d2D502edC0E',
-      sgenerator: '0x36f708Cd37f35e9517Be6F1F6D0f3b52b9898799'
+      sfactory: '0x2f8A69b0F843E95eaE444681a5047d38620dD5c4',
+      sgenerator: '0x1E715d7B6f7165F369eb30CF8d03F6D9e1E75eA7'
     }
   },
   43114: {
@@ -69,8 +69,8 @@ export const coinSymbols = {
 export const swapFactories = {
   97: {
     0: {
-      uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-      router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506'
+      uniswap: "0xB7926C0430Afb07AA7DEfDE6DA862aE0Bde767bc",
+      router: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3'
     }
   },
   43114: {
@@ -127,7 +127,7 @@ export const pool = (chain, poolAddress) => {
 }
 
 export const routerWeb3 = (chain, signer) => {
-  const contract = new ethers.Contract(swapFactories[chain]['router'], Router.abi, signer);
+  const contract = new ethers.Contract(swapFactories[chain][0]['router'], Router.abi, signer);
   return contract;
 }
 

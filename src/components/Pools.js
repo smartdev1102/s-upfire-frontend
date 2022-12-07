@@ -34,8 +34,6 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
     setPools(temp);
   }
 
-
-
   useEffect(() => {
     if (isMyPool) {
       const temp = stakePools.filter(pool => Number(pool.balance) > 0);
@@ -46,7 +44,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
   }, [isMyPool, stakePools]);
   useEffect(() => {
     if (!!searchKey) {
-      const temp = stakePools.filter(pool => pool.name.includes(searchKey));
+      const temp = stakePools.filter(pool => pool.name.toLowerCase().includes(searchKey.toLowerCase()));
       setFilteredPools(temp);
     } else {
       setFilteredPools(stakePools);
@@ -109,25 +107,36 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
 
 
   const stake = async (tokenAddress, poolAddress) => {
-    await tokenContract(chain, tokenAddress).approve(poolAddress, parseEther(amountIn));
-    tokenContract(chain, tokenAddress).once("Approval", async () => {
+    try {
+      const approveTx = await tokenWeb3(tokenAddress, library.getSigner()).approve(poolAddress, parseEther(amountIn));
+      await approveTx.wait();
       const tx = await spoolWeb3(poolAddress, library.getSigner()).stake(parseEther(amountIn));
       await tx.wait();
       window.alert("staked");
-    });
+    } catch (err) {
+      console.log(err)
+    }
   }
 
 
   const unstake = async (poolAddress) => {
-    const tx = await spoolWeb3(poolAddress, library.getSigner()).unstake(parseEther(amountOut));
-    await tx.wait();
-    window.alert('unstake');
+    try {
+      const tx = await spoolWeb3(poolAddress, library.getSigner()).unstake(parseEther(amountOut));
+      await tx.wait();
+      window.alert('unstake');
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const harvest = async (poolAddress) => {
-    const tx = await spoolWeb3(poolAddress, library.getSigner()).harvest();
-    await tx.wait();
-    window.alert('harvest');
+    try {
+      const tx = await spoolWeb3(poolAddress, library.getSigner()).harvest();
+      await tx.wait();
+      window.alert('harvest');
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
@@ -154,45 +163,46 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
             display: 'flex',
             width: '100%',
             alignItems: 'center',
-            px: '40px',
+            px: {xs: '10px', sm: '40px'},
             py: '10px',
             background: '#001126',
-            borderRadius: '20px'
+            borderRadius: '20px',
           }}
+          flexDirection={{sm: "row", xs: "column"}}
         >
-          <Hidden smDown>
-            <Typography sx={{ mt: '5px' }} variant="h6" gutterBottom component="h6">
-              Total Pool liquidity
-            </Typography>
-          </Hidden>
-          <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
-            
-          </Typography>
-          <Hidden smDown>
-            <Box>
-              <FormGroup sx={{ mx: '10px' }}>
-                <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
-              </FormGroup>
-            </Box>
-          </Hidden>
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <Box>
-            <RoundButton onClick={handleCreatePool} variant='contained'>
-              <Typography variant='h3' component='h3'>
-                Create Pool
+          <Box display={'flex'} justifyContent='space-between' alignItems='center' width='100%'>
+            <Box display={'flex'} alignItems='center'>
+              <Typography sx={{ mt: '7px' }} px={{sm: '10px', xs: '10px'}} variant="h6" gutterBottom component="h6" textTransform={'capitalize'}>
+                Total Pool liquidity
               </Typography>
-            </RoundButton>
+              <Typography sx={{ mx: '5px', mt: '10px' }} variant="h5" gutterBottom component="h5">
+                0
+              </Typography>
+            </Box>
+            <FormGroup sx={{ mx: '10px' }}>
+              <FormControlLabel control={<Switch checked={isMyPool} onChange={e => setIsMyPool(e.target.checked)} />} label="My pools" />
+            </FormGroup>
           </Box>
-          <Hidden mdDown>
-            <SearchInput
-              value={searchKey}
-              onChange={e => setSearchKey(e.target.value)}
-              placeholder='Search by name, symbol'
-            />
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-          </Hidden>
+          <Box sx={{flexGrow: '1'}}></Box>
+          <Box display={'flex'} justifyContent='space-between' alignItems='center' width='100%'>
+            <Box position={'relative'}>
+              <SearchInput
+                value={searchKey}
+                onChange={e => setSearchKey(e.target.value)}
+                placeholder='Search by name, symbol'
+              />
+              <IconButton sx={{position: 'absolute', top: '2px', right: '3px'}}>
+                <SearchIcon />
+              </IconButton>
+            </Box>
+            <Box px={{sm: '30px', xs: '30px'}}>
+              <RoundButton onClick={handleCreatePool} variant='contained'>
+                <Typography variant='h3' component='h3'>
+                  Create Pool
+                </Typography>
+              </RoundButton>
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Box
@@ -240,7 +250,6 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
               key={i}
             >
               <Box
-                onClick={() => handleOpenIndex(i)}
                 sx={{
                   bgcolor: 'background.paper',
                   mt: '10px',
@@ -251,7 +260,7 @@ const Pools = ({ chain, walletAddress, stakePools, openWalletAlert, setPools }) 
                   alignItems: 'center'
                 }}
               >
-                <Grid container spacing={2}>
+                <Grid container spacing={2} onClick={() => handleOpenIndex(i)}>
                   <Grid item xs={2}>
                     <Typography variant='h3' component='h3'>
                       {i + 1}

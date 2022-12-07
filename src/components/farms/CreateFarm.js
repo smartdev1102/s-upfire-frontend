@@ -45,8 +45,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [periodPerx, setPeriodPerx] = useState(0);
   const [isBonus, setIsBonus] = useState(false);
   const [isBonus1, setIsBonus1] = useState(false);
-  console.log("🚀 ~ file: CreateFarm.js ~ line 47 ~ CreateFarm ~ isBonus", isBonus)
-
 
   useEffect(() => {
     async function getPairs() {
@@ -96,7 +94,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   // calculate apy with rewardBlock
   useEffect(() => {
     if (rewardBlock <= 0) return;
-    const tempapy = rewardBlock * 3600 * 24 * 365 / Math.pow(10, 18) / 10;
+    console.log(rewardBlock)
+    const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 / amountIn;
     setApy(tempapy);
   }, [rewardBlock]);
 
@@ -227,8 +226,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     if (startDate <= bonusEndDate) return;
     setBonusEndDate(startDate);
   }, [startDate]);
-
-  console.log('chainnnnn', chain)
 
   return (
     <Dialog
