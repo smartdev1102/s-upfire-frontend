@@ -78,7 +78,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         rewardToken,
         stakeToken,
-        apr,
+        apy,
         amountIn,
         startBlock,
         endBlock
@@ -91,7 +91,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         rewardToken,
         stakeToken,
-        apr,
+        apy,
         amountIn,
         startBlock,
         endBlock
@@ -126,11 +126,30 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     const date = new Date(endBlock * 1000);
     setEndDate(date);
   }, [endBlock]);
+
+  useEffect(() => {
+    if (rewardBlock <= 0) return;
+    console.log(rewardBlock);
+    const tempapy = (formatEther(rewardBlock) * 3600 * 24 * 365) / amountIn;
+    setApy((tempapy * tokenPrice) / liquidity);
+  }, [rewardBlock, tokenPrice, liquidity]);
+
   // calculate end block when changing end date
   useEffect(() => {
     const block = Math.floor(new Date(endDate).getTime() / 1000);
     setEndBlock(block);
   }, [endDate]);
+
+  useEffect(() => {
+    const block = Math.floor(new Date(bonusEndDate).getTime() / 1000);
+    setBonusBlock(block);
+  }, [bonusEndDate]);
+
+  useEffect(() => {
+    if (bonusBlock <= 0) return;
+    const date = new Date(bonusBlock * 1000);
+    setBonusEndDate(date);
+  }, [bonusBlock]);
 
   useEffect(() => {
     async function getFarmToken() {
@@ -197,7 +216,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     }
     if (!!amountIn && multiplier > 0) {
       determineBlockReward();
-      console.log("check calll", determineBlockReward());
     }
   }, [
     amountIn,
@@ -319,35 +337,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                 >
                   Max
                 </button>
-              </Box>
-              <Box
-                sx={{
-                  mt: "20px",
-                }}
-              >
-                <Typography variant="h6" component="h6">
-                  Amount
-                </Typography>
-              </Box>
-              <Box>
-                <TextField
-                  size="small"
-                  value={amountIn}
-                  onChange={(e) => setAmountIn(e.target.value)}
-                  placeholder="0x..."
-                  fullWidth
-                />
-              </Box>
-              <Box
-                sx={{
-                  my: "5px",
-                  textAlign: "left",
-                  fontSize: "14px",
-                  color: "text.secondary",
-                }}
-              >
-                Create must deposit token to create pool. Pool end time is
-                calculated with this amount and apr.
               </Box>
 
               {/* =============== Dates ===================== */}

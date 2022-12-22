@@ -138,7 +138,7 @@ const Pools = ({
     const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
       rewardToken,
       stakeToken,
-      apr,
+      (apr * 10000).toFixed(0),
       parseEther(amountIn)
     );
     await tx.wait();
@@ -382,13 +382,13 @@ const Pools = ({
             container
             spacing={2}
           >
-            <Grid item md={6} sm={7} xs={8}>
+            <Grid item md={6} sm={7} xs={7}>
               <Grid container spacing={2}>
                 {/* <Hidden smDown>
                     <Grid item xs={2}>
                     </Grid>
                   </Hidden> */}
-                <Grid item md={4} sm={4} xs={4}>
+                <Grid item md={4} sm={5} xs={5}>
                   <Typography variant="h3" component="h3">
                     Pool
                   </Typography>
@@ -411,7 +411,7 @@ const Pools = ({
                   </Typography>
                 </Grid>
                 {/* </Hidden> */}
-                <Grid item md={4} sm={4} xs={4}>
+                <Grid item md={4} sm={3} xs={3}>
                   <Typography
                     sx={{
                       ml: "-15px",
@@ -425,22 +425,22 @@ const Pools = ({
                     component="h3"
                     className="asdasd"
                   >
-                    APR
+                    APY
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item md={4} sm={3} xs={2}>
+            <Grid item md={4} sm={3} xs={3}>
               <Grid container spacing={2}>
                 <Hidden smDown>
-                  <Grid item xs={2}></Grid>
+                  <Grid item xs={1}></Grid>
                   <Grid sx={{ pl: "10px" }} item xs={5}>
                     <Typography variant="h3" component="h3">
                       Start Date
                     </Typography>
                   </Grid>
                 </Hidden>
-                <Grid item xs={5}>
+                <Grid item xs={10} sm={5}>
                   <Typography
                     sx={{ pr: "6px", ml: "10px" }}
                     variant="h3"
@@ -453,7 +453,7 @@ const Pools = ({
             </Grid>
             <Grid item xs={2}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={10} sm={6}>
                   <Typography sx={{ ml: "20px" }} variant="h3" component="h3">
                     Liquidity
                   </Typography>
@@ -504,14 +504,14 @@ const Pools = ({
                     }}
                     onClick={() => handleOpenIndex(i)}
                   >
-                    <Grid item md={6} sm={7} xs={8}>
+                    <Grid item md={6} sm={7} xs={7}>
                       <Grid sx={{ alignItems: "center" }} container spacing={2}>
                         {/* <Hidden smDown> */}
                         <Grid
                           item
                           md={4}
-                          sm={4}
-                          xs={4}
+                          sm={5}
+                          xs={5}
                           sx={{
                             display: "flex",
                             marginRight: {
@@ -608,7 +608,7 @@ const Pools = ({
             </Grid> */}
                         {/* </Hidden> */}
 
-                        <Grid item md={4} sm={4} xs={4}>
+                        <Grid item md={4} sm={3} xs={3}>
                           <Typography
                             variant="h3"
                             component="h3"
@@ -620,14 +620,14 @@ const Pools = ({
                               },
                             }}
                           >
-                            {`${pool.apr}%`}
+                            {`${pool.apr.toFixed(3)}%`}
                           </Typography>
                         </Grid>
                       </Grid>
                     </Grid>
 
-                    <Grid item md={4} sm={3} xs={2}>
-                      <Grid sx={{ alignItems: "center" }} container spacing={2}>
+                    <Grid item md={4} sm={3} xs={3}>
+                      <Grid sx={{ alignItems: "center" }} container spacing={0}>
                         <Hidden smDown>
                           <Grid
                             sx={{
@@ -636,7 +636,7 @@ const Pools = ({
                               alignItems: "center",
                             }}
                             item
-                            xs={2}
+                            xs={1}
                           >
                             <DateRangeIcon sx={{ color: "#1F8BED" }} />
                           </Grid>
@@ -644,6 +644,17 @@ const Pools = ({
                             <Typography variant="h3" component="h3">
                               {moment(pool.start).format("MMM DD YYYY")}
                             </Typography>
+                          </Grid>
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              justifyContent: "end",
+                              alignItems: "center",
+                            }}
+                            item
+                            xs={1}
+                          >
+                            <DateRangeIcon sx={{ color: "#1F8BED" }} />
                           </Grid>
                         </Hidden>
                         <Grid item md={5} sm={5} xs={12}>

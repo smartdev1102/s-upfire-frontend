@@ -144,14 +144,14 @@ const FarmCard = ({
         container
         spacing={2}
       >
-        <Grid item md={6} sm={7} xs={8}>
+        <Grid item md={6} sm={7} xs={7}>
           <Grid sx={{ alignItems: "center" }} container spacing={2}>
             {/* <Hidden smDown> */}
             <Grid
               item
               md={4}
-              sm={4}
-              xs={4}
+              sm={5}
+              xs={5}
               sx={{
                 display: "flex",
                 marginRight: {
@@ -248,7 +248,7 @@ const FarmCard = ({
             </Grid> */}
             {/* </Hidden> */}
 
-            <Grid item md={4} sm={4} xs={4}>
+            <Grid item md={4} sm={3} xs={3}>
               <Typography
                 variant="h3"
                 component="h3"
@@ -265,8 +265,8 @@ const FarmCard = ({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={4} sm={3} xs={2}>
-          <Grid sx={{ alignItems: "center" }} container spacing={2}>
+        <Grid item md={4} sm={3} xs={3}>
+          <Grid sx={{ alignItems: "center" }} container spacing={0}>
             <Hidden smDown>
               <Grid
                 sx={{
@@ -275,7 +275,7 @@ const FarmCard = ({
                   alignItems: "center",
                 }}
                 item
-                xs={2}
+                xs={1}
               >
                 <DateRangeIcon sx={{ color: "#1F8BED" }} />
               </Grid>
@@ -283,6 +283,17 @@ const FarmCard = ({
                 <Typography variant="h3" component="h3">
                   {moment(farmInfo.start).format("MMM DD YYYY")}
                 </Typography>
+              </Grid>
+              <Grid
+                sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  alignItems: "center",
+                }}
+                item
+                xs={1}
+              >
+                <DateRangeIcon sx={{ color: "#1F8BED" }} />
               </Grid>
             </Hidden>
             <Grid item md={5} sm={5} xs={12}>
