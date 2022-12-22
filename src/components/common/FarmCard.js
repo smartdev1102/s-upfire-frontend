@@ -110,6 +110,20 @@ const FarmCard = ({
     window.alert("Withdraw");
   };
 
+  const claim = async () => {
+    try {
+      const rewards = await farmWeb3(
+        farmInfo.address,
+        library.getSigner()
+      ).pendingReward(walletAddress);
+      const tx = await farmWeb3(
+        farmInfo.address,
+        library.getSigner()
+      ).safeRewardTransfer(walletAddress, rewards);
+      await tx.wait();
+    } catch (err) {}
+  };
+
   return (
     <Card
       sx={{
@@ -361,7 +375,12 @@ const FarmCard = ({
               </Button>
             </Grid>
             <Grid item md={2} xs={12}>
-              <Button fullWidth onClick={() => {}} variant="contained">
+              <Button
+                fullWidth
+                onClick={claim}
+                variant="contained"
+                disabled={walletAddress}
+              >
                 claim
               </Button>
             </Grid>
