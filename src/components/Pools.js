@@ -20,7 +20,6 @@ import RoundButton from "./common/RoundButton";
 import SearchInput from "./common/SearchInput";
 import SearchIcon from "@mui/icons-material/Search";
 import PoolDlg from "./common/PoolDlg";
-import DateRangeIcon from "@mui/icons-material/DateRange";
 import {
   address,
   erc20Abi,
@@ -39,11 +38,7 @@ import { parseEther } from "ethers/lib/utils";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
 import { poolService } from "../services/api.service";
-import defaultIcon from "../assets/defaultIcon.png";
-import airdropIcon from "../assets/icons/airdrop.svg";
-import accountIcon from "../assets/icons/account.svg";
-
-const admin = process.env.REACT_APP_ADMIN.toLowerCase();
+import PoolCard from "./common/PoolCard";
 
 const Pools = ({
   chain,
@@ -54,20 +49,12 @@ const Pools = ({
 }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
-  const [amountIn, setAmountIn] = useState("0");
-  const [amountOut, setAmountOut] = useState("0");
-  const [openIndex, setOpenIndex] = useState([]);
   const [isMyPool, setIsMyPool] = useState(false);
   const [filterdPools, setFilteredPools] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState();
   const open = Boolean(anchorEl);
-
-  const chainsName = {
-    56: "smartchain",
-    43114: "avalanchec",
-  };
 
   console.log(filterdPools);
 
@@ -161,57 +148,6 @@ const Pools = ({
     });
     setPools([...stakePools, res]);
     setOpenDlg(false);
-  };
-
-  const handleOpenIndex = (i) => {
-    const index = openIndex.findIndex((ind) => ind === i);
-    let temp = [...openIndex];
-    if (index === -1) {
-      temp.push(i);
-      setOpenIndex(temp);
-    } else {
-      temp.splice(index, 1);
-      setOpenIndex(temp);
-    }
-  };
-
-  const stake = async (tokenAddress, poolAddress) => {
-    try {
-      const approveTx = await tokenWeb3(
-        tokenAddress,
-        library.getSigner()
-      ).approve(poolAddress, parseEther(amountIn));
-      await approveTx.wait();
-      const tx = await spoolWeb3(poolAddress, library.getSigner()).stake(
-        parseEther(amountIn)
-      );
-      await tx.wait();
-      window.alert("staked");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const unstake = async (poolAddress) => {
-    try {
-      const tx = await spoolWeb3(poolAddress, library.getSigner()).unstake(
-        parseEther(amountOut)
-      );
-      await tx.wait();
-      window.alert("unstake");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const harvest = async (poolAddress) => {
-    try {
-      const tx = await spoolWeb3(poolAddress, library.getSigner()).harvest();
-      await tx.wait();
-      window.alert("harvest");
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
@@ -484,322 +420,13 @@ const Pools = ({
             }}
           >
             {filterdPools.map((pool, i) => (
-              <Box key={i}>
-                <Card
-                  sx={{
-                    borderRadius: "20px",
-                    border: "1px solid #2494F3",
-                    fontFamily: "Exo",
-                    py: "15px",
-                    my: "10px",
-                    px: "20px",
-                  }}
-                >
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                      cursor: "pointer",
-                      alignItems: "center",
-                    }}
-                    onClick={() => handleOpenIndex(i)}
-                  >
-                    <Grid item md={6} sm={7} xs={7}>
-                      <Grid sx={{ alignItems: "center" }} container spacing={2}>
-                        {/* <Hidden smDown> */}
-                        <Grid
-                          item
-                          md={4}
-                          sm={5}
-                          xs={5}
-                          sx={{
-                            display: "flex",
-                            marginRight: {
-                              md: "0px",
-                              sm: "0px",
-                              xs: "0px",
-                            },
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <img
-                            style={{
-                              marginTop: "5px",
-                              zIndex: "9",
-                              borderRadius: "100%",
-                            }}
-                            className={"dualImg"}
-                            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                              chainsName[pool.chain]
-                            }/assets/${pool.stakeToken}/logo.png`}
-                            onError={({ currentTarget }) => {
-                              currentTarget.onerror = null; // prevents looping
-                              currentTarget.src = defaultIcon;
-                            }}
-                          />
-                          <img
-                            style={{
-                              marginTop: "5px",
-                              borderRadius: "100%",
-                              marginLeft: "-15px",
-                            }}
-                            className={"dualImg"}
-                            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                              chainsName[pool.chain]
-                            }/assets/${pool.rewardToken}/logo.png`}
-                            onError={({ currentTarget }) => {
-                              currentTarget.onerror = null; // prevents looping
-                              currentTarget.src = defaultIcon;
-                            }}
-                          />
-                          <Typography
-                            variant="h3"
-                            component="h4"
-                            sx={{ marginTop: "5px", marginLeft: "10px" }}
-                          >
-                            {`${pool.name.toUpperCase()}`}
-                          </Typography>
-                        </Grid>
-
-                        {/* <Hidden smDown> */}
-                        <Grid
-                          item
-                          md={4}
-                          sm={4}
-                          xs={4}
-                          sx={{
-                            marginLeft: {
-                              md: "0px",
-                              sm: "0px",
-                              xs: "0px",
-                            },
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <img
-                            style={{
-                              marginTop: "5px",
-                              borderRadius: "100%",
-                              marginRight: "10px",
-                            }}
-                            className={"dualImg"}
-                            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                              chainsName[pool.chain]
-                            }/assets/${pool.address}/logo.png`}
-                            onError={({ currentTarget }) => {
-                              currentTarget.onerror = null; // prevents looping
-                              currentTarget.src = defaultIcon;
-                            }}
-                          />
-                          <Typography
-                            variant="h3"
-                            component="h3"
-                            className="asdasda"
-                            sx={{ marginTop: "5px" }}
-                          >
-                            {`${pool.rewardSymbol}`}
-                          </Typography>
-                        </Grid>
-
-                        {/* <Hidden smDown> */}
-                        {/* <Grid item xs={1}>
-            </Grid> */}
-                        {/* </Hidden> */}
-
-                        <Grid item md={4} sm={3} xs={3}>
-                          <Typography
-                            variant="h3"
-                            component="h3"
-                            sx={{
-                              marginLeft: {
-                                md: "0px",
-                                sm: "0px",
-                                xs: "0px",
-                              },
-                            }}
-                          >
-                            {`${pool.apr.toFixed(3)}%`}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item md={4} sm={3} xs={3}>
-                      <Grid sx={{ alignItems: "center" }} container spacing={0}>
-                        <Hidden smDown>
-                          <Grid
-                            sx={{
-                              display: "flex",
-                              justifyContent: "end",
-                              alignItems: "center",
-                            }}
-                            item
-                            xs={1}
-                          >
-                            <DateRangeIcon sx={{ color: "#1F8BED" }} />
-                          </Grid>
-                          <Grid item md={5} sm={5} xs={5}>
-                            <Typography variant="h3" component="h3">
-                              {moment(pool.start).format("MMM DD YYYY")}
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            sx={{
-                              display: "flex",
-                              justifyContent: "end",
-                              alignItems: "center",
-                            }}
-                            item
-                            xs={1}
-                          >
-                            <DateRangeIcon sx={{ color: "#1F8BED" }} />
-                          </Grid>
-                        </Hidden>
-                        <Grid item md={5} sm={5} xs={12}>
-                          <Typography variant="h3" component="h3">
-                            {moment(pool.end).format("MMM DD YYYY")}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              height: "100%",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Box sx={{ mx: "10px", mt: "5px" }}>
-                              <img src={airdropIcon} />
-                            </Box>
-                            <Typography variant="h3" component="div">
-                              {0}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Hidden smDown>
-                              <Box sx={{ mr: "10px", mt: "5px" }}>
-                                <img
-                                  style={{ height: "20px" }}
-                                  src={accountIcon}
-                                />
-                              </Box>
-                              <Typography variant="h3" component="h3">
-                                {0}
-                              </Typography>
-                            </Hidden>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  {openIndex.includes(i) && (
-                    <Box
-                      sx={{
-                        background: "#020826",
-                        px: "30px",
-                        py: "10px",
-                      }}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={8}>
-                              <TextField
-                                size="small"
-                                fullWidth
-                                value={amountIn}
-                                onChange={(e) => setAmountIn(e.target.value)}
-                                label="Stake Amount"
-                              />
-                            </Grid>
-                            <Grid item xs={4}>
-                              <Button
-                                fullWidth
-                                onClick={() =>
-                                  stake(pool.rewardToken, pool.address)
-                                }
-                                variant="contained"
-                              >
-                                Stake
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={8}>
-                              <TextField
-                                size="small"
-                                fullWidth
-                                value={amountOut}
-                                onChange={(e) => setAmountOut(e.target.value)}
-                                label="Unstake Amount"
-                              />
-                            </Grid>
-                            <Grid item xs={4}>
-                              <Button
-                                fullWidth
-                                onClick={() => unstake(pool.address)}
-                                variant="contained"
-                              >
-                                Unstake
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={4}>
-                              <Button
-                                fullWidth
-                                onClick={() => harvest(pool.address)}
-                                variant="contained"
-                              >
-                                Harvest
-                              </Button>
-                            </Grid>
-                            <Grid item xs={8}>
-                              {(String(walletAddress).toLowerCase() === admin ||
-                                String(walletAddress).toLowerCase() ===
-                                  pool.owner.toLowerCase()) && (
-                                <Box>
-                                  <FormControlLabel
-                                    control={
-                                      <Switch
-                                        checked={!pool.invisible}
-                                        onChange={(e) =>
-                                          handleVisible(
-                                            pool._id,
-                                            !e.target.checked
-                                          )
-                                        }
-                                      />
-                                    }
-                                    label="show/hide"
-                                  />
-                                </Box>
-                              )}
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  )}
-                </Card>
-              </Box>
+              <PoolCard
+                key={i}
+                poolInfo={pool}
+                chain={chain}
+                walletAddress={walletAddress}
+                handleVisible={handleVisible}
+              ></PoolCard>
             ))}
           </Box>
         </Box>
