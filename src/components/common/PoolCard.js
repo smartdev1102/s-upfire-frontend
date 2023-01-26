@@ -162,27 +162,12 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                     currentTarget.src = defaultIcon;
                   }}
                 />
-                <img
-                  style={{
-                    marginTop: "5px",
-                    borderRadius: "100%",
-                    marginLeft: "-15px",
-                  }}
-                  className={"dualImg"}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                    chainsName[poolInfo.chain]
-                  }/assets/${poolInfo.rewardToken}/logo.png`}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = defaultIcon;
-                  }}
-                />
                 <Typography
                   variant="h3"
                   component="h4"
                   sx={{ marginTop: "5px", marginLeft: "10px" }}
                 >
-                  {`${poolInfo.name.toUpperCase()}`}
+                  {`${poolInfo.name.split("/")[0].toUpperCase()}`}
                 </Typography>
               </Grid>
 
