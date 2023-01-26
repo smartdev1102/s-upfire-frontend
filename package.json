@@ -53,5 +53,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "https://data-seed-prebsc-2-s2.binance.org:8545/"
 }

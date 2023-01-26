@@ -20,6 +20,7 @@ import { spoolWeb3, tokenWeb3, spool, pool } from "../../utils/ethers.util";
 import { useWeb3React } from "@web3-react/core";
 import { parseEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
+import useWalletAlert from "../../hooks/useWalletAlertContext";
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -30,6 +31,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [amountIn, setAmountIn] = useState("0");
   const [amountOut, setAmountOut] = useState("0");
   const [stakers, setStakers] = useState(0);
+  const [userBalance, setUserBalance] = useState();
+  const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
     56: "smartchain",
@@ -41,11 +44,23 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       const info = await spool(chain, poolInfo.address).getStakerCount();
       console.log("--------", info);
       setStakers(BigNumber.from(info).toNumber());
+
+      if (walletAddress) {
+        const balance = await spool(chain, poolInfo.address).deposits(
+          walletAddress
+        );
+        console.log("$$$$$$", balance);
+        setUserBalance(balance);
+      }
     }
     getPool();
   }, [walletAddress, poolInfo]);
 
   const stake = async (tokenAddress, poolAddress) => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
     try {
       const approveTx = await tokenWeb3(
         tokenAddress,
@@ -56,35 +71,41 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
         parseEther(amountIn)
       );
       await tx.wait();
-      window.alert("staked");
+      window.alert("Tokens successfully staked.");
     } catch (err) {
       console.log(err);
     }
   };
 
   const unstake = async (poolAddress) => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
     try {
       const tx = await spoolWeb3(poolAddress, library.getSigner()).unstake(
         parseEther(amountOut)
       );
       await tx.wait();
-      window.alert("unstake");
+      window.alert("Tokens successfully unstaked.");
     } catch (err) {
       console.log(err);
     }
   };
 
   const harvest = async (poolAddress) => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
     try {
       const tx = await spoolWeb3(poolAddress, library.getSigner()).harvest();
       await tx.wait();
-      window.alert("harvest");
+      window.alert("Tokens successfully claimed.");
     } catch (err) {
       console.log(err);
     }
   };
-
-  console.log("------------", poolInfo);
 
   return (
     poolInfo && (
@@ -354,6 +375,12 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       fullWidth
                       onClick={() => unstake(poolInfo.address)}
                       variant="contained"
+                      disabled={
+                        !(
+                          BigNumber.isBigNumber(userBalance) &&
+                          userBalance.gte(0)
+                        )
+                      }
                     >
                       Unstake
                     </Button>
@@ -367,8 +394,15 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       fullWidth
                       onClick={() => harvest(poolInfo.address)}
                       variant="contained"
+                      disabled={
+                        walletAddress === undefined ||
+                        !(
+                          BigNumber.isBigNumber(userBalance) &&
+                          userBalance.gte(0)
+                        )
+                      }
                     >
-                      Harvest
+                      Claim
                     </Button>
                   </Grid>
                   <Grid item xs={8}>

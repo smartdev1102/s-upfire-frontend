@@ -197,7 +197,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
             endBlock
           );
           setRewardBlock(blockReward.toString());
-          setLiquidity(formatEther(requiredAmount));
         } else {
           const [blockReward, requiredAmount, fee] = await generator(
             chain,
@@ -210,7 +209,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
             endBlock
           );
           setRewardBlock(blockReward.toString());
-          setLiquidity(formatEther(requiredAmount));
         }
       } catch (err) {}
     }
@@ -688,7 +686,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === 0 ? "?" : rewardBlock}
+                          {rewardBlock === 0 ? "?" : formatEther(rewardBlock)}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>
@@ -709,7 +707,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {apy.toFixed(2)}%
+                          {isFinite(apy) ? `${apy.toFixed(2)}%` : "∞"}
                         </Box>
                       </Grid>
                     </Grid>

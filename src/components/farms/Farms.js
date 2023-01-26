@@ -31,7 +31,7 @@ import {
   tokenWeb3,
 } from "../../utils/ethers.util";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import FarmCard from "../common/FarmCard";
 import StakeDlg from "../common/StakeDlg";
 import FarmCardV3 from "../common/FarmCardV3";
@@ -61,8 +61,6 @@ const Farms = ({
   const [liq, setLiq] = useState();
 
   const { library } = useWeb3React();
-
-  console.log(farms);
 
   useEffect(() => {
     async function getLiq() {
@@ -132,39 +130,39 @@ const Farms = ({
   useEffect(() => {
     if (filter === "apr") {
       farms.sort((a, b) => {
-        if (a.blockReward < b.blockReward) {
-          return -1;
-        }
-        if (a.blockReward > b.blockReward) {
+        if (Number(a.blockReward) < Number(b.blockReward)) {
           return 1;
+        } else if (Number(a.blockReward) > Number(b.blockReward)) {
+          return -1;
         }
         return 0;
       });
       farmsv3.sort((a, b) => {
-        if (a.blockReward < b.blockReward) {
-          return -1;
-        }
-        if (a.blockReward > b.blockReward) {
+        if (Number(a.blockReward) < Number(b.blockReward)) {
           return 1;
+        } else if (Number(a.blockReward) > Number(b.blockReward)) {
+          return -1;
         }
         return 0;
       });
     }
     if (filter === "liq") {
       farms.sort((a, b) => {
-        if (a.supply < b.supply) {
+        if (BigNumber.from.apply(a.supply).lt(BigNumber.from(b.supply))) {
           return -1;
-        }
-        if (a.supply > b.supply) {
+        } else if (
+          BigNumber.from.apply(a.supply).gt(BigNumber.from(b.supply))
+        ) {
           return 1;
         }
         return 0;
       });
       farmsv3.sort((a, b) => {
-        if (a.supply < b.supply) {
+        if (BigNumber.from.apply(a.supply).lt(BigNumber.from(b.supply))) {
           return -1;
-        }
-        if (a.supply > b.supply) {
+        } else if (
+          BigNumber.from.apply(a.supply).gt(BigNumber.from(b.supply))
+        ) {
           return 1;
         }
         return 0;
@@ -174,8 +172,7 @@ const Farms = ({
       farms.sort((a, b) => {
         if (a.symbol < b.symbol) {
           return -1;
-        }
-        if (a.symbol > b.symbol) {
+        } else if (a.symbol > b.symbol) {
           return 1;
         }
         return 0;
@@ -183,14 +180,13 @@ const Farms = ({
       farmsv3.sort((a, b) => {
         if (a.symbol < b.symbol) {
           return -1;
-        }
-        if (a.symbol > b.symbol) {
+        } else if (a.symbol > b.symbol) {
           return 1;
         }
         return 0;
       });
     }
-  }, [filter]);
+  }, [filter, farms, farmsv3]);
 
   const createFarm = async (
     farmToken,
@@ -243,10 +239,10 @@ const Farms = ({
 
       const rewardSymbol = await tokenContract(chain, farmToken).symbol();
       console.log("rewardSymbol: ", rewardSymbol);
-      const token0 = await pair(chain, lptoken).token0();
-      console.log("token0: ", token0);
       const token1 = await pair(chain, lptoken).token1();
       console.log("token1: ", token1);
+      const token0 = await pair(chain, lptoken).token0();
+      console.log("token0: ", token0);
       const symbol1 = await tokenContract(chain, token0).symbol();
       console.log("symbol1: ", symbol1);
       const symbol2 = await tokenContract(chain, token1).symbol();
@@ -441,7 +437,7 @@ const Farms = ({
                 >
                   <MenuItem>Filtered By</MenuItem>
                   <Divider />
-                  <MenuItem onClick={() => handleFilter("apr")}>APR</MenuItem>
+                  <MenuItem onClick={() => handleFilter("apr")}>APY</MenuItem>
                   <MenuItem onClick={() => handleFilter("liq")}>
                     Liquidity
                   </MenuItem>
@@ -612,6 +608,7 @@ const Farms = ({
                   setSelectedFarm={setSelectedFarm}
                   chain={chain}
                   farmInfo={farm}
+                  walletAddress={walletAddress}
                 />
               ))}
             </Box>

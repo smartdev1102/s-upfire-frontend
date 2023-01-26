@@ -75,11 +75,13 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
 
   useEffect(() => {
     async function getPairs() {
+      console.log(process.env.REACT_APP_CHAIN, chain);
       if (chain === Number(process.env.REACT_APP_CHAIN)) {
         const res = await pairService.fetchPairs({
           chain: chain,
           factory: swapFactories[chain][0]["uniswap"],
         });
+        console.log("___________ uniswap pair: ", res);
         setPairs(res);
       } else {
         const res = await pairService.fetchPairs({
@@ -129,7 +131,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   // calculate apy with rewardBlock
   useEffect(() => {
     if (rewardBlock <= 0) return;
-    console.log(rewardBlock);
     const tempapy = (formatEther(rewardBlock) * 3600 * 24 * 365) / amountIn;
     setApy((tempapy * tokenPrice) / liquidity);
   }, [rewardBlock, tokenPrice, liquidity]);
@@ -197,7 +198,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
         farmToken,
         amountIn,
         lpToken.address,
-        rewardBlock,
+        ~~(apy * 1000),
         startBlock,
         bonusEndBlock,
         multiplier,
@@ -241,7 +242,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             endBlock
           );
           setRewardBlock(blockReward.toString());
-          setLiquidity(formatEther(requiredAmount));
         } else {
           const [blockReward, requiredAmount, fee] = await generator(
             chain,
@@ -254,7 +254,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             endBlock
           );
           setRewardBlock(blockReward.toString());
-          setLiquidity(formatEther(requiredAmount));
         }
       } catch (err) {}
     }
@@ -1006,7 +1005,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === 0 ? "?" : rewardBlock}
+                          {rewardBlock === "0" ? "?" : formatEther(rewardBlock)}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>
@@ -1027,7 +1026,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {apy.toFixed(2)}%
+                          {isFinite(apy) ? `${apy.toFixed(2)}%` : "∞"}
                         </Box>
                       </Grid>
                     </Grid>

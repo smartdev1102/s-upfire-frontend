@@ -33,7 +33,7 @@ import {
   sfactory,
   tokenWeb3,
 } from "../utils/ethers.util";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
@@ -82,6 +82,46 @@ const Pools = ({
       setFilteredPools(stakePools);
     }
   }, [isMyPool, stakePools]);
+
+  useEffect(() => {
+    const sorted = [...filterdPools];
+    if (filter === "apr") {
+      sorted.sort((a, b) => {
+        if (Number(a.apr) < Number(b.apr)) {
+          return 1;
+        } else if (Number(a.apr) > Number(b.apr)) {
+          return -1;
+        }
+        return 0;
+      });
+      setFilteredPools(sorted);
+    }
+    if (filter === "liq") {
+      sorted.sort((a, b) => {
+        // if (BigNumber.from.apply(a.supply).lt(BigNumber.from(b.supply))) {
+        //   return -1;
+        // } else if (
+        //   BigNumber.from.apply(a.supply).gt(BigNumber.from(b.supply))
+        // ) {
+        //   return 1;
+        // }
+        // return 0;
+        return 1;
+      });
+      setFilteredPools(sorted);
+    }
+    if (filter === "alpha") {
+      sorted.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+      setFilteredPools(sorted);
+    }
+  }, [filter, stakePools]);
   useEffect(() => {
     if (!!searchKey) {
       const temp = stakePools.filter((pool) =>
@@ -196,7 +236,7 @@ const Pools = ({
                 component="h6"
                 textTransform={"capitalize"}
               >
-                Total Pool liquidity
+                Total Staking liquidity
               </Typography>
               <Typography
                 sx={{ mx: "5px", mt: "10px" }}
@@ -204,7 +244,7 @@ const Pools = ({
                 gutterBottom
                 component="h5"
               >
-                0
+                0 $
               </Typography>
             </Box>
             <FormGroup sx={{ mx: "10px" }}>
@@ -277,7 +317,7 @@ const Pools = ({
               >
                 <MenuItem>Filtered By</MenuItem>
                 <Divider />
-                <MenuItem onClick={() => handleFilter("apr")}>APR</MenuItem>
+                <MenuItem onClick={() => handleFilter("apr")}>APY</MenuItem>
                 <MenuItem onClick={() => handleFilter("liq")}>
                   Liquidity
                 </MenuItem>

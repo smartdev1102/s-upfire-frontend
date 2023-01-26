@@ -28,6 +28,8 @@ import { useWeb3React } from "@web3-react/core";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import loading from "../../assets/loading.svg";
 import defaultIcon from "../../assets/defaultIcon.png";
+import { BigNumber } from "ethers";
+import useWalletAlert from "../../hooks/useWalletAlertContext";
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -50,6 +52,7 @@ const FarmCard = ({
   const [userBalance, setUserBalance] = useState();
   const [farmers, setFarmers] = useState(0);
   const [apy, setApy] = useState(0);
+  const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
     56: "smartchain",
@@ -65,7 +68,7 @@ const FarmCard = ({
       setLiq(formatEther(supply));
       setFarmers(Number(info.numFarmers));
       const blockReward = info.blockReward.mul(86400 * 365);
-      setApy(Number(formatEther(blockReward)).toFixed(1));
+      setApy(Number(blockReward) / 1000);
     }
 
     async function getUserInfo() {
@@ -95,6 +98,10 @@ const FarmCard = ({
   const { library } = useWeb3React();
 
   const handleSelectedFarm = () => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
     setSelectedFarm(farmInfo);
   };
 
@@ -103,14 +110,26 @@ const FarmCard = ({
   };
 
   const withdraw = async () => {
-    const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
-      parseEther(amountIn)
-    );
-    await tx.wait();
-    window.alert("Withdraw");
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
+    try {
+      const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
+        parseEther(amountIn)
+      );
+      await tx.wait();
+      window.alert("Tokens successfully withdrew.");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const claim = async () => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
     try {
       const rewards = await farmWeb3(
         farmInfo.address,
@@ -381,7 +400,14 @@ const FarmCard = ({
               />
             </Grid>
             <Grid item md={2} xs={12}>
-              <Button fullWidth onClick={withdraw} variant="contained">
+              <Button
+                fullWidth
+                onClick={withdraw}
+                variant="contained"
+                disabled={
+                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                }
+              >
                 withdraw
               </Button>
             </Grid>
@@ -390,7 +416,10 @@ const FarmCard = ({
                 fullWidth
                 onClick={claim}
                 variant="contained"
-                disabled={walletAddress}
+                disabled={
+                  walletAddress === undefined ||
+                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                }
               >
                 claim
               </Button>
