@@ -148,21 +148,17 @@ const Farms = ({
     }
     if (filter === "liq") {
       farms.sort((a, b) => {
-        if (BigNumber.from.apply(a.supply).lt(BigNumber.from(b.supply))) {
+        if (Number(a.supply) < Number(b.supply)) {
           return -1;
-        } else if (
-          BigNumber.from.apply(a.supply).gt(BigNumber.from(b.supply))
-        ) {
+        } else if (Number(a.supply) > Number(b.supply)) {
           return 1;
         }
         return 0;
       });
       farmsv3.sort((a, b) => {
-        if (BigNumber.from.apply(a.supply).lt(BigNumber.from(b.supply))) {
+        if (Number(a.supply) < Number(b.supply)) {
           return -1;
-        } else if (
-          BigNumber.from.apply(a.supply).gt(BigNumber.from(b.supply))
-        ) {
+        } else if (Number(a.supply) > Number(b.supply)) {
           return 1;
         }
         return 0;
