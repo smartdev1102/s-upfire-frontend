@@ -279,7 +279,7 @@ const FarmCard = ({
                   },
                 }}
               >
-                {`${apy}%`}
+                {`${parseFloat(formatEther(apy)).toFixed(3)}%`}
               </Typography>
             </Grid>
           </Grid>

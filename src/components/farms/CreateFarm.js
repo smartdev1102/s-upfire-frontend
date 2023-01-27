@@ -198,7 +198,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
         farmToken,
         amountIn,
         lpToken.address,
-        ~~(apy * 1000),
+        rewardBlock,
         startBlock,
         bonusEndBlock,
         multiplier,
@@ -259,7 +259,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     }
     if (!!amountIn && multiplier > 0) {
       determineBlockReward();
-      console.log("check calll", determineBlockReward());
     }
   }, [
     amountIn,
