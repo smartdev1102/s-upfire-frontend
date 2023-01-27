@@ -68,7 +68,7 @@ const FarmCard = ({
       setLiq(formatEther(supply));
       setFarmers(Number(info.numFarmers));
       const blockReward = info.blockReward.mul(86400 * 365);
-      setApy(Number(blockReward) / 1000);
+      setApy(parseFloat(formatEther(blockReward)).toFixed(3));
     }
 
     async function getUserInfo() {
@@ -279,7 +279,7 @@ const FarmCard = ({
                   },
                 }}
               >
-                {`${parseFloat(formatEther(apy)).toFixed(3)}%`}
+                {`${apy}%`}
               </Typography>
             </Grid>
           </Grid>
