@@ -131,7 +131,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   // calculate apy with rewardBlock
   useEffect(() => {
     if (rewardBlock <= 0) return;
-    const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 * amountIn;
+    const tempapy = parseFloat(rewardBlock) * 3600 * 24 * 365;
     setApy((tempapy * tokenPrice) / liquidity);
   }, [rewardBlock, tokenPrice, liquidity, amountIn]);
 
@@ -241,7 +241,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             multiplier,
             endBlock
           );
-          setRewardBlock(blockReward.toString());
         } else {
           const [blockReward, requiredAmount, fee] = await generator(
             chain,
@@ -253,7 +252,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             multiplier,
             endBlock
           );
-          setRewardBlock(blockReward.toString());
         }
       } catch (err) {}
     }
@@ -275,6 +273,13 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     if (startDate <= bonusEndDate) return;
     setBonusEndDate(startDate);
   }, [startDate]);
+
+  useEffect(() => {
+    setRewardBlock(
+      parseFloat(amountIn) /
+        (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
+    );
+  }, [startBlock, endBlock, amountIn]);
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -1004,10 +1009,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === "0"
+                          {rewardBlock === "0" || !isFinite(rewardBlock)
                             ? "?"
-                            : parseFloat(formatEther(rewardBlock)) *
-                              parseFloat(amountIn)}
+                            : rewardBlock}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>

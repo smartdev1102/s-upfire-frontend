@@ -130,7 +130,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   useEffect(() => {
     if (rewardBlock <= 0) return;
     console.log(rewardBlock);
-    const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 * amountIn;
+    const tempapy = parseFloat(rewardBlock) * 3600 * 24 * 365;
     setApy((tempapy * tokenPrice) / liquidity);
   }, [rewardBlock, tokenPrice, liquidity, amountIn]);
 
@@ -225,6 +225,13 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     liquidity,
     tokenPrice,
   ]);
+
+  useEffect(() => {
+    setRewardBlock(
+      parseFloat(amountIn) /
+        (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
+    );
+  }, [startBlock, endBlock, amountIn]);
 
   const handleClose = () => {
     setFarmToken("");
@@ -686,10 +693,9 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === 0
+                          {rewardBlock === "0" || !isFinite(rewardBlock)
                             ? "?"
-                            : parseFloat(formatEther(rewardBlock)) *
-                              parseFloat(amountIn)}
+                            : rewardBlock}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>
