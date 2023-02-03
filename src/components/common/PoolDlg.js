@@ -130,9 +130,9 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   useEffect(() => {
     if (rewardBlock <= 0) return;
     console.log(rewardBlock);
-    const tempapy = (formatEther(rewardBlock) * 3600 * 24 * 365) / amountIn;
+    const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 * amountIn;
     setApy((tempapy * tokenPrice) / liquidity);
-  }, [rewardBlock, tokenPrice, liquidity]);
+  }, [rewardBlock, tokenPrice, liquidity, amountIn]);
 
   // calculate end block when changing end date
   useEffect(() => {
@@ -686,7 +686,10 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === 0 ? "?" : formatEther(rewardBlock)}
+                          {rewardBlock === 0
+                            ? "?"
+                            : parseFloat(formatEther(rewardBlock)) *
+                              parseFloat(amountIn)}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>

@@ -131,9 +131,9 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   // calculate apy with rewardBlock
   useEffect(() => {
     if (rewardBlock <= 0) return;
-    const tempapy = (formatEther(rewardBlock) * 3600 * 24 * 365) / amountIn;
+    const tempapy = formatEther(rewardBlock) * 3600 * 24 * 365 * amountIn;
     setApy((tempapy * tokenPrice) / liquidity);
-  }, [rewardBlock, tokenPrice, liquidity]);
+  }, [rewardBlock, tokenPrice, liquidity, amountIn]);
 
   // calculate start block when change start date
   useEffect(() => {
@@ -1004,7 +1004,10 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             ml: "25px",
                           }}
                         >
-                          {rewardBlock === "0" ? "?" : formatEther(rewardBlock)}
+                          {rewardBlock === "0"
+                            ? "?"
+                            : parseFloat(formatEther(rewardBlock)) *
+                              parseFloat(amountIn)}
                         </Box>
                       </Grid>
                       <Grid item xs={6}>
