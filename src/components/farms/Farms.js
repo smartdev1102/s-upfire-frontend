@@ -224,7 +224,7 @@ const Farms = ({
         farmToken,
         parseEther(amountIn),
         lptoken,
-        Number(blockReward),
+        parseEther(blockReward),
         startBlock,
         bonusEndBlock,
         bonus,

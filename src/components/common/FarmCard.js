@@ -49,16 +49,16 @@ const FarmCard = ({
   walletAddress,
 }) => {
   const [openStake, setOpenStake] = useState(false);
-  const [amountIn, setAmountIn] = useState("0");
-  const [amountOut, setAmountOut] = useState("0");
-  const [liq, setLiq] = useState("");
+  const [amountIn, setAmountIn] = useState(0);
+  const [amountOut, setAmountOut] = useState(0);
+  const [liq, setLiq] = useState();
   const [lockUnit, setLockUnit] = useState("month");
-  const [lockPeriod, setLockPeriod] = useState();
-  const [boostPeriod, setBoostPeriod] = useState();
+  const [lockPeriod, setLockPeriod] = useState(0);
+  const [boostPeriod, setBoostPeriod] = useState(0);
   const [boostNum, setBoostNum] = useState(0);
   const [boostx, setBoostx] = useState(1);
-  const [userBalance, setUserBalance] = useState();
-  const [userRewardDebt, setUserRewardDebt] = useState();
+  const [userBalance, setUserBalance] = useState(0);
+  const [userRewardDebt, setUserRewardDebt] = useState(0);
   const [farmers, setFarmers] = useState(0);
   const [bonusPeriod, setBonusPeriod] = useState(0);
   const [startBlock, setStartBlock] = useState(0);
@@ -73,13 +73,12 @@ const FarmCard = ({
   useEffect(() => {
     async function getLiq() {
       const info = await farm(chain, farmInfo.address).farmInfo();
-      const supply = info.farmableSupply;
-      const period = info.lockPeriod;
-      setLockPeriod(Number(period));
-      setLiq(formatEther(supply));
-      setFarmers(Number(info.numFarmers));
-      setStartBlock(info.startBlock)
-      setBonusPeriod(formatUnits(info.bonusPeriod, "0"))
+      console.log(farmInfo, farmInfo.name)
+      setLockPeriod(Number(formatUnits(info.lockPeriod, "0")));
+      setLiq(parseFloat(formatEther(info.farmableSupply)).toFixed(3));
+      setFarmers(Number(formatUnits(info.numFarmers, "0")));
+      setStartBlock(Number(formatUnits(info.startBlock, "0")))
+      setBonusPeriod(Number(formatUnits(info.bonusEndBlock, "0")))
       const blockReward = info.blockReward.mul(86400 * 365);
       setApy(parseFloat(formatEther(blockReward)).toFixed(3));
     }
@@ -89,9 +88,8 @@ const FarmCard = ({
       const userinfo = await farm(chain, farmInfo.address).userInfo(
         walletAddress
       );
-      console.log(userinfo)
-      setUserBalance(formatEther(userinfo.amount))
-      setUserRewardDebt(formatEther(userinfo.rewardDebt))
+      setUserBalance(Number(formatEther(userinfo.amount)))
+      setUserRewardDebt(Number(formatEther(userinfo.rewardDebt)))
     }
     getLiq();
     getUserInfo();
@@ -132,6 +130,25 @@ const FarmCard = ({
     try {
       const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
         parseEther(amountIn)
+      );
+      await tx.wait();
+      window.alert("Tokens successfully withdrew.");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const withdrawAll = async () => {
+    if (!walletAddress) {
+      setWalletAlertOpen(true);
+      return;
+    }
+    try {
+      const userinfo = await farm(chain, farmInfo.address).userInfo(
+        walletAddress
+      );
+      const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
+        userinfo.amount
       );
       await tx.wait();
       window.alert("Tokens successfully withdrew.");
@@ -389,7 +406,7 @@ const FarmCard = ({
                 add LQ & stake
               </Button>
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 size="small"
                 fullWidth
@@ -424,9 +441,22 @@ const FarmCard = ({
                 claim
               </Button>
             </Grid>
-            <Hidden smDown>
+            <Grid item md={2} xs={12}>
+              <Button
+                fullWidth
+                onClick={withdrawAll}
+                variant="contained"
+                disabled={
+                  walletAddress === undefined ||
+                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                }
+              >
+                withdraw all
+              </Button>
+            </Grid>
+            {/* <Hidden smDown>
               <Grid item xs={1}></Grid>
-            </Hidden>
+            </Hidden> */}
           </Grid>
 
           {(String(walletAddress).toLowerCase() === admin ||
@@ -534,7 +564,7 @@ const FarmCard = ({
                     </Box>
                     <Box>
                       <Typography>Bonus Period</Typography>
-                      <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod)}  ${((bonusPeriod - startBlock)/86400).toFixed(0)}.${(((bonusPeriod - startBlock)%86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
+                      <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod * 1000).toLocaleString()}  ${((bonusPeriod - startBlock) / 86400).toFixed(0)}.${(((bonusPeriod - startBlock) % 86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
                     </Box>
                   </Stack>
                 </Grid>
