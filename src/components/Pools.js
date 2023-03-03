@@ -151,6 +151,9 @@ const Pools = ({
     startBlock,
     endBlock
   ) => {
+    if (apr === Infinity) {
+      apr = 1000;
+    }
     const allowance = await tokenContract(chain, rewardToken).allowance(
       walletAddress,
       address[chain][0]["sgenerator"]
@@ -162,6 +165,7 @@ const Pools = ({
       );
       await tx.wait();
     }
+
     const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
       rewardToken,
       stakeToken,
@@ -174,6 +178,7 @@ const Pools = ({
     const poolAddress = await sfactory(chain).poolAtIndex(Number(length) - 1);
     const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
     const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+
     const res = await poolService.createPool({
       name: `${stakeSymbol}/${rewardSymbol}`,
       apr: Number(apr),
