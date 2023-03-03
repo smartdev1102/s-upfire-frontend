@@ -485,10 +485,6 @@ const Farms = ({
             >
               <Grid item md={6} sm={7} xs={7}>
                 <Grid container spacing={2}>
-                  {/* <Hidden smDown>
-                    <Grid item xs={2}>
-                    </Grid>
-                  </Hidden> */}
                   <Grid item md={4} sm={5} xs={5}>
                     <Typography variant="h3" component="h3">
                       Pool

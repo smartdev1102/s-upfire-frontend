@@ -140,18 +140,13 @@ const FarmCard = ({
         library.getSigner()
       ).safeRewardTransfer(walletAddress, rewards);
       await tx.wait();
-    } catch (err) {}
+    } catch (err) { }
   };
 
   return (
     <Card
       sx={{
-        borderRadius: "20px",
-        border: "1px solid #2494F3",
-        fontFamily: "Exo",
-        py: "15px",
-        my: "10px",
-        px: "20px",
+        borderRadius: "20px", border: "1px solid #2494F3", fontFamily: "Exo", py: "15px", my: "10px", px: "20px"
       }}
     >
       <Grid
@@ -166,21 +161,14 @@ const FarmCard = ({
         <Grid item md={6} sm={7} xs={7}>
           <Grid sx={{ alignItems: "center" }} container spacing={2}>
             {/* <Hidden smDown> */}
-            <Grid
-              item
-              md={4}
-              sm={5}
-              xs={5}
-              sx={{
-                display: "flex",
-                marginRight: {
-                  md: "0px",
-                  sm: "0px",
-                  xs: "0px",
-                },
-                display: "flex",
-                alignItems: "center",
-              }}
+            <Grid item md={4} sm={5} xs={5} sx={{
+              display: "flex",
+              marginRight: {
+                md: "0px", sm: "0px", xs: "0px",
+              },
+              display: "flex",
+              alignItems: "center",
+            }}
             >
               <img
                 style={{
@@ -189,9 +177,8 @@ const FarmCard = ({
                   borderRadius: "100%",
                 }}
                 className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                  chainsName[farmInfo.chain]
-                }/assets/${farmInfo.token0}/logo.png`}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                  }/assets/${farmInfo.token0}/logo.png`}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src = defaultIcon;
@@ -204,9 +191,8 @@ const FarmCard = ({
                   marginLeft: "-15px",
                 }}
                 className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                  chainsName[farmInfo.chain]
-                }/assets/${farmInfo.token1}/logo.png`}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                  }/assets/${farmInfo.token1}/logo.png`}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src = defaultIcon;
@@ -244,9 +230,8 @@ const FarmCard = ({
                   marginRight: "10px",
                 }}
                 className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                  chainsName[farmInfo.chain]
-                }/assets/${farmInfo.address}/logo.png`}
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                  }/assets/${farmInfo.address}/logo.png`}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src = defaultIcon;
@@ -430,7 +415,7 @@ const FarmCard = ({
           </Grid>
           {(String(walletAddress).toLowerCase() === admin ||
             String(walletAddress).toLowerCase() ===
-              String(farmInfo.owner).toLowerCase()) &&
+            String(farmInfo.owner).toLowerCase()) &&
             !!walletAddress && (
               <Box>
                 <FormControlLabel

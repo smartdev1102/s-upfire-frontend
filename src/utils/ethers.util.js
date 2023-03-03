@@ -67,8 +67,8 @@ export const coinSymbols = {
 export const swapFactories = {
   97: {
     0: {
-      uniswap: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-      router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      uniswap: "0xb7926c0430afb07aa7defde6da862ae0bde767bc",
+      router: "0x6e889755Ea9eCc99bFd71Ee5d666E69Ce32A3D06",
     },
   },
   43114: {
