@@ -9,18 +9,26 @@ import {
   Typography,
   Box,
   Switch,
+  Stack,
+  Link,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from "@mui/material";
 import moment from "moment";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import defaultIcon from "../../assets/defaultIcon.png";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
 import { spoolWeb3, tokenWeb3, spool, pool } from "../../utils/ethers.util";
 import { useWeb3React } from "@web3-react/core";
-import { parseEther } from "ethers/lib/utils";
+import { parseEther, formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
+import { networks } from "../../utils/network.util"
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -31,7 +39,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [amountIn, setAmountIn] = useState("0");
   const [amountOut, setAmountOut] = useState("0");
   const [stakers, setStakers] = useState(0);
-  const [userBalance, setUserBalance] = useState();
+  const [userBalance, setUserBalance] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -42,15 +50,15 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   useEffect(() => {
     async function getPool() {
       const info = await spool(chain, poolInfo.address).getStakerCount();
-      console.log("--------", info);
+      console.log("--------", BigNumber.from(info).toNumber());
       setStakers(BigNumber.from(info).toNumber());
 
       if (walletAddress) {
         const balance = await spool(chain, poolInfo.address).deposits(
           walletAddress
         );
-        console.log("$$$$$$", balance);
-        setUserBalance(balance);
+        console.log("$$$$$$", formatEther(balance));
+        setUserBalance(Number(formatEther(balance)));
       }
     }
     getPool();
@@ -147,16 +155,16 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   alignItems: "center",
                 }}
               >
-                <img
-                  style={{
-                    marginTop: "5px",
+                <Box
+                  component="img"
+                  sx={{
+                    mt: "5px",
                     zIndex: "9",
                     borderRadius: "100%",
                   }}
                   className={"dualImg"}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                    chainsName[poolInfo.chain]
-                  }/assets/${poolInfo.stakeToken}/logo.png`}
+                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
+                    }/assets/${poolInfo.stakeToken}/logo.png`}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = defaultIcon;
@@ -187,16 +195,16 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   alignItems: "center",
                 }}
               >
-                <img
-                  style={{
+                <Box
+                  component="img"
+                  sx={{
                     marginTop: "5px",
                     borderRadius: "100%",
                     marginRight: "10px",
                   }}
                   className={"dualImg"}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${
-                    chainsName[poolInfo.chain]
-                  }/assets/${poolInfo.address}/logo.png`}
+                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
+                    }/assets/${poolInfo.address}/logo.png`}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = defaultIcon;
@@ -283,9 +291,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                     alignItems: "center",
                   }}
                 >
-                  <Box sx={{ mx: "10px", mt: "5px" }}>
-                    <img src={airdropIcon} />
-                  </Box>
+                  <Box component="img" src={airdropIcon} sx={{ mx: "10px", mt: "5px" }} />
                   <Typography variant="h3" component="div">
                     {0}
                   </Typography>
@@ -299,9 +305,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   }}
                 >
                   <Hidden smDown>
-                    <Box sx={{ mr: "10px", mt: "5px" }}>
-                      <img style={{ height: "20px" }} src={accountIcon} />
-                    </Box>
+                    <Box component="img" src={accountIcon} sx={{ mr: "10px", mt: "5px", height: "20px" }} />
                     <Typography variant="h3" component="h3">
                       {stakers}
                     </Typography>
@@ -393,27 +397,72 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   <Grid item xs={8}>
                     {(String(walletAddress).toLowerCase() === admin ||
                       String(walletAddress).toLowerCase() ===
-                        poolInfo.owner.toLowerCase()) && (
-                      <Box>
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={!poolInfo.invisible}
-                              onChange={(e) =>
-                                handleVisible(poolInfo._id, !e.target.checked)
-                              }
-                            />
-                          }
-                          label="show/hide"
-                        />
-                      </Box>
-                    )}
+                      poolInfo.owner.toLowerCase()) && (
+                        <Box>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={!poolInfo.invisible}
+                                onChange={(e) =>
+                                  handleVisible(poolInfo._id, !e.target.checked)
+                                }
+                              />
+                            }
+                            label="show/hide"
+                          />
+                        </Box>
+                      )}
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
+            <Accordion sx={{ background: 'transparent', mt: '20px', '&::before': { backgroundColor: '#020826' } }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                sx={{ px: '20px' }}
+              >
+                <Typography>Pool Information</Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
+                <Grid container direction="row">
+                  <Grid item md={4} sm={4} xs={12}>
+                    <Stack direction="column" gap={1} justifyContent="center">
+                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.address}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>Pool Contract</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </Link>
+                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.staketoken}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>LP Token</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </Link>
+                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.rewardToken}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>Reward Token</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </Link>
+                    </Stack>
+                  </Grid>
+                  <Grid item md={4} sm={4} xs={12}>
+                    <Stack direction="column" justifyContent="center">
+                      <Box>
+                        <Typography>Deposited Tokens</Typography>
+                        <Typography>{userBalance}</Typography>
+                      </Box>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
           </Box>
         )}
+
       </Card>
     )
   );

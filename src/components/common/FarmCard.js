@@ -60,7 +60,8 @@ const FarmCard = ({
   const [userBalance, setUserBalance] = useState();
   const [userRewardDebt, setUserRewardDebt] = useState();
   const [farmers, setFarmers] = useState(0);
-  const [unlockPeriod, setUnlockPeriod] = useState(0);
+  const [bonusPeriod, setBonusPeriod] = useState(0);
+  const [startBlock, setStartBlock] = useState(0);
   const [apy, setApy] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
@@ -77,6 +78,8 @@ const FarmCard = ({
       setLockPeriod(Number(period));
       setLiq(formatEther(supply));
       setFarmers(Number(info.numFarmers));
+      setStartBlock(info.startBlock)
+      setBonusPeriod(formatUnits(info.bonusPeriod, "0"))
       const blockReward = info.blockReward.mul(86400 * 365);
       setApy(parseFloat(formatEther(blockReward)).toFixed(3));
     }
@@ -88,7 +91,6 @@ const FarmCard = ({
       );
       console.log(userinfo)
       setUserBalance(formatEther(userinfo.amount))
-      setUnlockPeriod(formatUnits(userinfo.unlockPeriod, "0"))
       setUserRewardDebt(formatEther(userinfo.rewardDebt))
     }
     getLiq();
@@ -528,11 +530,11 @@ const FarmCard = ({
                   <Stack direction="column" gap={2} justifyContent="center">
                     <Box>
                       <Typography>Lock Period</Typography>
-                      <Typography>{unlockPeriod}</Typography>
+                      <Typography>{lockPeriod / 86400} days</Typography>
                     </Box>
                     <Box>
-                      <Typography>UnClained Rewards</Typography>
-                      <Typography>{userRewardDebt}</Typography>
+                      <Typography>Bonus Period</Typography>
+                      <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod)}  ${((bonusPeriod - startBlock)/86400).toFixed(0)}.${(((bonusPeriod - startBlock)%86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
                     </Box>
                   </Stack>
                 </Grid>
@@ -541,6 +543,10 @@ const FarmCard = ({
                     <Box>
                       <Typography>Deposited Tokens</Typography>
                       <Typography>{userBalance}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography>UnClained Rewards</Typography>
+                      <Typography>{userRewardDebt}</Typography>
                     </Box>
                   </Stack>
                 </Grid>
