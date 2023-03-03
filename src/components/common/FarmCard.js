@@ -11,7 +11,14 @@ import {
   Select,
   Switch,
   TextField,
+  Stack,
+  Link,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
 } from "@mui/material";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import farmIcon from "../../assets/icons/farm.svg";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
@@ -21,7 +28,7 @@ import {
   tokenContract,
   tokenWeb3,
 } from "../../utils/ethers.util";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 import moment from "moment";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
@@ -30,6 +37,7 @@ import loading from "../../assets/loading.svg";
 import defaultIcon from "../../assets/defaultIcon.png";
 import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
+import { networks } from "../../utils/network.util"
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -50,7 +58,9 @@ const FarmCard = ({
   const [boostNum, setBoostNum] = useState(0);
   const [boostx, setBoostx] = useState(1);
   const [userBalance, setUserBalance] = useState();
+  const [userRewardDebt, setUserRewardDebt] = useState();
   const [farmers, setFarmers] = useState(0);
+  const [unlockPeriod, setUnlockPeriod] = useState(0);
   const [apy, setApy] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
@@ -76,7 +86,10 @@ const FarmCard = ({
       const userinfo = await farm(chain, farmInfo.address).userInfo(
         walletAddress
       );
-      setUserBalance(formatEther(userinfo.amount));
+      console.log(userinfo)
+      setUserBalance(formatEther(userinfo.amount))
+      setUnlockPeriod(formatUnits(userinfo.unlockPeriod, "0"))
+      setUserRewardDebt(formatEther(userinfo.rewardDebt))
     }
     getLiq();
     getUserInfo();
@@ -413,6 +426,7 @@ const FarmCard = ({
               <Grid item xs={1}></Grid>
             </Hidden>
           </Grid>
+
           {(String(walletAddress).toLowerCase() === admin ||
             String(walletAddress).toLowerCase() ===
             String(farmInfo.owner).toLowerCase()) &&
@@ -477,6 +491,62 @@ const FarmCard = ({
               </Box>
             </Box>
           )}
+          <Accordion sx={{ background: 'transparent', mt: '20px', '&::before': { backgroundColor: '#020826' } }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              sx={{ px: '20px' }}
+            >
+              <Typography>Farm Information</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
+              <Grid container direction="row">
+                <Grid item md={4} sm={4} xs={12}>
+                  <Stack direction="column" gap={1} justifyContent="center">
+                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.address}`} target="_blank">
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Typography>Farm Contract</Typography>
+                        <OpenInNewIcon />
+                      </Stack>
+                    </Link>
+                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.lptoken}`} target="_blank">
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Typography>LP Token</Typography>
+                        <OpenInNewIcon />
+                      </Stack>
+                    </Link>
+                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.rewardToken}`} target="_blank">
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Typography>Reward Token</Typography>
+                        <OpenInNewIcon />
+                      </Stack>
+                    </Link>
+                  </Stack>
+                </Grid>
+                <Grid item md={4} sm={4} xs={12}>
+                  <Stack direction="column" gap={2} justifyContent="center">
+                    <Box>
+                      <Typography>Lock Period</Typography>
+                      <Typography>{unlockPeriod}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography>UnClained Rewards</Typography>
+                      <Typography>{userRewardDebt}</Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+                <Grid item md={4} sm={4} xs={12}>
+                  <Stack direction="column" gap={2} justifyContent="center">
+                    <Box>
+                      <Typography>Deposited Tokens</Typography>
+                      <Typography>{userBalance}</Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
         </Box>
       )}
     </Card>
