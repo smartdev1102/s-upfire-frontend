@@ -253,7 +253,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             endBlock
           );
         }
-      } catch (err) {}
+      } catch (err) { }
     }
     if (!!amountIn && multiplier > 0) {
       determineBlockReward();
@@ -277,7 +277,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   useEffect(() => {
     setRewardBlock(
       parseFloat(amountIn) /
-        (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
+      (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
     );
   }, [startBlock, endBlock, amountIn]);
 
@@ -419,9 +419,8 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                             sx={{ width: "100%" }}
                             value={amountIn}
                             onChange={(e) => setAmountIn(e.target.value)}
-                            label={`Balance: ${
-                              !!farmBalance ? farmBalance : 0
-                            } ${!!farmSymbol ? farmSymbol : ""}`}
+                            label={`Balance: ${!!farmBalance ? farmBalance : 0
+                              } ${!!farmSymbol ? farmSymbol : ""}`}
                             variant="filled"
                             focused
                           />
@@ -553,20 +552,20 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                       {chain == process.env.REACT_APP_CHAIN
                         ? "Select Pancakeswap pair"
                         : chain == 43114
-                        ? currentSwap == 0
-                          ? "Select Pangolin pair"
-                          : "Select Trader joe pair"
-                        : "Select AMM pair"}
+                          ? currentSwap == 0
+                            ? "Select Pangolin pair"
+                            : "Select Trader joe pair"
+                          : "Select AMM pair"}
                     </StepLabel>
                     <StepContent>
                       <Box sx={{ color: "text.secondary", mb: "5px" }}>
                         {chain == process.env.REACT_APP_CHAIN
                           ? "Select Pancakeswap pair"
                           : chain == 43114
-                          ? currentSwap == 0
-                            ? "Select Pangolin pair"
-                            : "Select Trader joe pair"
-                          : "Select AMM pair"}
+                            ? currentSwap == 0
+                              ? "Select Pangolin pair"
+                              : "Select Trader joe pair"
+                            : "Select AMM pair"}
                       </Box>
                       {isV3 ? (
                         <Box>

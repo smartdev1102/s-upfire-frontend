@@ -207,14 +207,14 @@ const Farms = ({
     console.log("isV3: ", isV3);
     console.log("index: ", index);
     try {
-      // const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
-      // if (Number(allowance) < Number(parseEther(amountIn))) {
-      const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(
-        address[chain][index]["generator"],
-        parseEther(amountIn)
-      );
-      await tx1.wait();
-      // }
+      const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
+      if (Number(allowance) < Number(parseEther(amountIn))) {
+        const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(
+          address[chain][index]["generator"],
+          parseEther(amountIn)
+        );
+        await tx1.wait();
+      }
       console.log(lockPeriod);
       const tx = await generatorWeb3(
         chain,
