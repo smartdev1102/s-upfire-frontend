@@ -24,7 +24,7 @@ import { networks } from "../../utils/network.util";
 import { Close } from "@mui/icons-material";
 import { useWeb3React } from "@web3-react/core";
 
-const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
+const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg }) => {
   const [balance0, setBalance0] = useState("0");
   const [balance1, setBalance1] = useState("0");
   const [symbol0, setSymbol0] = useState("");
@@ -165,7 +165,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose }) => {
       );
       await tx.wait();
       window.alert("Tokens successfully deposited.");
-
+      setStakeFalg(!stakeFalg);
       onClose();
     } catch (err) {
       console.log(err);

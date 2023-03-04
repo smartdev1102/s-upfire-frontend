@@ -59,7 +59,7 @@ const Farms = ({
   const [filterFarmv3, setFilterFarmv3] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [liq, setLiq] = useState();
-
+  const [stakeFalg, setStakeFalg] = useState(false);
   const { library } = useWeb3React();
 
   useEffect(() => {
@@ -288,6 +288,8 @@ const Farms = ({
         farm={selectedFarm}
         chain={chain}
         walletAddress={walletAddress}
+        setStakeFalg={setStakeFalg}
+        stakeFalg={stakeFalg}
       />
       {/* create farm */}
       <CreateFarm
@@ -592,6 +594,7 @@ const Farms = ({
                   farmInfo={farm}
                   handleVisible={handleVisible}
                   walletAddress={walletAddress}
+                  stakeFalg={stakeFalg}
                 />
               ))}
               {filterFarmv3.map((farm, i) => (
