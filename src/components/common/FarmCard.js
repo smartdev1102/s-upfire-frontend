@@ -27,8 +27,9 @@ import {
   farmWeb3,
   tokenContract,
   tokenWeb3,
+  pair
 } from "../../utils/ethers.util";
-import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import moment from "moment";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
@@ -73,14 +74,24 @@ const FarmCard = ({
   useEffect(() => {
     async function getLiq() {
       const info = await farm(chain, farmInfo.address).farmInfo();
-      console.log(farmInfo, farmInfo.name)
       setLockPeriod(Number(formatUnits(info.lockPeriod, "0")));
       setLiq(parseFloat(formatEther(info.farmableSupply)).toFixed(3));
       setFarmers(Number(formatUnits(info.numFarmers, "0")));
       setStartBlock(Number(formatUnits(info.startBlock, "0")))
       setBonusPeriod(Number(formatUnits(info.bonusEndBlock, "0")))
-      const blockReward = info.blockReward.mul(86400 * 365);
-      setApy(parseFloat(formatEther(blockReward)).toFixed(3));
+
+      const balanceLP = await pair(chain, info.lpToken).balanceOf(farmInfo.address);
+      const decimalLP = await pair(chain, info.lpToken).decimals();
+      const balanceRT = await pair(chain, info.rewardToken).balanceOf(farmInfo.address);
+      const decimalRT = await pair(chain, info.rewardToken).decimals();
+      var rate = Number(formatUnits(balanceRT, decimalRT.toString())) / Number(formatUnits(balanceLP, decimalLP.toString()))
+      if (rate === 0 || rate === Infinity) {
+        rate = 1;
+      }
+      const apyData = Number(formatEther(info.blockReward)) * (86400 * 365) * rate;
+      console.log(rate, apyData);
+
+      setApy(apyData.toFixed(3));
     }
 
     async function getUserInfo() {
@@ -107,7 +118,7 @@ const FarmCard = ({
     setBoostPeriod(period);
     setBoostx(period / lockPeriod);
   }, [boostNum, lockUnit]);
-
+  
   const { library } = useWeb3React();
 
   const handleSelectedFarm = () => {

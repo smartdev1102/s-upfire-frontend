@@ -201,7 +201,7 @@ const Farms = ({
     console.log("lptoken: ", lptoken);
     console.log("blockReward: ", blockReward);
     console.log("startBlock: ", startBlock);
-    console.log("bonusEndBlock: ", bonusEndBlock);
+    console.log("bonusEndBlock: ", bonusEndBlock.toFixed(0));
     console.log("bonus: ", bonus);
     console.log("lockPeriod: ", bonus);
     console.log("isV3: ", isV3);
@@ -224,7 +224,7 @@ const Farms = ({
         farmToken,
         parseEther(amountIn),
         lptoken,
-        parseEther(blockReward),
+        blockReward.toFixed(0),
         startBlock,
         bonusEndBlock,
         bonus,
