@@ -23,7 +23,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import defaultIcon from "../../assets/defaultIcon.png";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
-import { spoolWeb3, tokenWeb3, spool, pool } from "../../utils/ethers.util";
+import { spoolWeb3, tokenWeb3, spool, pool, pair } from "../../utils/ethers.util";
 import { useWeb3React } from "@web3-react/core";
 import { parseEther, formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
@@ -40,6 +40,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [amountOut, setAmountOut] = useState("0");
   const [stakers, setStakers] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
+  const [rewardLP, setRewardLP] = useState(0);
+  const [userRewardBalance, setUserRewardBalance] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -47,20 +49,27 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     43114: "avalanchec",
   };
 
-  useEffect(() => {
-    async function getPool() {
-      const info = await spool(chain, poolInfo.address).getStakerCount();
-      console.log("--------", BigNumber.from(info).toNumber());
-      setStakers(BigNumber.from(info).toNumber());
+  async function getPool() {
+    const info = await spool(chain, poolInfo.address).getStakerCount();
+    console.log("--------", BigNumber.from(info).toNumber());
+    setStakers(BigNumber.from(info).toNumber());
 
-      if (walletAddress) {
-        const balance = await spool(chain, poolInfo.address).deposits(
-          walletAddress
-        );
-        console.log("$$$$$$", formatEther(balance));
-        setUserBalance(Number(formatEther(balance)));
-      }
+    if (walletAddress) {
+      const balance1 = await spool(chain, poolInfo.address).deposits(
+        walletAddress
+      );
+      const balance2 = await spool(chain, poolInfo.address).pendingReward(
+        walletAddress
+      );
+      console.log("$$$$$$", formatEther(balance1));
+      setUserRewardBalance(parseFloat(formatEther(balance2)).toFixed(2))
+      setUserBalance(Number(formatEther(balance1)));
     }
+    const amount = await pair(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
+    setRewardLP(parseFloat(formatEther(amount)).toFixed(0))
+  }
+
+  useEffect(() => {
     getPool();
   }, [walletAddress, poolInfo]);
 
@@ -82,6 +91,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       window.alert("Tokens successfully staked.");
     } catch (err) {
       console.log(err);
+    } finally {
+      getPool();
     }
   };
 
@@ -98,6 +109,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       window.alert("Tokens successfully unstaked.");
     } catch (err) {
       console.log(err);
+    } finally {
+      getPool();
     }
   };
 
@@ -112,6 +125,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       window.alert("Tokens successfully claimed.");
     } catch (err) {
       console.log(err);
+    } finally {
+      getPool();
     }
   };
 
@@ -293,7 +308,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                 >
                   <Box component="img" src={airdropIcon} sx={{ mx: "10px", mt: "5px" }} />
                   <Typography variant="h3" component="div">
-                    {0}
+                    {rewardLP}
                   </Typography>
                 </Box>
               </Grid>
@@ -341,6 +356,9 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       onClick={() =>
                         stake(poolInfo.rewardToken, poolInfo.address)
                       }
+                      disabled={
+                        !(amountIn > 0)
+                      }
                       variant="contained"
                     >
                       Stake
@@ -365,10 +383,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       onClick={() => unstake(poolInfo.address)}
                       variant="contained"
                       disabled={
-                        !(
-                          BigNumber.isBigNumber(userBalance) &&
-                          userBalance.gte(0)
-                        )
+                        !(amountOut > 0 && userBalance >= amountOut)
                       }
                     >
                       Unstake
@@ -385,10 +400,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       variant="contained"
                       disabled={
                         walletAddress === undefined ||
-                        !(
-                          BigNumber.isBigNumber(userBalance) &&
-                          userBalance.gte(0)
-                        )
+                        !(userRewardBalance > 0)
                       }
                     >
                       Claim
@@ -454,6 +466,10 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                       <Box>
                         <Typography>Deposited Tokens</Typography>
                         <Typography>{userBalance}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography>UnClained Rewards</Typography>
+                        <Typography>{userRewardBalance}</Typography>
                       </Box>
                     </Stack>
                   </Grid>

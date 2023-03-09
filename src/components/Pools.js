@@ -152,13 +152,14 @@ const Pools = ({
     endBlock
   ) => {
     if (apr === Infinity) {
-      apr = 1000;
+      apr = 0.1;
     }
     const allowance = await tokenContract(chain, rewardToken).allowance(
       walletAddress,
       address[chain][0]["sgenerator"]
     );
-    if (allowance < parseEther(amountIn)) {
+
+    if (allowance.lt(parseEther(amountIn))) {
       const tx = await tokenWeb3(rewardToken, library.getSigner()).approve(
         address[chain][0]["sgenerator"],
         parseEther(amountIn)

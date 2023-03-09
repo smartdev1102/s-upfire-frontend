@@ -21,7 +21,6 @@ import { generator, tokenContract } from "../../utils/ethers.util";
 import { formatEther } from "ethers/lib/utils";
 
 const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
-  const [rewardToken, setRewardToken] = useState("");
   const [stakeToken, setStakeToken] = useState("");
   const [apr, setApr] = useState(0);
   const [amountIn, setAmountIn] = useState("0");
@@ -34,12 +33,12 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
 
   const [isBonus, setIsBonus] = useState(false);
   const [isBonus1, setIsBonus1] = useState(false);
-  const [farmBalance, setFarmBalance] = useState();
-  const [farmSymbol, setFarmSymbol] = useState();
-  const [farmToken, setFarmToken] = useState("");
+  const [rewardBalance, setRewardBalance] = useState();
+  const [rewardSymbol, setRewardSymbol] = useState();
+  const [rewardToken, setRewardToken] = useState("");
   const [tokenLoading, setTokenLoading] = useState();
-  const [farmDecimals, setFarmDecimals] = useState();
-  const [farmTokenName, setFarmTokenName] = useState();
+  const [rewardDecimals, setRewardDecimals] = useState();
+  const [rewardTokenName, setRewardTokenName] = useState();
 
   const [tokenPrice, setTokenPrice] = useState(1);
   const [liquidity, setLiquidity] = useState(0);
@@ -82,10 +81,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         amountIn,
         startBlock,
         endBlock
-        // bonusEndBlock,
-        // multiplier,
-        // lockPeriod,
-        // false,
       );
     } else {
       create(
@@ -95,10 +90,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         amountIn,
         startBlock,
         endBlock
-        // bonusEndBlock,
-        // multiplier,
-        // false,
-        // currentSwap
       );
     }
   };
@@ -152,29 +143,29 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   }, [bonusBlock]);
 
   useEffect(() => {
-    async function getFarmToken() {
-      if (farmToken.length === 42) {
+    async function getRewardToken() {
+      if (rewardToken.length === 42) {
         setTokenLoading(true);
-        const symbol = await tokenContract(chain, farmToken).symbol();
-        setFarmSymbol(symbol);
-        const decimals = await tokenContract(chain, farmToken).decimals();
-        setFarmDecimals(decimals);
-        const balance = await tokenContract(chain, farmToken).balanceOf(
+        const symbol = await tokenContract(chain, rewardToken).symbol();
+        setRewardSymbol(symbol);
+        const decimals = await tokenContract(chain, rewardToken).decimals();
+        setRewardDecimals(decimals);
+        const balance = await tokenContract(chain, rewardToken).balanceOf(
           walletAddress
         );
-        setFarmBalance(formatEther(balance));
-        const name = await tokenContract(chain, farmToken).name();
-        setFarmTokenName(name);
+        setRewardBalance(formatEther(balance));
+        const name = await tokenContract(chain, rewardToken).name();
+        setRewardTokenName(name);
         setTokenLoading(false);
       } else {
-        setFarmSymbol();
-        setFarmDecimals();
-        setFarmBalance();
-        setFarmTokenName();
+        setRewardSymbol();
+        setRewardDecimals();
+        setRewardBalance();
+        setRewardTokenName();
       }
     }
-    getFarmToken();
-  }, [farmToken]);
+    getRewardToken();
+  }, [rewardToken]);
 
   // determine reward per block
   useEffect(() => {
@@ -226,21 +217,14 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     tokenPrice,
   ]);
 
-  useEffect(() => {
-    setRewardBlock(
-      parseFloat(amountIn) /
-        (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
-    );
-  }, [startBlock, endBlock, amountIn]);
-
   const handleClose = () => {
-    setFarmToken("");
-    setFarmSymbol();
+    setRewardToken("");
+    setRewardSymbol();
     onClose();
   };
 
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog onClose={handleClose} open={open}>
       <Box
         sx={{
           border: "2px solid #2494F3",
@@ -286,6 +270,45 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
               <Box
                 sx={{
                   mt: "20px",
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "start",
+                  width: "100%",
+                }}
+              >
+                {/* <Box sx={{ flexGrow: 1 }}></Box> */}
+                <TextField
+                  size="small"
+                  sx={{ width: "100%" }}
+                  value={amountIn}
+                  onChange={(e) => setAmountIn(e.target.value)}
+                  label={`Balance: ${!!rewardBalance ? rewardBalance : 0} ${
+                    !!rewardSymbol ? rewardSymbol : ""
+                  }`}
+                  variant="filled"
+                  focused
+                />
+                <button
+                  onClick={() => setAmountIn(rewardBalance)}
+                  style={{
+                    position: "absolute",
+                    right: "5px",
+                    bottom: "5px",
+                    padding: "5px",
+                    cursor: "pointer",
+                    background: "#266d7a",
+                    outline: "none",
+                    border: "none",
+                  }}
+                  variant="contained"
+                  size="small"
+                >
+                  Max
+                </button>
+              </Box>
+              <Box
+                sx={{
+                  mt: "20px",
                 }}
               >
                 <Typography variant="h6" component="h6">
@@ -304,46 +327,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                   fullWidth
                 />
               </Box>
-              <Box
-                sx={{
-                  mt: "20px",
-                  position: "relative",
-                  display: "flex",
-                  justifyContent: "start",
-                  width: "100%",
-                }}
-              >
-                {/* <Box sx={{ flexGrow: 1 }}></Box> */}
-                <TextField
-                  size="small"
-                  sx={{ width: "100%" }}
-                  value={amountIn}
-                  onChange={(e) => setAmountIn(e.target.value)}
-                  label={`Balance: ${!!farmBalance ? farmBalance : 0} ${
-                    !!farmSymbol ? farmSymbol : ""
-                  }`}
-                  variant="filled"
-                  focused
-                />
-                <button
-                  onClick={() => setAmountIn(farmBalance)}
-                  style={{
-                    position: "absolute",
-                    right: "5px",
-                    bottom: "5px",
-                    padding: "5px",
-                    cursor: "pointer",
-                    background: "#266d7a",
-                    outline: "none",
-                    border: "none",
-                  }}
-                  variant="contained"
-                  size="small"
-                >
-                  Max
-                </button>
-              </Box>
-
               {/* =============== Dates ===================== */}
               {/* Start Date */}
               <Box
@@ -358,7 +341,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                   sx={{ color: "text.secondary", mb: "10px", fontSize: "13px" }}
                 >
                   We reccommend a start block at least 24 hours in advance to
-                  give people time to get ready to farm.
+                  give people time to get ready to reward.
                 </Box>
                 <Box
                   sx={{

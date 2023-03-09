@@ -51,7 +51,6 @@ const FarmCard = ({
   stakeFalg
 }) => {
   const [openStake, setOpenStake] = useState(false);
-  const [amountIn, setAmountIn] = useState(0);
   const [amountOut, setAmountOut] = useState(0);
   const [liq, setLiq] = useState();
   const [lockUnit, setLockUnit] = useState("month");
@@ -60,11 +59,13 @@ const FarmCard = ({
   const [boostNum, setBoostNum] = useState(0);
   const [boostx, setBoostx] = useState(1);
   const [userBalance, setUserBalance] = useState(0);
-  const [userRewardDebt, setUserRewardDebt] = useState(0);
+  const [userRewardBalance, setUserRewardBalance] = useState(0);
   const [farmers, setFarmers] = useState(0);
   const [bonusPeriod, setBonusPeriod] = useState(0);
   const [startBlock, setStartBlock] = useState(0);
   const [apy, setApy] = useState(0);
+  const [d_LP, setD_LP] = useState(18);
+  const [d_RT, setD_RT] = useState(18);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -75,42 +76,39 @@ const FarmCard = ({
   async function getLiq() {
     const info = await farm(chain, farmInfo.address).farmInfo();
     setLockPeriod(Number(formatUnits(info.lockPeriod, "0")));
-    setLiq(parseFloat(formatEther(info.farmableSupply)).toFixed(3));
     setFarmers(Number(formatUnits(info.numFarmers, "0")));
     setStartBlock(Number(formatUnits(info.startBlock, "0")))
     setBonusPeriod(Number(formatUnits(info.bonusEndBlock, "0")))
 
     const balanceLP = await pair(chain, info.lpToken).balanceOf(farmInfo.address);
     const decimalLP = await pair(chain, info.lpToken).decimals();
+    setD_LP(decimalLP);
     const balanceRT = await pair(chain, info.rewardToken).balanceOf(farmInfo.address);
     const decimalRT = await pair(chain, info.rewardToken).decimals();
-    var rate = Number(formatUnits(balanceRT, decimalRT.toString())) / Number(formatUnits(balanceLP, decimalLP.toString()))
+    setD_RT(decimalRT);
+    setLiq(parseFloat(formatUnits(info.farmableSupply), decimalRT).toFixed(3));
+    var rate = Number(formatUnits(balanceRT, decimalRT)) / Number(formatUnits(balanceLP, decimalLP.toString()))
     if (rate === 0 || rate === Infinity) {
       rate = 1;
     }
-    const apyData = Number(formatEther(info.blockReward)) * (86400 * 365) * rate;
-    console.log(rate, apyData);
+    const apyData = Number(formatUnits(info.blockReward, decimalRT)) * (86400 * 365) * rate;
 
     setApy(apyData.toFixed(3));
   }
 
   async function getUserInfo() {
     if (!walletAddress) return;
-    const userinfo = await farm(chain, farmInfo.address).userInfo(
-      walletAddress
-    );
-    setUserBalance(Number(formatEther(userinfo.amount)))
-    setUserRewardDebt(Number(formatEther(userinfo.rewardDebt)))
+    const userinfo = await farm(chain, farmInfo.address).userInfo(walletAddress)
+    const rewardBalance = await farm(chain, farmInfo.address).pendingReward(walletAddress)
+    console.log(rewardBalance, "rewardBalance");
+    setUserBalance(Number(formatUnits(userinfo.amount, d_LP)))
+    setUserRewardBalance(Number(formatUnits(rewardBalance, d_RT)))
   }
 
   useEffect(() => {
     getLiq();
-  }, [stakeFalg])
-
-  useEffect(() => {
-    getLiq();
     getUserInfo();
-  }, [farmInfo, walletAddress]);
+  }, [farmInfo, walletAddress, stakeFalg]);
 
   useEffect(() => {
     let period;
@@ -146,12 +144,15 @@ const FarmCard = ({
     }
     try {
       const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
-        parseEther(amountIn)
+        parseUnits(amountOut, d_LP)
       );
       await tx.wait();
       window.alert("Tokens successfully withdrew.");
     } catch (err) {
       console.log(err);
+    } finally {
+      getLiq();
+      getUserInfo();
     }
   };
 
@@ -161,16 +162,14 @@ const FarmCard = ({
       return;
     }
     try {
-      const userinfo = await farm(chain, farmInfo.address).userInfo(
-        walletAddress
-      );
-      const tx = await farmWeb3(farmInfo.address, library.getSigner()).withdraw(
-        userinfo.amount
-      );
+      const tx = await farmWeb3(farmInfo.address, library.getSigner()).emergencyWithdraw();
       await tx.wait();
       window.alert("Tokens successfully withdrew.");
     } catch (err) {
       console.log(err);
+    } finally {
+      getLiq();
+      getUserInfo();
     }
   };
 
@@ -180,16 +179,17 @@ const FarmCard = ({
       return;
     }
     try {
-      const rewards = await farmWeb3(
-        farmInfo.address,
-        library.getSigner()
-      ).pendingReward(walletAddress);
       const tx = await farmWeb3(
         farmInfo.address,
         library.getSigner()
-      ).safeRewardTransfer(walletAddress, rewards);
+      ).withdraw('0');
       await tx.wait();
-    } catch (err) { }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      getLiq();
+      getUserInfo();
+    }
   };
 
   return (
@@ -439,7 +439,7 @@ const FarmCard = ({
                 onClick={withdraw}
                 variant="contained"
                 disabled={
-                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                  !walletAddress || !(amountOut > 0 && parseFloat(userBalance) >= amountOut)
                 }
               >
                 withdraw
@@ -451,8 +451,7 @@ const FarmCard = ({
                 onClick={claim}
                 variant="contained"
                 disabled={
-                  walletAddress === undefined ||
-                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                  !walletAddress || !(parseFloat(userRewardBalance) > 0)
                 }
               >
                 claim
@@ -464,8 +463,7 @@ const FarmCard = ({
                 onClick={withdrawAll}
                 variant="contained"
                 disabled={
-                  walletAddress === undefined ||
-                  !(BigNumber.isBigNumber(userBalance) && userBalance.gte(0))
+                  !walletAddress || !(parseFloat(userBalance) > 0)
                 }
               >
                 withdraw all
@@ -494,7 +492,7 @@ const FarmCard = ({
                 />
               </Box>
             )}
-          {userBalance > 0 && (
+          {/* {userBalance > 0 && (
             <Box
               sx={{
                 display: "flex",
@@ -539,7 +537,7 @@ const FarmCard = ({
                 </Grid>
               </Box>
             </Box>
-          )}
+          )} */}
           <Accordion sx={{ background: 'transparent', mt: '20px', '&::before': { backgroundColor: '#020826' } }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -593,7 +591,7 @@ const FarmCard = ({
                     </Box>
                     <Box>
                       <Typography>UnClained Rewards</Typography>
-                      <Typography>{userRewardDebt}</Typography>
+                      <Typography>{userRewardBalance}</Typography>
                     </Box>
                   </Stack>
                 </Grid>

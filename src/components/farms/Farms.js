@@ -30,7 +30,7 @@ import {
   tokenContract,
   tokenWeb3,
 } from "../../utils/ethers.util";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, parseEther, parseUnits, formatUnits } from "ethers/lib/utils";
 import { BigNumber, ethers } from "ethers";
 import FarmCard from "../common/FarmCard";
 import StakeDlg from "../common/StakeDlg";
@@ -186,6 +186,7 @@ const Farms = ({
 
   const createFarm = async (
     farmToken,
+    farmDecimals,
     amountIn,
     lptoken,
     blockReward,
@@ -196,7 +197,7 @@ const Farms = ({
     isV3,
     index
   ) => {
-    console.log("farmToken: ", farmToken);
+    console.log("farmToken: ", farmToken, farmDecimals);
     console.log("amountIn: ", amountIn);
     console.log("lptoken: ", lptoken);
     console.log("blockReward: ", blockReward);
@@ -206,25 +207,25 @@ const Farms = ({
     console.log("lockPeriod: ", bonus);
     console.log("isV3: ", isV3);
     console.log("index: ", index);
-    try {
+    // try {
       const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
-      if (Number(allowance) < Number(parseEther(amountIn))) {
+      if (allowance.lt(parseUnits(amountIn, farmDecimals))) {
         const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(
           address[chain][index]["generator"],
-          parseEther(amountIn)
+          parseUnits(amountIn, farmDecimals)
         );
         await tx1.wait();
       }
-      console.log(lockPeriod);
+
       const tx = await generatorWeb3(
         chain,
         library.getSigner(),
         index
       ).createFarmV2(
         farmToken,
-        parseEther(amountIn),
+        parseUnits(amountIn, farmDecimals),
         lptoken,
-        blockReward.toFixed(0),
+        parseUnits((blockReward - Math.pow(10, -farmDecimals)).toFixed(farmDecimals), farmDecimals),
         startBlock,
         bonusEndBlock,
         bonus,
@@ -272,9 +273,9 @@ const Farms = ({
       });
       setFarms([...farms, res]);
       setOpenCreateFarm(false);
-    } catch (err) {
-      console.log(err);
-    }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (

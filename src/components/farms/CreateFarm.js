@@ -31,7 +31,7 @@ import {
   swapFactories,
   tokenContract,
 } from "../../utils/ethers.util";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import { Close } from "@mui/icons-material";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -106,7 +106,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
         const balance = await tokenContract(chain, farmToken).balanceOf(
           walletAddress
         );
-        setFarmBalance(formatEther(balance));
+        setFarmBalance(formatUnits(balance, decimals));
         const name = await tokenContract(chain, farmToken).name();
         setFarmTokenName(name);
         setTokenLoading(false);
@@ -196,6 +196,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     if (chain === Number(process.env.REACT_APP_CHAIN)) {
       create(
         farmToken,
+        farmDecimals,
         amountIn,
         lpToken.address,
         rewardBlock,
@@ -209,6 +210,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     } else {
       create(
         farmToken,
+        farmDecimals,
         amountIn,
         lpToken.address,
         rewardBlock,
@@ -235,7 +237,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             chain,
             0
           ).determineBlockReward(
-            parseEther(amountIn),
+            parseUnits(amountIn, farmDecimals),
             startBlock,
             Number(bonusEndBlock),
             multiplier,
@@ -246,7 +248,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
             chain,
             currentSwap
           ).determineBlockReward(
-            parseEther(amountIn),
+            parseUnits(amountIn, farmDecimals),
             startBlock,
             Number(bonusEndBlock),
             multiplier,
@@ -267,6 +269,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
     walletAddress,
     liquidity,
     tokenPrice,
+    farmDecimals
   ]);
 
   useEffect(() => {
@@ -277,7 +280,7 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   useEffect(() => {
     setRewardBlock(
       parseFloat(amountIn) /
-      (parseFloat(endBlock / 1000) - parseFloat(startBlock / 1000))
+      (parseFloat(endBlock) - parseFloat(startBlock))
     );
   }, [startBlock, endBlock, amountIn]);
 
