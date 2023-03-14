@@ -27,7 +27,9 @@ import {
   farmWeb3,
   tokenContract,
   tokenWeb3,
-  pair
+  pair,
+  provider,
+  blocknumTotimestamp
 } from "../../utils/ethers.util";
 import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import moment from "moment";
@@ -100,7 +102,6 @@ const FarmCard = ({
     if (!walletAddress) return;
     const userinfo = await farm(chain, farmInfo.address).userInfo(walletAddress)
     const rewardBalance = await farm(chain, farmInfo.address).pendingReward(walletAddress)
-    console.log(rewardBalance, "rewardBalance");
     setUserBalance(Number(formatUnits(userinfo.amount, d_LP)))
     setUserRewardBalance(Number(formatUnits(rewardBalance, d_RT)))
   }

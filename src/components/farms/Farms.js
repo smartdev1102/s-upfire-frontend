@@ -29,8 +29,9 @@ import {
   pair,
   tokenContract,
   tokenWeb3,
+  timestampToblocknum,
 } from "../../utils/ethers.util";
-import { formatEther, parseEther, parseUnits, formatUnits } from "ethers/lib/utils";
+import { formatEther, parseUnits } from "ethers/lib/utils";
 import { BigNumber, ethers } from "ethers";
 import FarmCard from "../common/FarmCard";
 import StakeDlg from "../common/StakeDlg";
@@ -191,6 +192,7 @@ const Farms = ({
     lptoken,
     blockReward,
     startBlock,
+    endBlock,
     bonusEndBlock,
     bonus,
     lockPeriod,
@@ -207,7 +209,7 @@ const Farms = ({
     console.log("lockPeriod: ", bonus);
     console.log("isV3: ", isV3);
     console.log("index: ", index);
-    // try {
+    try {
       const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
       if (allowance.lt(parseUnits(amountIn, farmDecimals))) {
         const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(
@@ -216,6 +218,10 @@ const Farms = ({
         );
         await tx1.wait();
       }
+
+      const startBlockNumber = await timestampToblocknum(chain, startBlock);
+      const bonusEndBlockNumber = await timestampToblocknum(chain, bonusEndBlock);
+      console.log(startBlockNumber, bonusEndBlockNumber, "startBlockNumber")
 
       const tx = await generatorWeb3(
         chain,
@@ -226,8 +232,8 @@ const Farms = ({
         parseUnits(amountIn, farmDecimals),
         lptoken,
         parseUnits((blockReward - Math.pow(10, -farmDecimals)).toFixed(farmDecimals), farmDecimals),
-        startBlock,
-        bonusEndBlock,
+        startBlockNumber,
+        bonusEndBlockNumber,
         bonus,
         lockPeriod,
         false
@@ -254,12 +260,13 @@ const Farms = ({
       console.log("farmAddress: ", farmAddress);
       const farminfo = await farm(chain, farmAddress).farmInfo();
       console.log("farminfo: ", farminfo);
+
       const res = await farmService.createFarm({
         name: lpsymbol,
         baseToken: rewardSymbol,
         symbol: lpsymbol,
         start: new Date(startBlock * 1000),
-        end: new Date(farminfo.endBlock * 1000),
+        end: new Date(endBlock * 1000),
         supply: formatEther(farminfo.farmableSupply),
         blockReward: blockReward,
         address: farmAddress,
@@ -273,9 +280,9 @@ const Farms = ({
       });
       setFarms([...farms, res]);
       setOpenCreateFarm(false);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

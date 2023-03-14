@@ -100,6 +100,37 @@ export const factory = (chain, index) => {
     provider
   );
 };
+
+const timePerBlockF = async (chain) => {
+  const provider = new ethers.providers.JsonRpcProvider(
+    networks[chain].rpcUrls[0]
+  );
+
+  const latestBlockNumber = await provider.getBlockNumber();
+  const latestBlock = await provider.getBlock(latestBlockNumber);
+  const block1000Ago = await provider.getBlock(latestBlockNumber - 10000);
+  const timePerBlock = (latestBlock.timestamp - block1000Ago.timestamp) / 10000;
+  return { timePerBlock, latestBlockNumber, latestBlock }
+}
+
+export const blocknumTotimestamp = async (chain, blocknum) => {
+  const timePerBlock = await timePerBlockF(chain);
+  const timestamp = timePerBlock.latestBlock.timestamp + ((blocknum - timePerBlock.latestBlockNumber) * timePerBlock.timePerBlock)
+  return timestamp.toFixed(0);
+}
+
+export const timestampToblocknum = async (chain, timestamp) => {
+  const timePerBlock = await timePerBlockF(chain);
+  const blockNumber = timePerBlock.latestBlockNumber + ((Number(timestamp) - new Date().valueOf() / 1000) / timePerBlock.timePerBlock);
+  return blockNumber.toFixed(0);
+}
+
+export const provider = (chain) => {
+  return new ethers.providers.JsonRpcProvider(
+    networks[chain].rpcUrls[0]
+  );
+}
+
 export const factoryWeb3 = (chain, signer, index) => {
   return new ethers.Contract(
     address[chain][index]["factory"],
