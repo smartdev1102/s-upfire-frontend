@@ -690,7 +690,13 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                         }}
                       >
                         <Button
-                          onClick={() => setActiveStep(3)}
+                          onClick={() => {
+                            if (startBlock - Date.now() / 1000 < 300) {
+                              alert("Please set the start date to 5 minutes from now.");
+                              return;
+                            }
+                            setActiveStep(3)
+                          }}
                           variant="contained"
                           size="small"
                         >
