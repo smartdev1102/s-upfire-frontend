@@ -405,17 +405,16 @@ const FarmCard = ({
           sx={{
             background: "#020826",
             alignItems: "center",
+            px: "30px",
+            py: "10px"
           }}
         >
           <Grid
-            sx={{ alignItems: "center", px: "30px", py: "10px" }}
+            sx={{ alignItems: "center" }}
             container
             spacing={2}
           >
-            <Hidden smDown>
-              <Grid item xs={1}></Grid>
-            </Hidden>
-            <Grid item md={2} xs={12}>
+            <Grid item md={3} xs={12}>
               <Button
                 onClick={handleSelectedFarm}
                 fullWidth
@@ -539,7 +538,7 @@ const FarmCard = ({
               </Box>
             </Box>
           )} */}
-          <Accordion sx={{ background: 'transparent', mt: '20px', '&::before': { backgroundColor: '#020826' } }}>
+          <Accordion sx={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))', mt: '20px', '&::before': { backgroundColor: 'transparent' }, borderRadius: '4px' }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"

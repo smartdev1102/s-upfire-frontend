@@ -32,9 +32,10 @@ import {
   spoolWeb3,
   sfactory,
   tokenWeb3,
+  pair
 } from "../utils/ethers.util";
 import { BigNumber, ethers } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { parseUnits, formatUnits } from "ethers/lib/utils";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
 import { poolService } from "../services/api.service";
@@ -146,32 +147,31 @@ const Pools = ({
   const createPool = async (
     rewardToken,
     stakeToken,
-    apr,
+    rewardBlock,
+    rewardDecimals,
     amountIn,
     startBlock,
     endBlock
   ) => {
-    if (apr === Infinity) {
-      apr = 0.1;
-    }
     const allowance = await tokenContract(chain, rewardToken).allowance(
       walletAddress,
       address[chain][0]["sgenerator"]
     );
 
-    if (allowance.lt(parseEther(amountIn))) {
+    if (allowance.lt(parseUnits(amountIn, rewardDecimals))) {
       const tx = await tokenWeb3(rewardToken, library.getSigner()).approve(
         address[chain][0]["sgenerator"],
-        parseEther(amountIn)
+        parseUnits(amountIn, rewardDecimals)
       );
       await tx.wait();
     }
+    const apr = parseFloat(rewardBlock) * 365 * 86400 / amountIn * 100 / 12;
 
     const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
       rewardToken,
       stakeToken,
-      (apr * 10000).toFixed(0),
-      parseEther(amountIn)
+      (apr * 10).toFixed(0),
+      parseUnits(amountIn, rewardDecimals)
     );
     await tx.wait();
 
@@ -179,13 +179,16 @@ const Pools = ({
     const poolAddress = await sfactory(chain).poolAtIndex(Number(length) - 1);
     const rewardSymbol = await tokenContract(chain, rewardToken).symbol();
     const stakeSymbol = await tokenContract(chain, stakeToken).symbol();
+    const amount = await pair(chain, rewardToken).balanceOf(poolAddress);
 
     const res = await poolService.createPool({
       name: `${stakeSymbol}/${rewardSymbol}`,
-      apr: Number(apr),
+      apr: apr * 12,
       owner: walletAddress,
       rewardToken: rewardToken,
       stakeToken: stakeToken,
+      rewardPerBlock: rewardBlock,
+      supply: parseFloat(formatUnits(amount, rewardDecimals)),
       address: poolAddress,
       chain: chain,
       start: new Date(startBlock * 1000),

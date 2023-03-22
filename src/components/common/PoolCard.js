@@ -23,9 +23,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import defaultIcon from "../../assets/defaultIcon.png";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
-import { spoolWeb3, tokenWeb3, spool, pool, pair } from "../../utils/ethers.util";
+import { spoolWeb3, tokenWeb3, spool, pool, tokenContract } from "../../utils/ethers.util";
 import { useWeb3React } from "@web3-react/core";
-import { parseEther, formatEther } from "ethers/lib/utils";
+import { parseEther, formatUnits } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
@@ -40,8 +40,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [amountOut, setAmountOut] = useState("0");
   const [stakers, setStakers] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
-  const [rewardLP, setRewardLP] = useState(0);
   const [userRewardBalance, setUserRewardBalance] = useState(0);
+  const [apy, setApy] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -53,6 +53,10 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     const info = await spool(chain, poolInfo.address).getStakerCount();
     console.log("--------", BigNumber.from(info).toNumber());
     setStakers(BigNumber.from(info).toNumber());
+    const decimals = await tokenContract(chain, poolInfo.rewardToken).decimals();
+    const amount = await tokenContract(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
+    const lpAmount = parseFloat(formatUnits(amount, decimals)).toFixed(0) - poolInfo.supply
+    setApy(lpAmount === 0 ? poolInfo.apr : (parseFloat(poolInfo.rewardPerBlock) * 3600 * 24 * 365) / lpAmount * 100)
 
     if (walletAddress) {
       const balance1 = await spool(chain, poolInfo.address).deposits(
@@ -61,12 +65,10 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       const balance2 = await spool(chain, poolInfo.address).pendingReward(
         walletAddress
       );
-      console.log("$$$$$$", formatEther(balance1));
-      setUserRewardBalance(parseFloat(formatEther(balance2)).toFixed(2))
-      setUserBalance(Number(formatEther(balance1)));
+      console.log("$$$$$$", formatUnits(balance1, decimals));
+      setUserRewardBalance(parseFloat(formatUnits(balance2, decimals)).toFixed(2))
+      setUserBalance(Number(formatUnits(balance1, decimals)));
     }
-    const amount = await pair(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
-    setRewardLP(parseFloat(formatEther(amount)).toFixed(0))
   }
 
   useEffect(() => {
@@ -149,7 +151,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
             cursor: "pointer",
             alignItems: "center",
           }}
-          onClick={() => setOpen(true)}
+          onClick={() => setOpen(!open)}
         >
           <Grid item md={6} sm={7} xs={7}>
             <Grid sx={{ alignItems: "center" }} container spacing={2}>
@@ -252,7 +254,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                     },
                   }}
                 >
-                  {`${poolInfo.apr.toFixed(3)}%`}
+                  {`${apy.toFixed(2)}%`}
                 </Typography>
               </Grid>
             </Grid>
@@ -308,7 +310,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                 >
                   <Box component="img" src={airdropIcon} sx={{ mx: "10px", mt: "5px" }} />
                   <Typography variant="h3" component="div">
-                    {rewardLP}
+                    {poolInfo.supply}
                   </Typography>
                 </Box>
               </Grid>
@@ -428,7 +430,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Accordion sx={{ background: 'transparent', mt: '20px', '&::before': { backgroundColor: '#020826' } }}>
+            <Accordion sx={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))', mt: '20px', '&::before': { backgroundColor: 'transparent' }, borderRadius: '4px' }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

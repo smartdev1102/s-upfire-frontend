@@ -16,9 +16,8 @@ import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { parseEther } from "ethers/lib/utils";
 import { generator, tokenContract } from "../../utils/ethers.util";
-import { formatEther } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 
 const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [stakeToken, setStakeToken] = useState("");
@@ -77,7 +76,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         rewardToken,
         stakeToken,
-        apy,
+        rewardBlock,
+        rewardDecimals,
         amountIn,
         startBlock,
         endBlock
@@ -86,7 +86,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
       create(
         rewardToken,
         stakeToken,
-        apy,
+        rewardBlock,
+        rewardDecimals,
         amountIn,
         startBlock,
         endBlock
@@ -120,9 +121,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
 
   useEffect(() => {
     if (rewardBlock <= 0) return;
-    console.log(rewardBlock);
     const tempapy = parseFloat(rewardBlock) * 3600 * 24 * 365;
-    setApy((tempapy * tokenPrice) / liquidity);
+    setApy((tempapy * tokenPrice) / liquidity * 100);
   }, [rewardBlock, tokenPrice, liquidity, amountIn]);
 
   // calculate end block when changing end date
@@ -153,7 +153,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         const balance = await tokenContract(chain, rewardToken).balanceOf(
           walletAddress
         );
-        setRewardBalance(formatEther(balance));
+        setRewardBalance(formatUnits(balance, decimals));
         const name = await tokenContract(chain, rewardToken).name();
         setRewardTokenName(name);
         setTokenLoading(false);
@@ -181,25 +181,25 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
             chain,
             0
           ).determineBlockReward(
-            parseEther(amountIn),
+            parseUnits(amountIn, rewardDecimals),
             startBlock,
             Number(bonusEndBlock),
             multiplier,
             endBlock
           );
-          setRewardBlock(blockReward.toString());
+          setRewardBlock(formatUnits(blockReward, rewardDecimals));
         } else {
           const [blockReward, requiredAmount, fee] = await generator(
             chain,
             currentSwap
           ).determineBlockReward(
-            parseEther(amountIn),
+            parseUnits(amountIn, rewardDecimals),
             startBlock,
             Number(bonusEndBlock),
             multiplier,
             endBlock
           );
-          setRewardBlock(blockReward.toString());
+          setRewardBlock(formatUnits(blockReward, rewardDecimals));
         }
       } catch (err) {}
     }
