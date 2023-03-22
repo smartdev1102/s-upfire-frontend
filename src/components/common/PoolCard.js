@@ -51,7 +51,6 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
 
   async function getPool() {
     const info = await spool(chain, poolInfo.address).getStakerCount();
-    console.log("--------", BigNumber.from(info).toNumber());
     setStakers(BigNumber.from(info).toNumber());
     const decimals = await tokenContract(chain, poolInfo.rewardToken).decimals();
     const amount = await tokenContract(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
@@ -65,6 +64,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
       const balance2 = await spool(chain, poolInfo.address).pendingReward(
         walletAddress
       );
+      console.log(balance2, "balance2");
       console.log("$$$$$$", formatUnits(balance1, decimals));
       setUserRewardBalance(parseFloat(formatUnits(balance2, decimals)).toFixed(2))
       setUserBalance(Number(formatUnits(balance1, decimals)));

@@ -166,7 +166,9 @@ const Pools = ({
       await tx.wait();
     }
     const apr = parseFloat(rewardBlock) * 365 * 86400 / amountIn * 100 / 12;
-
+    console.log(rewardToken,
+      stakeToken,
+      (apr * 10).toFixed(0),amountIn)
     const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
       rewardToken,
       stakeToken,
