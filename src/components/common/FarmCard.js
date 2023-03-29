@@ -193,6 +193,16 @@ const FarmCard = ({
     }
   };
 
+  const handleOpenStake = () => {
+    console.log(walletAddress)
+    if (!walletAddress && !openStake) {
+      setWalletAlertOpen(true);
+      return;
+    }
+
+    setOpenStake(!openStake)
+  }
+
   return (
     <Card
       sx={{
@@ -200,7 +210,7 @@ const FarmCard = ({
       }}
     >
       <Grid
-        onClick={() => setOpenStake(!openStake)}
+        onClick={handleOpenStake}
         sx={{
           cursor: "pointer",
           alignItems: "center",

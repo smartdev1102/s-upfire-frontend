@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,6 +19,7 @@ import {
   swapFactories,
   tokenContract,
   tokenWeb3,
+  pair
 } from "../../utils/ethers.util";
 import { networks } from "../../utils/network.util";
 import { Close } from "@mui/icons-material";
@@ -86,6 +87,16 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
   }, [farm]);
 
   const handleApprove = async () => {
+    if (parseFloat(formatEther(balance0)) < parseFloat(amountIn0)) {
+      alert(`Invalid ${symbol0} amount`);
+      return;
+    }
+
+    if (parseFloat(formatEther(balance1)) < parseFloat(amountIn1)) {
+      alert(`Invalid ${symbol1} amount`);
+      return;
+    }
+    
     try {
       if (isEther !== 0) {
         const tx = await tokenWeb3(farm.token0, library.getSigner()).approve(
@@ -172,6 +183,49 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
     }
   };
 
+  const getAmountOut = (value, reserveIn, reserveOut) => {
+    const amountInWithFee = parseFloat(value) * 9975;
+    const numerator = amountInWithFee * parseFloat(formatEther(reserveOut));
+    const denominator = parseFloat(formatEther(reserveIn)) * 10000 + amountInWithFee;
+    const amountOut = numerator / denominator;
+    return amountOut;
+  }
+
+  const handleAmountIn0 = async (value) => {
+    setAmountIn0(value.toString());
+    if (!value) {
+      setAmountIn1('0');
+    } else {
+      const reserves = await pair(chain, farm.lptoken).getReserves();
+      const token0 = await pair(chain, farm.lptoken).token0();
+      console.log(token0, farm.token0)
+      var amountOut;
+      if (farm.token0 === token0) {
+        amountOut = getAmountOut(value, reserves.reserve0, reserves.reserve1);
+      } else {
+        amountOut = getAmountOut(value, reserves.reserve1, reserves.reserve0);
+      }
+      setAmountIn1(parseFloat(amountOut.toFixed(7)).toString());
+    }
+  }
+
+  const handleAmountIn1 = async (value) => {
+    setAmountIn1(value.toString());
+    if (!value) {
+      setAmountIn0('0');
+    } else {
+      const reserves = await pair(chain, farm.lptoken).getReserves();
+      const token0 = await pair(chain, farm.lptoken).token0();
+      var amountOut;
+      if (farm.token1 === token0) {
+        amountOut = getAmountOut(value, reserves.reserve0, reserves.reserve1);
+      } else {
+        amountOut = getAmountOut(value, reserves.reserve1, reserves.reserve0);
+      }
+      setAmountIn0(parseFloat(amountOut.toFixed(7)).toString());
+    }
+  }
+
   return (
     !!farm && (
       <Card
@@ -221,10 +275,10 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
                   mb: "5px",
                 }}
               >
-                Balance: {Number(formatEther(balance0)).toFixed(1)} {symbol0}
+                Balance: {parseFloat(Number(formatEther(balance0)).toFixed(7))} {symbol0}
                 <Box sx={{ flexGrow: 1 }}></Box>
                 <button
-                  onClick={() => setAmountIn0(formatEther(balance0))}
+                  onClick={() => handleAmountIn0(parseFloat(formatEther(balance0)))}
                   style={{
                     cursor: "pointer",
                     background: "#2494F3",
@@ -240,7 +294,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
                 <TextField
                   size="small"
                   value={amountIn0}
-                  onChange={(e) => setAmountIn0(e.target.value)}
+                  onChange={(e) => handleAmountIn0(e.target.value)}
                   fullWidth
                 />
               </Box>
@@ -252,10 +306,10 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
                   mb: "5px",
                 }}
               >
-                Balance: {Number(formatEther(balance1)).toFixed(1)} {symbol1}
+                Balance: {parseFloat(Number(formatEther(balance1)).toFixed(7))} {symbol1}
                 <Box sx={{ flexGrow: 1 }}></Box>
                 <button
-                  onClick={() => setAmountIn1(formatEther(balance1))}
+                  onClick={() => handleAmountIn1(parseFloat(formatEther(balance1)))}
                   style={{
                     cursor: "pointer",
                     background: "#2494F3",
@@ -271,7 +325,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
                 <TextField
                   size="small"
                   value={amountIn1}
-                  onChange={(e) => setAmountIn1(e.target.value)}
+                  onChange={(e) => handleAmountIn1(e.target.value)}
                   fullWidth
                 />
               </Box>
@@ -312,7 +366,7 @@ const StakeDlg = ({ farm, chain, walletAddress, onClose, setStakeFalg, stakeFalg
             >
               <Grid item xs={12} md={6}>
                 <Box sx={{ display: "flex", mb: "5px" }}>
-                  Balance: {Number(formatEther(lpBalance)).toFixed(1)}
+                  Balance: {parseFloat(Number(formatEther(lpBalance)).toFixed(7))}
                   <Box sx={{ flexGrow: 1 }}></Box>
                   <button
                     onClick={() => setAmountIn(formatEther(lpBalance))}

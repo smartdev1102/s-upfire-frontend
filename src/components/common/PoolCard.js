@@ -35,7 +35,7 @@ const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const { library } = useWeb3React();
 
-  const [open, setOpen] = useState(false);
+  const [openStake, setOpenStake] = useState(false);
   const [amountIn, setAmountIn] = useState("0");
   const [amountOut, setAmountOut] = useState("0");
   const [stakers, setStakers] = useState(0);
@@ -132,6 +132,15 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     }
   };
 
+  const handleOpenStake = () => {
+    if (!walletAddress && !openStake) {
+      setWalletAlertOpen(true);
+      return;
+    }
+
+    setOpenStake(!openStake)
+  }
+
   return (
     poolInfo && (
       <Card
@@ -151,7 +160,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
             cursor: "pointer",
             alignItems: "center",
           }}
-          onClick={() => setOpen(!open)}
+          onClick={handleOpenStake}
         >
           <Grid item md={6} sm={7} xs={7}>
             <Grid sx={{ alignItems: "center" }} container spacing={2}>
@@ -332,7 +341,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
             </Grid>
           </Grid>
         </Grid>
-        {open && (
+        {openStake && (
           <Box
             sx={{
               background: "#020826",
