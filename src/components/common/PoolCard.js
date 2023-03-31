@@ -41,6 +41,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [stakers, setStakers] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
   const [userRewardBalance, setUserRewardBalance] = useState(0);
+  const [stakeTokenSymbol, setStakeTokenSymbol] = useState('');
   const [apy, setApy] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
@@ -56,6 +57,8 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     const amount = await tokenContract(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
     const lpAmount = parseFloat(formatUnits(amount, decimals)).toFixed(0) - poolInfo.supply
     setApy(lpAmount === 0 ? poolInfo.apr : (parseFloat(poolInfo.rewardPerBlock) * 3600 * 24 * 365) / lpAmount * 100)
+    const symbol = await tokenContract(chain, poolInfo.stakeToken).symbol();
+    setStakeTokenSymbol(symbol);
 
     if (walletAddress) {
       const balance1 = await spool(chain, poolInfo.address).deposits(
@@ -475,12 +478,12 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   <Grid item md={4} sm={4} xs={12}>
                     <Stack direction="column" justifyContent="center">
                       <Box>
-                        <Typography>Deposited Tokens</Typography>
-                        <Typography>{userBalance}</Typography>
+                        <Typography sx={{ fontWeight: 'bold' }}>Deposited Tokens</Typography>
+                        <Typography>{userBalance} {stakeTokenSymbol}</Typography>
                       </Box>
                       <Box>
-                        <Typography>UnClained Rewards</Typography>
-                        <Typography>{userRewardBalance}</Typography>
+                        <Typography sx={{ fontWeight: 'bold' }}>Unclaimed Rewards</Typography>
+                        <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
                       </Box>
                     </Stack>
                   </Grid>
