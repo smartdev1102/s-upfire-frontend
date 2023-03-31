@@ -41,7 +41,6 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
   const [stakers, setStakers] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
   const [userRewardBalance, setUserRewardBalance] = useState(0);
-  const [stakeTokenSymbol, setStakeTokenSymbol] = useState('');
   const [apy, setApy] = useState(0);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
@@ -57,8 +56,6 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     const amount = await tokenContract(chain, poolInfo.rewardToken).balanceOf(poolInfo.address);
     const lpAmount = parseFloat(formatUnits(amount, decimals)).toFixed(0) - poolInfo.supply
     setApy(lpAmount === 0 ? poolInfo.apr : (parseFloat(poolInfo.rewardPerBlock) * 3600 * 24 * 365) / lpAmount * 100)
-    const symbol = await tokenContract(chain, poolInfo.stakeToken).symbol();
-    setStakeTokenSymbol(symbol);
 
     if (walletAddress) {
       const balance1 = await spool(chain, poolInfo.address).deposits(
@@ -204,7 +201,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   component="h4"
                   sx={{ marginTop: "5px", marginLeft: "10px" }}
                 >
-                  {`${poolInfo.name.split("/")[0].toUpperCase()}`}
+                  {`${poolInfo.name.split("/")[0]}`}
                 </Typography>
               </Grid>
 
@@ -479,7 +476,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                     <Stack direction="column" justifyContent="center">
                       <Box>
                         <Typography sx={{ fontWeight: 'bold' }}>Deposited Tokens</Typography>
-                        <Typography>{userBalance} {stakeTokenSymbol}</Typography>
+                        <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
                       </Box>
                       <Box>
                         <Typography sx={{ fontWeight: 'bold' }}>Unclaimed Rewards</Typography>
