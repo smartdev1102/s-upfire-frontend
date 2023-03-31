@@ -584,11 +584,11 @@ const FarmCard = ({
                 <Grid item md={4} sm={4} xs={12}>
                   <Stack direction="column" gap={2} justifyContent="center">
                     <Box>
-                      <Typography sx={{ fontWeight: 'bold' }}>Lock Period</Typography>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Lock Period</Typography>
                       <Typography>{lockPeriod / 86400} days</Typography>
                     </Box>
                     <Box>
-                      <Typography sx={{ fontWeight: 'bold' }}>Bonus Period</Typography>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Bonus Period</Typography>
                       <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod * 1000).toLocaleString()}  ${((bonusPeriod - startBlock) / 86400).toFixed(0)}.${(((bonusPeriod - startBlock) % 86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
                     </Box>
                   </Stack>
@@ -596,11 +596,11 @@ const FarmCard = ({
                 <Grid item md={4} sm={4} xs={12}>
                   <Stack direction="column" gap={2} justifyContent="center">
                     <Box>
-                      <Typography sx={{ fontWeight: 'bold' }}>Deposited Tokens</Typography>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
                       <Typography>{userBalance} LP</Typography>
                     </Box>
                     <Box>
-                      <Typography sx={{ fontWeight: 'bold' }}>Unclaimed Rewards</Typography>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
                       <Typography>{`${userRewardBalance} ${farmInfo.baseToken}`}</Typography>
                     </Box>
                   </Stack>

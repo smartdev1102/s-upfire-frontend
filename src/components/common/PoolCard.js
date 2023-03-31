@@ -475,11 +475,11 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                   <Grid item md={4} sm={4} xs={12}>
                     <Stack direction="column" justifyContent="center">
                       <Box>
-                        <Typography sx={{ fontWeight: 'bold' }}>Deposited Tokens</Typography>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
                         <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
                       </Box>
                       <Box>
-                        <Typography sx={{ fontWeight: 'bold' }}>Unclaimed Rewards</Typography>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
                         <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
                       </Box>
                     </Stack>
