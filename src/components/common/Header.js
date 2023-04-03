@@ -103,12 +103,13 @@ const Header = ({ walletAddress, connectWallet, handleReferral, chain, setChain 
           alignItems: 'center',
         }}
       >
-        <Box
-          onClick={() => window.location.href = '/main?tab=1'}
-          sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-        >
-          <img style={{ height: '80px' }} src={logo} />
-        </Box>
+        <Link to="/farm/all" style={{ textDecoration: 'unset' }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          >
+            <img style={{ height: '80px' }} src={logo} />
+          </Box>
+        </Link>
         <Box sx={{ flexGrow: 1 }}></Box>
         <Hidden mdDown>
           <Box
