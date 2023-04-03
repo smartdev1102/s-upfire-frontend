@@ -47,6 +47,7 @@ const Pools = ({
   stakePools,
   openWalletAlert,
   setPools,
+  poolAddress
 }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
@@ -477,6 +478,7 @@ const Pools = ({
                 chain={chain}
                 walletAddress={walletAddress}
                 handleVisible={handleVisible}
+                poolAddress={poolAddress}
               ></PoolCard>
             ))}
           </Box>

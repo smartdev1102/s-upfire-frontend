@@ -77,7 +77,7 @@ function App() {
           (item) =>
             !item.invisible ||
             String(item.owner).toLowerCase() ===
-              String(walletAddress).toLowerCase()
+            String(walletAddress).toLowerCase()
         );
       }
       if (!walletAddress) {
@@ -91,7 +91,7 @@ function App() {
           (item) =>
             !item.invisible ||
             String(item.owner).toLowerCase() ===
-              String(walletAddress).toLowerCase()
+            String(walletAddress).toLowerCase()
         );
       }
       setStakePools(temp);
@@ -210,9 +210,11 @@ function App() {
           </Box>
           <Box>
             <Routes>
-              <Route path="/" element={<Navigate to="/main" />} />
+              <Route path="/" element={<Navigate to="/farm/all" />} />
+              <Route path="/farm" element={<Navigate to="/farm/all" />} />
+              <Route path="/pool" element={<Navigate to="/pool/all" />} />
               <Route
-                path="/main"
+                path="/farm/:address"
                 element={
                   <Main
                     openWalletAlert={() => setOpenWalletAlert(true)}
@@ -225,6 +227,25 @@ function App() {
                     stakePools={stakePools}
                     setFarms={setFarms}
                     setPools={setStakePools}
+                    tabIndex={1}
+                  />
+                }
+              />
+              <Route
+                path="/pool/:address"
+                element={
+                  <Main
+                    openWalletAlert={() => setOpenWalletAlert(true)}
+                    walletAddress={walletAddress}
+                    chain={chain}
+                    farms={farms}
+                    farmsv3={farmsv3}
+                    farmTokens={farmTokens}
+                    stakeTokens={stakeTokens}
+                    stakePools={stakePools}
+                    setFarms={setFarms}
+                    setPools={setStakePools}
+                    tabIndex={2}
                   />
                 }
               />

@@ -10,10 +10,10 @@ import {
   Box,
   Switch,
   Stack,
-  Link,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link as MuiLink
 } from "@mui/material";
 import moment from "moment";
 import DateRangeIcon from "@mui/icons-material/DateRange";
@@ -29,10 +29,11 @@ import { parseEther, formatUnits } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
+import { Link } from 'react-router-dom';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
-const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
+const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }) => {
   const { library } = useWeb3React();
 
   const [openStake, setOpenStake] = useState(false);
@@ -132,13 +133,19 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
     }
   };
 
+  useEffect(() => {
+    if (poolAddress.toLowerCase() === poolInfo.address.toLowerCase()) {
+      setOpenStake(true);
+    } else {
+      setOpenStake(false);
+    }
+  }, [poolAddress])
+
   const handleOpenStake = () => {
-    if (!walletAddress && !openStake) {
+    if (!walletAddress) {
       setWalletAlertOpen(true);
       return;
     }
-
-    setOpenStake(!openStake)
   }
 
   return (
@@ -153,194 +160,197 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
           px: "20px",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            cursor: "pointer",
-            alignItems: "center",
-          }}
-          onClick={handleOpenStake}
-        >
-          <Grid item md={6} sm={7} xs={7}>
-            <Grid sx={{ alignItems: "center" }} container spacing={2}>
-              {/* <Hidden smDown> */}
-              <Grid
-                item
-                md={4}
-                sm={5}
-                xs={5}
-                sx={{
-                  display: "flex",
-                  marginRight: {
-                    md: "0px",
-                    sm: "0px",
-                    xs: "0px",
-                  },
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
+        <Link to={`/pool/${poolInfo.address}`} style={{ textDecoration: 'unset' }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              cursor: "pointer",
+              alignItems: "center",
+              color: "white"
+            }}
+            onClick={() => setOpenStake(!openStake)}
+          >
+            <Grid item md={6} sm={7} xs={7}>
+              <Grid sx={{ alignItems: "center" }} container spacing={2}>
+                {/* <Hidden smDown> */}
+                <Grid
+                  item
+                  md={4}
+                  sm={5}
+                  xs={5}
                   sx={{
-                    mt: "5px",
-                    zIndex: "9",
-                    borderRadius: "100%",
+                    display: "flex",
+                    marginRight: {
+                      md: "0px",
+                      sm: "0px",
+                      xs: "0px",
+                    },
+                    display: "flex",
+                    alignItems: "center",
                   }}
-                  className={"dualImg"}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
-                    }/assets/${poolInfo.stakeToken}/logo.png`}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = defaultIcon;
-                  }}
-                />
-                <Typography
-                  variant="h3"
-                  component="h4"
-                  sx={{ marginTop: "5px", marginLeft: "10px" }}
                 >
-                  {`${poolInfo.name.split("/")[0]}`}
-                </Typography>
-              </Grid>
+                  <Box
+                    component="img"
+                    sx={{
+                      mt: "5px",
+                      zIndex: "9",
+                      borderRadius: "100%",
+                    }}
+                    className={"dualImg"}
+                    src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
+                      }/assets/${poolInfo.stakeToken}/logo.png`}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src = defaultIcon;
+                    }}
+                  />
+                  <Typography
+                    variant="h3"
+                    component="h4"
+                    sx={{ marginTop: "5px", marginLeft: "10px" }}
+                  >
+                    {`${poolInfo.name.split("/")[0]}`}
+                  </Typography>
+                </Grid>
 
-              {/* <Hidden smDown> */}
-              <Grid
-                item
-                md={4}
-                sm={4}
-                xs={4}
-                sx={{
-                  marginLeft: {
-                    md: "0px",
-                    sm: "0px",
-                    xs: "0px",
-                  },
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  sx={{
-                    marginTop: "5px",
-                    borderRadius: "100%",
-                    marginRight: "10px",
-                  }}
-                  className={"dualImg"}
-                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
-                    }/assets/${poolInfo.address}/logo.png`}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src = defaultIcon;
-                  }}
-                />
-                <Typography
-                  variant="h3"
-                  component="h3"
-                  className="asdasda"
-                  sx={{ marginTop: "5px" }}
-                >
-                  {`${poolInfo.rewardSymbol}`}
-                </Typography>
-              </Grid>
-
-              {/* <Hidden smDown> */}
-              {/* <Grid item xs={1}>
-</Grid> */}
-              {/* </Hidden> */}
-
-              <Grid item md={4} sm={3} xs={3}>
-                <Typography
-                  variant="h3"
-                  component="h3"
+                {/* <Hidden smDown> */}
+                <Grid
+                  item
+                  md={4}
+                  sm={4}
+                  xs={4}
                   sx={{
                     marginLeft: {
                       md: "0px",
                       sm: "0px",
                       xs: "0px",
                     },
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
-                  {`${apy.toFixed(2)}%`}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+                  <Box
+                    component="img"
+                    sx={{
+                      marginTop: "5px",
+                      borderRadius: "100%",
+                      marginRight: "10px",
+                    }}
+                    className={"dualImg"}
+                    src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[poolInfo.chain]
+                      }/assets/${poolInfo.address}/logo.png`}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src = defaultIcon;
+                    }}
+                  />
+                  <Typography
+                    variant="h3"
+                    component="h3"
+                    className="asdasda"
+                    sx={{ marginTop: "5px" }}
+                  >
+                    {`${poolInfo.rewardSymbol}`}
+                  </Typography>
+                </Grid>
 
-          <Grid item md={4} sm={3} xs={3}>
-            <Grid sx={{ alignItems: "center" }} container spacing={0}>
-              <Hidden smDown>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    justifyContent: "end",
-                    alignItems: "center",
-                  }}
-                  item
-                  xs={1}
-                >
-                  <DateRangeIcon sx={{ color: "#1F8BED" }} />
-                </Grid>
-                <Grid item md={5} sm={5} xs={5}>
-                  <Typography variant="h3" component="h3">
-                    {moment(poolInfo.start).format("MMM DD YYYY")}
+                {/* <Hidden smDown> */}
+                {/* <Grid item xs={1}>
+  </Grid> */}
+                {/* </Hidden> */}
+
+                <Grid item md={4} sm={3} xs={3}>
+                  <Typography
+                    variant="h3"
+                    component="h3"
+                    sx={{
+                      marginLeft: {
+                        md: "0px",
+                        sm: "0px",
+                        xs: "0px",
+                      },
+                    }}
+                  >
+                    {`${apy.toFixed(2)}%`}
                   </Typography>
                 </Grid>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    justifyContent: "end",
-                    alignItems: "center",
-                  }}
-                  item
-                  xs={1}
-                >
-                  <DateRangeIcon sx={{ color: "#1F8BED" }} />
-                </Grid>
-              </Hidden>
-              <Grid item md={5} sm={5} xs={12}>
-                <Typography variant="h3" component="h3">
-                  {moment(poolInfo.end).format("MMM DD YYYY")}
-                </Typography>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={2}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    height: "100%",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box component="img" src={airdropIcon} sx={{ mx: "10px", mt: "5px" }} />
-                  <Typography variant="h3" component="div">
-                    {poolInfo.supply}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Hidden smDown>
-                    <Box component="img" src={accountIcon} sx={{ mr: "10px", mt: "5px", height: "20px" }} />
+
+            <Grid item md={4} sm={3} xs={3}>
+              <Grid sx={{ alignItems: "center" }} container spacing={0}>
+                <Hidden smDown>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      justifyContent: "end",
+                      alignItems: "center",
+                    }}
+                    item
+                    xs={1}
+                  >
+                    <DateRangeIcon sx={{ color: "#1F8BED" }} />
+                  </Grid>
+                  <Grid item md={5} sm={5} xs={5}>
                     <Typography variant="h3" component="h3">
-                      {stakers}
+                      {moment(poolInfo.start).format("MMM DD YYYY")}
                     </Typography>
-                  </Hidden>
-                </Box>
+                  </Grid>
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      justifyContent: "end",
+                      alignItems: "center",
+                    }}
+                    item
+                    xs={1}
+                  >
+                    <DateRangeIcon sx={{ color: "#1F8BED" }} />
+                  </Grid>
+                </Hidden>
+                <Grid item md={5} sm={5} xs={12}>
+                  <Typography variant="h3" component="h3">
+                    {moment(poolInfo.end).format("MMM DD YYYY")}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={2}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      height: "100%",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box component="img" src={airdropIcon} sx={{ mx: "10px", mt: "5px" }} />
+                    <Typography variant="h3" component="div">
+                      {poolInfo.supply}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Hidden smDown>
+                      <Box component="img" src={accountIcon} sx={{ mr: "10px", mt: "5px", height: "20px" }} />
+                      <Typography variant="h3" component="h3">
+                        {stakers}
+                      </Typography>
+                    </Hidden>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Link>
         {openStake && (
           <Box
             sx={{
@@ -445,47 +455,50 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible }) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
                 sx={{ px: '20px' }}
+                onClick={handleOpenStake}
               >
                 <Typography>Pool Information</Typography>
               </AccordionSummary>
-              <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
-                <Grid container direction="row">
-                  <Grid item md={4} sm={4} xs={12}>
-                    <Stack direction="column" gap={1} justifyContent="center">
-                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.address}`} target="_blank">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                          <Typography>Pool Contract</Typography>
-                          <OpenInNewIcon />
-                        </Stack>
-                      </Link>
-                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.staketoken}`} target="_blank">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                          <Typography>LP Token</Typography>
-                          <OpenInNewIcon />
-                        </Stack>
-                      </Link>
-                      <Link href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.rewardToken}`} target="_blank">
-                        <Stack direction="row" alignItems="center" spacing={1}>
-                          <Typography>Reward Token</Typography>
-                          <OpenInNewIcon />
-                        </Stack>
-                      </Link>
-                    </Stack>
+              {walletAddress &&
+                <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
+                  <Grid container direction="row">
+                    <Grid item md={4} sm={4} xs={12}>
+                      <Stack direction="column" gap={1} justifyContent="center">
+                        <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.address}`} target="_blank">
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography>Pool Contract</Typography>
+                            <OpenInNewIcon />
+                          </Stack>
+                        </MuiLink>
+                        <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.staketoken}`} target="_blank">
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography>LP Token</Typography>
+                            <OpenInNewIcon />
+                          </Stack>
+                        </MuiLink>
+                        <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.rewardToken}`} target="_blank">
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography>Reward Token</Typography>
+                            <OpenInNewIcon />
+                          </Stack>
+                        </MuiLink>
+                      </Stack>
+                    </Grid>
+                    <Grid item md={4} sm={4} xs={12}>
+                      <Stack direction="column" justifyContent="center">
+                        <Box>
+                          <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
+                          <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
+                        </Box>
+                        <Box>
+                          <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
+                          <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
+                        </Box>
+                      </Stack>
+                    </Grid>
                   </Grid>
-                  <Grid item md={4} sm={4} xs={12}>
-                    <Stack direction="column" justifyContent="center">
-                      <Box>
-                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
-                        <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
-                        <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
+                </AccordionDetails>
+              }
             </Accordion>
           </Box>
         )}

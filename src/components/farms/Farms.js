@@ -49,6 +49,7 @@ const Farms = ({
   farmsv3,
   pairs,
   setFarms,
+  farmAddress
 }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
@@ -603,6 +604,7 @@ const Farms = ({
                   handleVisible={handleVisible}
                   walletAddress={walletAddress}
                   stakeFalg={stakeFalg}
+                  farmAddress={farmAddress}
                 />
               ))}
               {filterFarmv3.map((farm, i) => (

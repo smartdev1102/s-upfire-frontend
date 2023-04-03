@@ -5,7 +5,7 @@ import Tokens from './Tokens';
 import Farms from './farms/Farms';
 import Pools from './Pools';
 import { Hidden } from '@mui/material';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 const Main = ({
   openWalletAlert,
@@ -18,23 +18,12 @@ const Main = ({
   stakeTokens,
   stakePools,
   setFarms,
-  setPools
+  setPools,
+  tabIndex
 }) => {
-  const [tabIndex, setTabIndex] = useState(1);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { address } = useParams();
 
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (!tab) {
-      setTabIndex(1);
-      setSearchParams({tab: 1});
-    } else {
-      setTabIndex(Number(tab));
-    }
-  }, [searchParams.get('tab')]);
-
-  
   return (
     <Box
       sx={{
@@ -62,15 +51,16 @@ const Main = ({
             px: '10px'
           }}
         >
-          {/* <RoundButton color={tabIndex == 0 ? 'primary' : 'secondary'} onClick={()=>setTabIndex(0)} variant='contained'>
-            Farmable Tokens
-          </RoundButton> */}
-          <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} onClick={() => setTabIndex(1)} variant='contained'>
-            Farms
-          </RoundButton>
-          <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} onClick={() => setTabIndex(2)} variant='contained'>
-            Staking Pools
-          </RoundButton>
+          <Link to="/farm/all" style={{ textDecoration: 'unset' }}>
+            <RoundButton color={tabIndex == 1 ? 'primary' : 'secondary'} variant='contained'>
+              Farms
+            </RoundButton>
+          </Link>
+          <Link to="/pool/all" style={{ textDecoration: 'unset' }}>
+            <RoundButton color={tabIndex == 2 ? 'primary' : 'secondary'} variant='contained'>
+              Staking Pools
+            </RoundButton>
+          </Link>
         </Box>
         <Box>
           {
@@ -93,6 +83,7 @@ const Main = ({
                 pairs={pairs}
                 chain={chain}
                 setFarms={setFarms}
+                farmAddress={address}
               />
             )
           }
@@ -104,6 +95,7 @@ const Main = ({
                 stakePools={stakePools}
                 openWalletAlert={openWalletAlert}
                 setPools={setPools}
+                poolAddress={address}
               />
             )
           }

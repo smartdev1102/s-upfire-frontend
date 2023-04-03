@@ -12,10 +12,10 @@ import {
   Switch,
   TextField,
   Stack,
-  Link,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Link as MuiLink
 } from "@mui/material";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -41,6 +41,7 @@ import defaultIcon from "../../assets/defaultIcon.png";
 import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
+import { Link } from 'react-router-dom';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -50,7 +51,8 @@ const FarmCard = ({
   setSelectedFarm,
   handleVisible,
   walletAddress,
-  stakeFalg
+  stakeFalg,
+  farmAddress
 }) => {
   const [openStake, setOpenStake] = useState(false);
   const [amountOut, setAmountOut] = useState(0);
@@ -110,6 +112,14 @@ const FarmCard = ({
     getLiq();
     getUserInfo();
   }, [farmInfo, walletAddress, stakeFalg]);
+
+  useEffect(() => {
+    if (farmAddress.toLowerCase() === farmInfo.address.toLowerCase()) {
+      setOpenStake(true);
+    } else {
+      setOpenStake(false);
+    }
+  }, [farmAddress])
 
   useEffect(() => {
     let period;
@@ -194,13 +204,10 @@ const FarmCard = ({
   };
 
   const handleOpenStake = () => {
-    console.log(walletAddress)
-    if (!walletAddress && !openStake) {
+    if (!walletAddress) {
       setWalletAlertOpen(true);
       return;
     }
-
-    setOpenStake(!openStake)
   }
 
   return (
@@ -209,206 +216,209 @@ const FarmCard = ({
         borderRadius: "20px", border: "1px solid #2494F3", fontFamily: "Exo", py: "15px", my: "10px", px: "20px"
       }}
     >
-      <Grid
-        onClick={handleOpenStake}
-        sx={{
-          cursor: "pointer",
-          alignItems: "center",
-        }}
-        container
-        spacing={2}
-      >
-        <Grid item md={6} sm={7} xs={7}>
-          <Grid sx={{ alignItems: "center" }} container spacing={2}>
-            {/* <Hidden smDown> */}
-            <Grid item md={4} sm={5} xs={5} sx={{
-              display: "flex",
-              marginRight: {
-                md: "0px", sm: "0px", xs: "0px",
-              },
-              display: "flex",
-              alignItems: "center",
-            }}
-            >
-              <img
-                style={{
-                  marginTop: "5px",
-                  zIndex: "9",
-                  borderRadius: "100%",
-                }}
-                className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
-                  }/assets/${farmInfo.token0}/logo.png`}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = defaultIcon;
-                }}
-              />
-              <img
-                style={{
-                  marginTop: "5px",
-                  borderRadius: "100%",
-                  marginLeft: "-15px",
-                }}
-                className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
-                  }/assets/${farmInfo.token1}/logo.png`}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = defaultIcon;
-                }}
-              />
-              <Typography
-                variant="h3"
-                component="h4"
-                sx={{ marginTop: "5px", marginLeft: "10px" }}
-              >
-                {`${farmInfo.name.toUpperCase()}`}
-              </Typography>
-            </Grid>
-
-            {/* <Hidden smDown> */}
-            <Grid
-              item
-              md={4}
-              sm={4}
-              xs={4}
-              sx={{
-                marginLeft: {
-                  md: "0px",
-                  sm: "0px",
-                  xs: "0px",
+      <Link to={`/farm/${farmInfo.address}`} style={{ textDecoration: 'unset' }}>
+        <Grid
+          sx={{
+            cursor: "pointer",
+            alignItems: "center",
+            color: 'white'
+          }}
+          container
+          spacing={2}
+          onClick={() => setOpenStake(!openStake)}
+        >
+          <Grid item md={6} sm={7} xs={7}>
+            <Grid sx={{ alignItems: "center" }} container spacing={2}>
+              {/* <Hidden smDown> */}
+              <Grid item md={4} sm={5} xs={5} sx={{
+                display: "flex",
+                marginRight: {
+                  md: "0px", sm: "0px", xs: "0px",
                 },
                 display: "flex",
                 alignItems: "center",
               }}
-            >
-              <img
-                style={{
-                  marginTop: "5px",
-                  borderRadius: "100%",
-                  marginRight: "10px",
-                }}
-                className={"dualImg"}
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
-                  }/assets/${farmInfo.address}/logo.png`}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = defaultIcon;
-                }}
-              />
-              <Typography
-                variant="h3"
-                component="h3"
-                className="asdasda"
-                sx={{ marginTop: "5px" }}
               >
-                {`${farmInfo.baseToken}`}
-              </Typography>
-            </Grid>
+                <img
+                  style={{
+                    marginTop: "5px",
+                    zIndex: "9",
+                    borderRadius: "100%",
+                  }}
+                  className={"dualImg"}
+                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                    }/assets/${farmInfo.token0}/logo.png`}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = defaultIcon;
+                  }}
+                />
+                <img
+                  style={{
+                    marginTop: "5px",
+                    borderRadius: "100%",
+                    marginLeft: "-15px",
+                  }}
+                  className={"dualImg"}
+                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                    }/assets/${farmInfo.token1}/logo.png`}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = defaultIcon;
+                  }}
+                />
+                <Typography
+                  variant="h3"
+                  component="h4"
+                  sx={{ marginTop: "5px", marginLeft: "10px" }}
+                >
+                  {`${farmInfo.name.toUpperCase()}`}
+                </Typography>
+              </Grid>
 
-            {/* <Hidden smDown> */}
-            {/* <Grid item xs={1}>
-            </Grid> */}
-            {/* </Hidden> */}
-
-            <Grid item md={4} sm={3} xs={3}>
-              <Typography
-                variant="h3"
-                component="h3"
+              {/* <Hidden smDown> */}
+              <Grid
+                item
+                md={4}
+                sm={4}
+                xs={4}
                 sx={{
                   marginLeft: {
                     md: "0px",
                     sm: "0px",
                     xs: "0px",
                   },
-                }}
-              >
-                {`${apy}%`}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item md={4} sm={3} xs={3}>
-          <Grid sx={{ alignItems: "center" }} container spacing={0}>
-            <Hidden smDown>
-              <Grid
-                sx={{
                   display: "flex",
-                  justifyContent: "end",
                   alignItems: "center",
                 }}
-                item
-                xs={1}
               >
-                <DateRangeIcon sx={{ color: "#1F8BED" }} />
-              </Grid>
-              <Grid item md={5} sm={5} xs={5}>
-                <Typography variant="h3" component="h3">
-                  {moment(farmInfo.start).format("MMM DD YYYY")}
+                <img
+                  style={{
+                    marginTop: "5px",
+                    borderRadius: "100%",
+                    marginRight: "10px",
+                  }}
+                  className={"dualImg"}
+                  src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainsName[farmInfo.chain]
+                    }/assets/${farmInfo.address}/logo.png`}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = defaultIcon;
+                  }}
+                />
+                <Typography
+                  variant="h3"
+                  component="h3"
+                  className="asdasda"
+                  sx={{ marginTop: "5px" }}
+                >
+                  {`${farmInfo.baseToken}`}
                 </Typography>
               </Grid>
-              <Grid
-                sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                  alignItems: "center",
-                }}
-                item
-                xs={1}
-              >
-                <DateRangeIcon sx={{ color: "#1F8BED" }} />
+
+              {/* <Hidden smDown> */}
+              {/* <Grid item xs={1}>
+              </Grid> */}
+              {/* </Hidden> */}
+
+              <Grid item md={4} sm={3} xs={3}>
+                <Typography
+                  variant="h3"
+                  component="h3"
+                  sx={{
+                    marginLeft: {
+                      md: "0px",
+                      sm: "0px",
+                      xs: "0px",
+                    },
+                  }}
+                >
+                  {`${apy}%`}
+                </Typography>
               </Grid>
-            </Hidden>
-            <Grid item md={5} sm={5} xs={12}>
-              <Typography variant="h3" component="h3">
-                {moment(farmInfo.end).format("MMM DD YYYY")}
-              </Typography>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={2}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Box
-                sx={{
-                  display: "flex",
-                  height: "100%",
-                  alignItems: "center",
-                }}
-              >
-                <Box sx={{ mx: "10px", mt: "5px" }}>
-                  <img src={airdropIcon} />
-                </Box>
-                {liq == 0 ? (
-                  <img style={{ height: "20px" }} src={loading} />
-                ) : (
-                  <Typography variant="h3" component="div">
-                    {Math.trunc(liq)}
-                  </Typography>
-                )}
-              </Box>
-            </Grid>
-            <Grid item xs={6}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Hidden smDown>
-                  <Box sx={{ mr: "10px", mt: "5px" }}>
-                    <img style={{ height: "20px" }} src={accountIcon} />
-                  </Box>
+          <Grid item md={4} sm={3} xs={3}>
+            <Grid sx={{ alignItems: "center" }} container spacing={0}>
+              <Hidden smDown>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    alignItems: "center",
+                  }}
+                  item
+                  xs={1}
+                >
+                  <DateRangeIcon sx={{ color: "#1F8BED" }} />
+                </Grid>
+                <Grid item md={5} sm={5} xs={5}>
                   <Typography variant="h3" component="h3">
-                    {farmers}
+                    {moment(farmInfo.start).format("MMM DD YYYY")}
                   </Typography>
-                </Hidden>
-              </Box>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    alignItems: "center",
+                  }}
+                  item
+                  xs={1}
+                >
+                  <DateRangeIcon sx={{ color: "#1F8BED" }} />
+                </Grid>
+              </Hidden>
+              <Grid item md={5} sm={5} xs={12}>
+                <Typography variant="h3" component="h3">
+                  {moment(farmInfo.end).format("MMM DD YYYY")}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={2}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    height: "100%",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box sx={{ mx: "10px", mt: "5px" }}>
+                    <img src={airdropIcon} />
+                  </Box>
+                  {liq == 0 ? (
+                    <img style={{ height: "20px" }} src={loading} />
+                  ) : (
+                    <Typography variant="h3" component="div">
+                      {Math.trunc(liq)}
+                    </Typography>
+                  )}
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Hidden smDown>
+                    <Box sx={{ mr: "10px", mt: "5px" }}>
+                      <img style={{ height: "20px" }} src={accountIcon} />
+                    </Box>
+                    <Typography variant="h3" component="h3">
+                      {farmers}
+                    </Typography>
+                  </Hidden>
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Link>
       {/* stake */}
       {openStake && (
         <Box
@@ -554,59 +564,62 @@ const FarmCard = ({
               aria-controls="panel1a-content"
               id="panel1a-header"
               sx={{ px: '20px' }}
+              onClick={handleOpenStake}
             >
               <Typography>Farm Information</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
-              <Grid container direction="row">
-                <Grid item md={4} sm={4} xs={12}>
-                  <Stack direction="column" gap={1} justifyContent="center">
-                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.address}`} target="_blank">
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography>Farm Contract</Typography>
-                        <OpenInNewIcon />
-                      </Stack>
-                    </Link>
-                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.lptoken}`} target="_blank">
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography>LP Token</Typography>
-                        <OpenInNewIcon />
-                      </Stack>
-                    </Link>
-                    <Link href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.rewardToken}`} target="_blank">
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography>Reward Token</Typography>
-                        <OpenInNewIcon />
-                      </Stack>
-                    </Link>
-                  </Stack>
+            {walletAddress &&
+              <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
+                <Grid container direction="row">
+                  <Grid item md={4} sm={4} xs={12}>
+                    <Stack direction="column" gap={1} justifyContent="center">
+                      <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.address}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>Farm Contract</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </MuiLink>
+                      <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.lptoken}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>LP Token</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </MuiLink>
+                      <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${farmInfo.rewardToken}`} target="_blank">
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography>Reward Token</Typography>
+                          <OpenInNewIcon />
+                        </Stack>
+                      </MuiLink>
+                    </Stack>
+                  </Grid>
+                  <Grid item md={4} sm={4} xs={12}>
+                    <Stack direction="column" gap={2} justifyContent="center">
+                      <Box>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Lock Period</Typography>
+                        <Typography>{lockPeriod / 86400} days</Typography>
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Bonus Period</Typography>
+                        <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod * 1000).toLocaleString()}  ${((bonusPeriod - startBlock) / 86400).toFixed(0)}.${(((bonusPeriod - startBlock) % 86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
+                      </Box>
+                    </Stack>
+                  </Grid>
+                  <Grid item md={4} sm={4} xs={12}>
+                    <Stack direction="column" gap={2} justifyContent="center">
+                      <Box>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
+                        <Typography>{userBalance} LP</Typography>
+                      </Box>
+                      <Box>
+                        <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
+                        <Typography>{`${userRewardBalance} ${farmInfo.baseToken}`}</Typography>
+                      </Box>
+                    </Stack>
+                  </Grid>
                 </Grid>
-                <Grid item md={4} sm={4} xs={12}>
-                  <Stack direction="column" gap={2} justifyContent="center">
-                    <Box>
-                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Lock Period</Typography>
-                      <Typography>{lockPeriod / 86400} days</Typography>
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Bonus Period</Typography>
-                      <Typography>{bonusPeriod === 0 || bonusPeriod < startBlock ? 'Not Exist' : `Until ${new Date(bonusPeriod * 1000).toLocaleString()}  ${((bonusPeriod - startBlock) / 86400).toFixed(0)}.${(((bonusPeriod - startBlock) % 86400) / 3600 / 24 * 100).toFixed(0)}X`}</Typography>
-                    </Box>
-                  </Stack>
-                </Grid>
-                <Grid item md={4} sm={4} xs={12}>
-                  <Stack direction="column" gap={2} justifyContent="center">
-                    <Box>
-                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
-                      <Typography>{userBalance} LP</Typography>
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
-                      <Typography>{`${userRewardBalance} ${farmInfo.baseToken}`}</Typography>
-                    </Box>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </AccordionDetails>
+              </AccordionDetails>
+            }
           </Accordion>
         </Box>
       )}
