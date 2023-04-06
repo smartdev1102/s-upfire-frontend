@@ -23,6 +23,7 @@ const Main = ({
 }) => {
 
   const { address } = useParams();
+  const itemsPerPage = 10;
 
   return (
     <Box
@@ -84,6 +85,7 @@ const Main = ({
                 chain={chain}
                 setFarms={setFarms}
                 farmAddress={address}
+                itemsPerPage={itemsPerPage}
               />
             )
           }
@@ -96,6 +98,7 @@ const Main = ({
                 openWalletAlert={openWalletAlert}
                 setPools={setPools}
                 poolAddress={address}
+                itemsPerPage={itemsPerPage}
               />
             )
           }

@@ -3,7 +3,6 @@ import { Box } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import RoundButton from "../common/RoundButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   FormControlLabel,
   Grid,
@@ -21,7 +20,6 @@ import loading from "../../assets/loading.svg";
 import CreateFarm from "./CreateFarm";
 import {
   address,
-  erc20Abi,
   factory,
   farm,
   generatorWeb3,
@@ -31,13 +29,12 @@ import {
   timestampToblocknum,
 } from "../../utils/ethers.util";
 import { formatEther, parseUnits } from "ethers/lib/utils";
-import { BigNumber, ethers } from "ethers";
 import FarmCard from "../common/FarmCard";
 import StakeDlg from "../common/StakeDlg";
 import FarmCardV3 from "../common/FarmCardV3";
 import { useWeb3React } from "@web3-react/core";
 import SearchInput from "../common/SearchInput";
-import { farmService, pairService } from "../../services/api.service";
+import { farmService } from "../../services/api.service";
 import SearchIcon from "@mui/icons-material/Search";
 
 const Farms = ({
@@ -48,7 +45,8 @@ const Farms = ({
   farmsv3,
   pairs,
   setFarms,
-  farmAddress
+  farmAddress,
+  itemsPerPage
 }) => {
   const [openCreateFarm, setOpenCreateFarm] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState();
@@ -185,6 +183,11 @@ const Farms = ({
       });
     }
   }, [filter, farms, farmsv3]);
+
+  useEffect(() => {
+    const farmIndex = filterFarm.findIndex((farm) => farmAddress.toLowerCase() === farm.address.toLowerCase())
+    setPage(parseInt((farmIndex + 1) / itemsPerPage) + 1)
+  }, [filterFarm])
 
   const createFarm = async (
     farmToken,
@@ -600,7 +603,7 @@ const Farms = ({
               }}
             >
               {filterFarm.map((farm, i) => (
-                (i >= (page-1) * 10 && i < page * 10) && (
+                (i >= (page-1) * itemsPerPage && i < page * itemsPerPage) && (
                   <FarmCard
                     key={i}
                     setSelectedFarm={setSelectedFarm}
@@ -633,9 +636,10 @@ const Farms = ({
         }}
       >
         <Pagination
-          count={parseInt(filterFarm.length / 10) + 1}
+          count={parseInt(filterFarm.length / itemsPerPage) + 1}
           color="primary"
           onChange={setPageChange}
+          page={page}
         />
       </Box>
     </Box>

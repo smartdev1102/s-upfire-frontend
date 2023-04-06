@@ -37,7 +37,8 @@ const Pools = ({
   stakePools,
   openWalletAlert,
   setPools,
-  poolAddress
+  poolAddress,
+  itemsPerPage
 }) => {
   // const [activeTab, setActiveTab] = useState('mining');
   const [openDlg, setOpenDlg] = useState(false);
@@ -48,8 +49,6 @@ const Pools = ({
   const [filter, setFilter] = useState();
   const open = Boolean(anchorEl);
   const [page, setPage] = useState(1);
-
-  console.log(filterdPools);
 
   const handleVisible = async (id, invisible) => {
     await poolService.setVisible({
@@ -115,6 +114,7 @@ const Pools = ({
       setFilteredPools(sorted);
     }
   }, [filter, stakePools]);
+
   useEffect(() => {
     if (!!searchKey) {
       const temp = stakePools.filter((pool) =>
@@ -125,6 +125,11 @@ const Pools = ({
       setFilteredPools(stakePools);
     }
   }, [searchKey]);
+
+  useEffect(() => {
+    const poolIndex = filterdPools.findIndex((pool) => poolAddress.toLowerCase() === pool.address.toLowerCase())
+    setPage(parseInt((poolIndex + 1) / itemsPerPage) + 1)
+  }, [filterdPools])
 
   const { library } = useWeb3React();
 
@@ -467,7 +472,7 @@ const Pools = ({
             }}
           >
             {filterdPools.map((pool, i) => (
-              (i >= (page - 1) * 10 && i < page * 10) && (
+              (i >= (page - 1) * itemsPerPage && i < page * itemsPerPage) && (
                 <PoolCard
                   key={i}
                   poolInfo={pool}
@@ -488,9 +493,10 @@ const Pools = ({
         }}
       >
         <Pagination
-          count={parseInt(filterdPools.length / 10) + 1}
+          count={parseInt(filterdPools.length / itemsPerPage) + 1}
           color="primary"
           onChange={setPageChange}
+          page={page}
         />
       </Box>
     </Box>

@@ -4,11 +4,8 @@ import Typography from "@mui/material/Typography";
 import {
   Button,
   Card,
-  FormControl,
   FormControlLabel,
   Grid,
-  MenuItem,
-  Select,
   Switch,
   TextField,
   Stack,
@@ -19,26 +16,20 @@ import {
 } from "@mui/material";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import farmIcon from "../../assets/icons/farm.svg";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
 import {
   farm,
   farmWeb3,
-  tokenContract,
-  tokenWeb3,
   pair,
-  provider,
-  blocknumTotimestamp
 } from "../../utils/ethers.util";
-import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import moment from "moment";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import loading from "../../assets/loading.svg";
 import defaultIcon from "../../assets/defaultIcon.png";
-import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
 import { Link } from 'react-router-dom';
