@@ -4,17 +4,14 @@ import {
   Switch,
   IconButton,
   Grid,
-  TextField,
-  Button,
   FormGroup,
   FormControlLabel,
   Typography,
   MenuItem,
   Divider,
   Menu,
-  Card,
+  Pagination
 } from "@mui/material";
-import moment from "moment";
 import MenuIcon from "@mui/icons-material/Menu";
 import RoundButton from "./common/RoundButton";
 import SearchInput from "./common/SearchInput";
@@ -22,19 +19,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import PoolDlg from "./common/PoolDlg";
 import {
   address,
-  erc20Abi,
-  generatorWeb3,
-  factory,
-  pool,
-  farm,
   tokenContract,
   sgeneratorWeb3,
-  spoolWeb3,
   sfactory,
   tokenWeb3,
   pair
 } from "../utils/ethers.util";
-import { BigNumber, ethers } from "ethers";
 import { parseUnits, formatUnits } from "ethers/lib/utils";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
@@ -57,6 +47,7 @@ const Pools = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [filter, setFilter] = useState();
   const open = Boolean(anchorEl);
+  const [page, setPage] = useState(1);
 
   console.log(filterdPools);
 
@@ -169,7 +160,7 @@ const Pools = ({
     const apr = parseFloat(rewardBlock) * 365 * 86400 / amountIn * 100 / 12;
     console.log(rewardToken,
       stakeToken,
-      (apr * 10).toFixed(0),amountIn)
+      (apr * 10).toFixed(0), amountIn)
     const tx = await sgeneratorWeb3(chain, library.getSigner()).createPool(
       rewardToken,
       stakeToken,
@@ -201,6 +192,10 @@ const Pools = ({
     setPools([...stakePools, res]);
     setOpenDlg(false);
   };
+
+  const setPageChange = (e, currentPage) => {
+    setPage(currentPage);
+  }
 
   return (
     <Box
@@ -472,14 +467,16 @@ const Pools = ({
             }}
           >
             {filterdPools.map((pool, i) => (
-              <PoolCard
-                key={i}
-                poolInfo={pool}
-                chain={chain}
-                walletAddress={walletAddress}
-                handleVisible={handleVisible}
-                poolAddress={poolAddress}
-              ></PoolCard>
+              (i >= (page - 1) * 10 && i < page * 10) && (
+                <PoolCard
+                  key={i}
+                  poolInfo={pool}
+                  chain={chain}
+                  walletAddress={walletAddress}
+                  handleVisible={handleVisible}
+                  poolAddress={poolAddress}
+                />
+              )
             ))}
           </Box>
         </Box>
@@ -490,7 +487,11 @@ const Pools = ({
           justifyContent: "center",
         }}
       >
-        {/* <Pagination count={10} variant='outlined'/> */}
+        <Pagination
+          count={parseInt(filterdPools.length / 10) + 1}
+          color="primary"
+          onChange={setPageChange}
+        />
       </Box>
     </Box>
   );

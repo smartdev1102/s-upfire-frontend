@@ -13,9 +13,8 @@ import {
   Switch,
   FormGroup,
   IconButton,
-  Stack,
+  Pagination
 } from "@mui/material";
-// import Pagination from '@mui/material/Pagination';
 import Divider from "@mui/material/Divider";
 import loading from "../../assets/loading.svg";
 
@@ -63,6 +62,7 @@ const Farms = ({
   const [liq, setLiq] = useState();
   const [stakeFalg, setStakeFalg] = useState(false);
   const { library } = useWeb3React();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function getLiq() {
@@ -285,6 +285,10 @@ const Farms = ({
       console.log(err);
     }
   };
+
+  const setPageChange = (e, currentPage) => {
+    setPage(currentPage);
+  }
 
   return (
     <Box
@@ -596,16 +600,18 @@ const Farms = ({
               }}
             >
               {filterFarm.map((farm, i) => (
-                <FarmCard
-                  key={i}
-                  setSelectedFarm={setSelectedFarm}
-                  chain={chain}
-                  farmInfo={farm}
-                  handleVisible={handleVisible}
-                  walletAddress={walletAddress}
-                  stakeFalg={stakeFalg}
-                  farmAddress={farmAddress}
-                />
+                (i >= (page-1) * 10 && i < page * 10) && (
+                  <FarmCard
+                    key={i}
+                    setSelectedFarm={setSelectedFarm}
+                    chain={chain}
+                    farmInfo={farm}
+                    handleVisible={handleVisible}
+                    walletAddress={walletAddress}
+                    stakeFalg={stakeFalg}
+                    farmAddress={farmAddress}
+                  />
+                )
               ))}
               {filterFarmv3.map((farm, i) => (
                 <FarmCardV3
@@ -626,7 +632,11 @@ const Farms = ({
           justifyContent: "center",
         }}
       >
-        {/* <Pagination count={10} variant='outlined'/> */}
+        <Pagination
+          count={parseInt(filterFarm.length / 10) + 1}
+          color="primary"
+          onChange={setPageChange}
+        />
       </Box>
     </Box>
   );
