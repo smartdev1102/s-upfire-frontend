@@ -462,7 +462,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }
               {walletAddress &&
                 <AccordionDetails sx={{ px: '20px', pb: '20px' }}>
                   <Grid container direction="row">
-                    <Grid item md={4} sm={4} xs={12}>
+                    <Grid item md={3} sm={3} xs={12}>
                       <Stack direction="column" gap={1} justifyContent="center">
                         <MuiLink href={`${networks[chain].blockExplorerUrls}/address/${poolInfo.address}`} target="_blank">
                           <Stack direction="row" alignItems="center" spacing={1}>
@@ -484,17 +484,25 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }
                         </MuiLink>
                       </Stack>
                     </Grid>
-                    <Grid item md={4} sm={4} xs={12}>
-                      <Stack direction="column" justifyContent="center">
+                    <Grid container item md={9} sm={9} xs={12}>
+                      <Grid item md={12} sm={12} xs={12}>
+                        <Box sx={{ mb: '8px' }}>
+                          <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Direct Link</Typography>
+                          <Typography noWrap>{window.location.href}</Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={12}>
                         <Box>
                           <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
                           <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
                         </Box>
+                      </Grid>
+                      <Grid item md={6} sm={6} xs={12}>
                         <Box>
                           <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
                           <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
                         </Box>
-                      </Stack>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </AccordionDetails>
