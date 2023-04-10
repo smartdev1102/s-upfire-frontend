@@ -148,7 +148,12 @@ const Pools = ({
     rewardDecimals,
     amountIn,
     startBlock,
-    endBlock
+    endBlock,
+    multiplier,
+    bonusPeriod,
+    lockPeriod,
+    isBonus,
+    isLock
   ) => {
     const allowance = await tokenContract(chain, rewardToken).allowance(
       walletAddress,
@@ -193,6 +198,11 @@ const Pools = ({
       start: new Date(startBlock * 1000),
       end: new Date(endBlock * 1000),
       rewardSymbol: rewardSymbol,
+      multiplier: multiplier,
+      bonusPeriod: parseFloat(bonusPeriod) * 1000,
+      lockPeriod: parseFloat(lockPeriod),
+      isBonus: isBonus,
+      isLock: isLock
     });
     setPools([...stakePools, res]);
     setOpenDlg(false);

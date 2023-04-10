@@ -12,7 +12,9 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Link as MuiLink
+  Link as MuiLink,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -28,11 +30,13 @@ import moment from "moment";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import loading from "../../assets/loading.svg";
 import defaultIcon from "../../assets/defaultIcon.png";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
 import { Link } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -61,6 +65,7 @@ const FarmCard = ({
   const [apy, setApy] = useState(0);
   const [d_LP, setD_LP] = useState(18);
   const [d_RT, setD_RT] = useState(18);
+  const [copied, setCopied] = useState(false);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -124,6 +129,12 @@ const FarmCard = ({
     setBoostPeriod(period);
     setBoostx(period / lockPeriod);
   }, [boostNum, lockUnit]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000)
+  }, [copied])
 
   const { library } = useWeb3React();
 
@@ -588,7 +599,14 @@ const FarmCard = ({
                     <Grid item md={12} sm={12} xs={12}>
                       <Box sx={{ mb: '8px' }}>
                         <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Direct Link</Typography>
-                        <Typography noWrap>{window.location.href}</Typography>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography noWrap>{window.location.href}</Typography>
+                          <CopyToClipboard onCopy={() => setCopied(true)} text={window.location.href}>
+                            <Tooltip title={copied ? 'Copied' : 'Copy link'} placement="top">
+                              <IconButton><ContentCopyIcon sx={{ fontSize: '16px' }} /></IconButton>
+                            </Tooltip>
+                          </CopyToClipboard>
+                        </Stack>
                       </Box>
                     </Grid>
                     <Grid item md={6} sm={6} xs={12}>

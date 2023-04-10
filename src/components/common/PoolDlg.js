@@ -70,7 +70,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     } else {
       unit = 3600 * 24 * 30;
     }
-    // const lockPeriod = periodPerx * unit;
+    const lockPeriod = periodPerx * unit;
 
     if (chain === Number(process.env.REACT_APP_CHAIN)) {
       create(
@@ -80,7 +80,12 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         rewardDecimals,
         amountIn,
         startBlock,
-        endBlock
+        endBlock,
+        multiplier,
+        bonusBlock,
+        lockPeriod,
+        isBonus,
+        isBonus1,
       );
     } else {
       create(
@@ -90,7 +95,12 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
         rewardDecimals,
         amountIn,
         startBlock,
-        endBlock
+        endBlock,
+        multiplier,
+        bonusBlock,
+        lockPeriod,
+        isBonus,
+        isBonus1,
       );
     }
   };

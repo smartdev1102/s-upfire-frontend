@@ -13,13 +13,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Link as MuiLink
+  Link as MuiLink,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import moment from "moment";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import defaultIcon from "../../assets/defaultIcon.png";
 import airdropIcon from "../../assets/icons/airdrop.svg";
 import accountIcon from "../../assets/icons/account.svg";
@@ -30,6 +32,7 @@ import { BigNumber } from "ethers";
 import useWalletAlert from "../../hooks/useWalletAlertContext";
 import { networks } from "../../utils/network.util"
 import { Link } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const admin = process.env.REACT_APP_ADMIN.toLowerCase();
 
@@ -43,6 +46,7 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }
   const [userBalance, setUserBalance] = useState(0);
   const [userRewardBalance, setUserRewardBalance] = useState(0);
   const [apy, setApy] = useState(0);
+  const [copied, setCopied] = useState(false);
   const { setOpen: setWalletAlertOpen } = useWalletAlert();
 
   const chainsName = {
@@ -75,6 +79,12 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }
   useEffect(() => {
     getPool();
   }, [walletAddress, poolInfo]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000)
+  }, [copied])
 
   const stake = async (tokenAddress, poolAddress) => {
     if (!walletAddress) {
@@ -488,20 +498,39 @@ const PoolCard = ({ poolInfo, chain, walletAddress, handleVisible, poolAddress }
                       <Grid item md={12} sm={12} xs={12}>
                         <Box sx={{ mb: '8px' }}>
                           <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Direct Link</Typography>
-                          <Typography noWrap>{window.location.href}</Typography>
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography noWrap>{window.location.href}</Typography>
+                            <CopyToClipboard onCopy={() => setCopied(true)} text={window.location.href}>
+                              <Tooltip title={copied ? 'Copied' : 'Copy link'} placement="top">
+                                <IconButton><ContentCopyIcon sx={{ fontSize: '16px' }} /></IconButton>
+                              </Tooltip>
+                            </CopyToClipboard>
+                          </Stack>
                         </Box>
                       </Grid>
                       <Grid item md={6} sm={6} xs={12}>
-                        <Box>
-                          <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
-                          <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
-                        </Box>
+                        <Stack direction="column" gap={2} justifyContent="center">
+                          <Box>
+                            <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Lock Period</Typography>
+                            <Typography>{poolInfo.isLock ? `${poolInfo.lockPeriod / 86400} days` : 'Not Exist'}</Typography>
+                          </Box>
+                          <Box>
+                            <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Bonus Period</Typography>
+                            <Typography>{poolInfo.isBonus ? `Until ${new Date(poolInfo.bonusPeriod).toLocaleString()} ${poolInfo.multiplier}X` : 'Not Exist'}</Typography>
+                          </Box>
+                        </Stack>
                       </Grid>
                       <Grid item md={6} sm={6} xs={12}>
-                        <Box>
-                          <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
-                          <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
-                        </Box>
+                        <Stack direction="column" gap={2} justifyContent="center">
+                          <Box>
+                            <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Deposited Tokens</Typography>
+                            <Typography>{userBalance} {poolInfo.name.split("/")[0]}</Typography>
+                          </Box>
+                          <Box>
+                            <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Unclaimed Rewards</Typography>
+                            <Typography>{userRewardBalance} {poolInfo.rewardSymbol}</Typography>
+                          </Box>
+                        </Stack>
                       </Grid>
                     </Grid>
                   </Grid>
