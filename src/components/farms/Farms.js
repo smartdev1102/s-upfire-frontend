@@ -225,8 +225,11 @@ const Farms = ({
 
       const startBlockNumber = await timestampToblocknum(chain, startBlock);
       const bonusEndBlockNumber = await timestampToblocknum(chain, bonusEndBlock);
-      console.log(startBlockNumber, bonusEndBlockNumber, "startBlockNumber")
-
+      const fees = await generatorWeb3(
+        chain,
+        library.getSigner(),
+        index
+      ).gFees();
       const tx = await generatorWeb3(
         chain,
         library.getSigner(),
@@ -240,7 +243,10 @@ const Farms = ({
         bonusEndBlockNumber,
         bonus,
         lockPeriod,
-        false
+        false,
+        {
+          value: fees.ethFee
+        }
       );
       await tx.wait();
 
@@ -603,7 +609,7 @@ const Farms = ({
               }}
             >
               {filterFarm.map((farm, i) => (
-                (i >= (page-1) * itemsPerPage && i < page * itemsPerPage) && (
+                (i >= (page - 1) * itemsPerPage && i < page * itemsPerPage) && (
                   <FarmCard
                     key={i}
                     setSelectedFarm={setSelectedFarm}

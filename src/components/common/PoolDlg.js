@@ -7,6 +7,7 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
+  Stack
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
@@ -16,8 +17,9 @@ import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { generator, tokenContract } from "../../utils/ethers.util";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { generator, tokenContract, sgeneratorWeb3, coinSymbols } from "../../utils/ethers.util";
+import { formatUnits, parseUnits, formatEther } from "ethers/lib/utils";
+import { useWeb3React } from "@web3-react/core";
 
 const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [stakeToken, setStakeToken] = useState("");
@@ -49,6 +51,9 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [startBlock, setStartBlock] = useState(0);
   const [endDate, setEndDate] = useState(new Date());
   const [endBlock, setEndBlock] = useState(0);
+  const [ethFee, setEthFee] = useState(0);
+  const [tokenFee, setTokenFee] = useState(0);
+  const { library } = useWeb3React();
 
   const createPool = () => {
     // create(
@@ -105,6 +110,15 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
     }
   };
 
+  useEffect(() => {
+    async function setFees() {
+      const ethFee = await sgeneratorWeb3(chain, library.getSigner()).ethFee();
+      const tokenFee = await sgeneratorWeb3(chain, library.getSigner()).tokenFee();
+      setEthFee(parseFloat(formatEther(ethFee)));
+      setTokenFee(parseFloat(tokenFee));
+    }
+    setFees()
+  }, [])
   // Start Date ====================
 
   // calculate start block when change start date
@@ -211,7 +225,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
           );
           setRewardBlock(formatUnits(blockReward, rewardDecimals));
         }
-      } catch (err) {}
+      } catch (err) { }
     }
     if (!!amountIn && multiplier > 0) {
       determineBlockReward();
@@ -292,9 +306,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                   sx={{ width: "100%" }}
                   value={amountIn}
                   onChange={(e) => setAmountIn(e.target.value)}
-                  label={`Balance: ${!!rewardBalance ? rewardBalance : 0} ${
-                    !!rewardSymbol ? rewardSymbol : ""
-                  }`}
+                  label={`Balance: ${!!rewardBalance ? rewardBalance : 0} ${!!rewardSymbol ? rewardSymbol : ""
+                    }`}
                   variant="filled"
                   focused
                 />
@@ -715,6 +728,27 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                     </Grid>
                   </Box>
                 </Box>
+              </Box>
+              <Box
+                sx={{
+                  position: "relative",
+                  mt: "20px",
+                }}
+              >
+                <Grid container>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Farm Creation Fee: </Typography>
+                      <Typography>{ethFee} {coinSymbols[chain]}</Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Token Fee: </Typography>
+                      <Typography>{amountIn / 1000 * tokenFee} UPR</Typography>
+                    </Stack>
+                  </Grid>
+                </Grid>
               </Box>
             </PerfectScrollbar>
           </Box>

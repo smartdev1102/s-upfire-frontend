@@ -26,12 +26,12 @@ export const address = {
   },
   97: {
     0: {
-      factory: "0x5CD5a6dCf173a4e44CC62dB621C957c4B133E270",
-      generator: "0x747e47410DA188885E4717202786490122b9475b",
+      factory: "0xBF74130A6a13fC59be3fE6C4b342bDE2836ce15B",
+      generator: "0xD394D42A2da44fAf0F4f229C163a2F877c09D5C5",
       rewardToken: "0x75D8D5989fd5df9358adeadDeEC21d04227c2cAA",
       wether: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       sfactory: "0xCBC8fEb8aD4aa4D1caaDDE45CBA24FB70fb219a9",
-      sgenerator: "0x5232c97D6bf528FC2B386798cF990EE1e38A3459",
+      sgenerator: "0xaee3fC32d1ca3905CE6b1bfAcD460a4A385f656B",
     },
   },
   43114: {
@@ -60,14 +60,14 @@ export const address = {
 export const coinSymbols = {
   97: "BNB",
   43114: "AVAX",
-  4: "ETHER",
+  4: "ETH",
   56: "BNB",
 };
 
 export const swapFactories = {
   97: {
     0: {
-      uniswap: "0xb7926c0430afb07aa7defde6da862ae0bde767bc",
+      uniswap: "0xB7926C0430Afb07AA7DEfDE6DA862aE0Bde767bc",
       router: "0x6e889755Ea9eCc99bFd71Ee5d666E69Ce32A3D06",
     },
   },

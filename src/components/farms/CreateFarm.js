@@ -20,6 +20,7 @@ import {
   ListItemText,
   FormControlLabel,
   Checkbox,
+  Stack
 } from "@mui/material";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -30,6 +31,8 @@ import {
   generator,
   swapFactories,
   tokenContract,
+  generatorWeb3,
+  coinSymbols
 } from "../../utils/ethers.util";
 import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 import { Close } from "@mui/icons-material";
@@ -40,6 +43,7 @@ import loading from "../../assets/loading.svg";
 import { pairService } from "../../services/api.service";
 import Autocomplete from "@mui/material/Autocomplete";
 import LptokenDlg from "../common/LptokenDlg";
+import { useWeb3React } from "@web3-react/core";
 
 const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [startDate, setstartDate] = useState(new Date());
@@ -72,6 +76,22 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [periodPerx, setPeriodPerx] = useState(0);
   const [isBonus, setIsBonus] = useState(false);
   const [isBonus1, setIsBonus1] = useState(false);
+  const [ethFee, setEthFee] = useState(0);
+  const [tokenFee, setTokenFee] = useState(0);
+  const { library } = useWeb3React();
+
+  useEffect(() => {
+    async function setFees() {
+      const fees = await generatorWeb3(
+        chain,
+        library.getSigner(),
+        0
+      ).gFees();
+      setEthFee(parseFloat(formatEther(fees.ethFee)));
+      setTokenFee(parseFloat(fees.tokenFee));
+    }
+    setFees()
+  }, [])
 
   useEffect(() => {
     async function getPairs() {
@@ -1048,6 +1068,27 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
                     </Grid>
                   </Box>
                 </Box>
+              </Box>
+              <Box
+                sx={{
+                  position: "relative",
+                  mt: "20px",
+                }}
+              >
+                <Grid container>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Farm Creation Fee: </Typography>
+                      <Typography>{ethFee} {coinSymbols[chain]}</Typography>
+                    </Stack>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Token Fee: </Typography>
+                      <Typography>{amountIn / 1000 * tokenFee} UPR</Typography>
+                    </Stack>
+                  </Grid>
+                </Grid>
               </Box>
             </PerfectScrollbar>
           </Box>
