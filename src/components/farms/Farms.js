@@ -210,7 +210,7 @@ const Farms = ({
     console.log("startBlock: ", startBlock);
     console.log("bonusEndBlock: ", bonusEndBlock.toFixed(0));
     console.log("bonus: ", bonus);
-    console.log("lockPeriod: ", bonus);
+    console.log("lockPeriod: ", lockPeriod);
     console.log("isV3: ", isV3);
     console.log("index: ", index);
     try {

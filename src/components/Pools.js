@@ -175,6 +175,9 @@ const Pools = ({
       stakeToken,
       (apr * 10).toFixed(0),
       parseUnits(amountIn, rewardDecimals),
+      lockPeriod,
+      (multiplier * 100).toFixed(0),
+      bonusPeriod.toString(),
       { value: ethFee }
     );
     await tx.wait();
