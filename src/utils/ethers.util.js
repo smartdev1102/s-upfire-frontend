@@ -31,7 +31,7 @@ export const address = {
       rewardToken: "0x75D8D5989fd5df9358adeadDeEC21d04227c2cAA",
       wether: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       sfactory: "0xCBC8fEb8aD4aa4D1caaDDE45CBA24FB70fb219a9",
-      sgenerator: "0xaee3fC32d1ca3905CE6b1bfAcD460a4A385f656B",
+      sgenerator: "0x791Eb12b42a6e3d15bE783a8a411EC94AF67901b",
     },
   },
   43114: {
