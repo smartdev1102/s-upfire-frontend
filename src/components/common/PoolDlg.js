@@ -17,9 +17,8 @@ import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { generator, tokenContract, sgeneratorWeb3, coinSymbols } from "../../utils/ethers.util";
+import { generator, tokenContract, sgenerator, coinSymbols } from "../../utils/ethers.util";
 import { formatUnits, parseUnits, formatEther } from "ethers/lib/utils";
-import { useWeb3React } from "@web3-react/core";
 
 const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [stakeToken, setStakeToken] = useState("");
@@ -38,12 +37,12 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [rewardSymbol, setRewardSymbol] = useState();
   const [rewardToken, setRewardToken] = useState("");
   const [tokenLoading, setTokenLoading] = useState();
-  const [rewardDecimals, setRewardDecimals] = useState();
+  const [rewardDecimals, setRewardDecimals] = useState(18);
   const [rewardTokenName, setRewardTokenName] = useState();
 
   const [tokenPrice, setTokenPrice] = useState(1);
   const [liquidity, setLiquidity] = useState(0);
-  const [rewardBlock, setRewardBlock] = useState("0");
+  const [rewardBlock, setRewardBlock] = useState(0);
   const [apy, setApy] = useState(0);
   const [currentSwap, setCurrentSwap] = useState(0);
 
@@ -53,7 +52,6 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   const [endBlock, setEndBlock] = useState(0);
   const [ethFee, setEthFee] = useState(0);
   const [tokenFee, setTokenFee] = useState(0);
-  const { library } = useWeb3React();
 
   const createPool = () => {
     // create(
@@ -112,8 +110,8 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
 
   useEffect(() => {
     async function setFees() {
-      const ethFee = await sgeneratorWeb3(chain, library.getSigner()).ethFee();
-      const tokenFee = await sgeneratorWeb3(chain, library.getSigner()).tokenFee();
+      const ethFee = await sgenerator(chain).ethFee();
+      const tokenFee = await sgenerator(chain).tokenFee();
       setEthFee(parseFloat(formatEther(ethFee)));
       setTokenFee(parseFloat(tokenFee));
     }
@@ -144,6 +142,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
   }, [endBlock]);
 
   useEffect(() => {
+    console.log(rewardBlock)
     if (rewardBlock <= 0) return;
     const tempapy = parseFloat(rewardBlock) * 3600 * 24 * 365;
     setApy((tempapy * tokenPrice) / liquidity * 100);
@@ -207,11 +206,11 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
           ).determineBlockReward(
             parseUnits(amountIn, rewardDecimals),
             startBlock,
-            Number(bonusEndBlock),
+            endBlock > bonusEndBlock ? endBlock : bonusEndBlock,
             multiplier,
             endBlock
           );
-          setRewardBlock(formatUnits(blockReward, rewardDecimals));
+          setRewardBlock(parseFloat(formatUnits(blockReward, rewardDecimals)));
         } else {
           const [blockReward, requiredAmount, fee] = await generator(
             chain,
@@ -219,11 +218,11 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
           ).determineBlockReward(
             parseUnits(amountIn, rewardDecimals),
             startBlock,
-            Number(bonusEndBlock),
+            endBlock > bonusEndBlock ? endBlock : bonusEndBlock,
             multiplier,
             endBlock
           );
-          setRewardBlock(formatUnits(blockReward, rewardDecimals));
+          setRewardBlock(parseFloat(formatUnits(blockReward, rewardDecimals)));
         }
       } catch (err) { }
     }

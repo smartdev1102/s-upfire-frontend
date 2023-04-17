@@ -15,9 +15,6 @@ import {
   StepContent,
   Hidden,
   Grid,
-  List,
-  ListItemButton,
-  ListItemText,
   FormControlLabel,
   Checkbox,
   Stack
@@ -27,23 +24,18 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import React, { useEffect, useState } from "react";
 import {
-  address,
   generator,
   swapFactories,
   tokenContract,
-  generatorWeb3,
   coinSymbols
 } from "../../utils/ethers.util";
-import { formatEther, formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
 import { Close } from "@mui/icons-material";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import RoundButton from "../common/RoundButton";
-import loading from "../../assets/loading.svg";
 import { pairService } from "../../services/api.service";
-import Autocomplete from "@mui/material/Autocomplete";
 import LptokenDlg from "../common/LptokenDlg";
-import { useWeb3React } from "@web3-react/core";
 
 const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [startDate, setstartDate] = useState(new Date());
@@ -70,7 +62,6 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [apy, setApy] = useState(0);
   const [liquidity, setLiquidity] = useState(0);
   const [pairs, setPairs] = useState([]);
-  const [lpname, setLpname] = useState("");
   const [openList, setOpenList] = useState(false);
   const [lockUnit, setLockUnit] = useState("month");
   const [periodPerx, setPeriodPerx] = useState(0);
@@ -78,13 +69,11 @@ const CreateFarm = ({ open, onClose, create, walletAddress, chain }) => {
   const [isBonus1, setIsBonus1] = useState(false);
   const [ethFee, setEthFee] = useState(0);
   const [tokenFee, setTokenFee] = useState(0);
-  const { library } = useWeb3React();
 
   useEffect(() => {
     async function setFees() {
-      const fees = await generatorWeb3(
+      const fees = await generator(
         chain,
-        library.getSigner(),
         0
       ).gFees();
       setEthFee(parseFloat(formatEther(fees.ethFee)));
