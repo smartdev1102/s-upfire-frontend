@@ -17,11 +17,11 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 export const address = {
   56: {
     0: {
-      factory: "0xF854E75B77d92d11579442cd9c36980Ed39fe68d",
-      generator: "0x9C2D0018986FEd97c5EFE7569020ea4108646740",
+      factory: "0xd9394b2C3fc7d4C22A42B9930c025c79B3f364Cb",
+      generator: "0x30bA76b5E9E29d42a91ec72a1B7e25219E6C542b",
       wether: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       sfactory: "0xD2fc6F5cFAbd74E0db78BE3449C6cf1059f863DF",
-      sgenerator: "0xF56A3531D06453376Ae2ab92e6A27b76B9d718b6",
+      sgenerator: "0xb4E054B3f923795dbC7D4D62c60a60dbC822c7bb",
     },
   },
   97: {
