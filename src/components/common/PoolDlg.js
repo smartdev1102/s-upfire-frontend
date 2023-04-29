@@ -744,7 +744,7 @@ const PoolDlg = ({ open, onClose, create, walletAddress, chain }) => {
                   <Grid item md={6} sm={6} xs={12}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <Typography sx={{ fontWeight: 'bold', color: '#f9bd22' }}>Token Fee: </Typography>
-                      <Typography>{amountIn / 1000 * tokenFee} UPR</Typography>
+                      <Typography>{amountIn / 1000 * tokenFee} {rewardSymbol}</Typography>
                     </Stack>
                   </Grid>
                 </Grid>
