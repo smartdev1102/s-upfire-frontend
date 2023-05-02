@@ -215,21 +215,24 @@ const Farms = ({
     console.log("index: ", index);
     try {
       const allowance = await tokenContract(chain, farmToken).allowance(walletAddress, address[chain][index]['generator']);
-      if (allowance.lt(parseUnits(amountIn, farmDecimals))) {
+      
+      const fees = await generatorWeb3(
+        chain,
+        library.getSigner(),
+        index
+      ).gFees();
+      const txAmount = parseUnits((parseFloat(amountIn) * Number(fees.tokenFee) / 1000 + parseFloat(amountIn)).toString(), farmDecimals)
+      
+      if (allowance.lt(txAmount)) {
         const tx1 = await tokenWeb3(farmToken, library.getSigner()).approve(
           address[chain][index]["generator"],
-          parseUnits(amountIn, farmDecimals)
+          txAmount
         );
         await tx1.wait();
       }
 
       const startBlockNumber = await timestampToblocknum(chain, startBlock);
       const bonusEndBlockNumber = await timestampToblocknum(chain, bonusEndBlock);
-      const fees = await generatorWeb3(
-        chain,
-        library.getSigner(),
-        index
-      ).gFees();
       const tx = await generatorWeb3(
         chain,
         library.getSigner(),

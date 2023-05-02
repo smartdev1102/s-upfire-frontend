@@ -27,11 +27,11 @@ export const address = {
   97: {
     0: {
       factory: "0xBF74130A6a13fC59be3fE6C4b342bDE2836ce15B",
-      generator: "0xD394D42A2da44fAf0F4f229C163a2F877c09D5C5",
+      generator: "0xA434bee3ACf01bE1ED1D7629F5b83d91393D7b39",
       rewardToken: "0x75D8D5989fd5df9358adeadDeEC21d04227c2cAA",
       wether: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       sfactory: "0xCBC8fEb8aD4aa4D1caaDDE45CBA24FB70fb219a9",
-      sgenerator: "0x791Eb12b42a6e3d15bE783a8a411EC94AF67901b",
+      sgenerator: "0x3bEc6aEBEF57c5811B774497d19495F1D251786C",
     },
   },
   43114: {

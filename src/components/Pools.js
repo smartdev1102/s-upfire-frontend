@@ -26,6 +26,7 @@ import {
   pair
 } from "../utils/ethers.util";
 import { parseUnits, formatUnits } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 import Hidden from "@mui/material/Hidden";
 import { useWeb3React } from "@web3-react/core";
 import { poolService } from "../services/api.service";
@@ -160,10 +161,13 @@ const Pools = ({
       address[chain][0]["sgenerator"]
     );
 
-    if (allowance.lt(parseUnits(amountIn, rewardDecimals))) {
+    const fee = await sgeneratorWeb3(chain, library.getSigner()).tokenFee();
+    const txAmount = parseUnits((parseFloat(amountIn) * Number(fee) / 1000 + parseFloat(amountIn)).toString(), rewardDecimals)
+
+    if (allowance.lt(txAmount)) {
       const tx = await tokenWeb3(rewardToken, library.getSigner()).approve(
         address[chain][0]["sgenerator"],
-        parseUnits(amountIn, rewardDecimals)
+        txAmount
       );
       await tx.wait();
     }
@@ -178,6 +182,8 @@ const Pools = ({
       isLock ? lockPeriod : '0',
       isBonus ? (multiplier * 100).toFixed(0) : '0',
       isBonus ? bonusPeriod.toString() : '0',
+      startBlock,
+      endBlock,
       { value: ethFee }
     );
     await tx.wait();
