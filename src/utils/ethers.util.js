@@ -18,10 +18,10 @@ export const address = {
   56: {
     0: {
       factory: "0xd9394b2C3fc7d4C22A42B9930c025c79B3f364Cb",
-      generator: "0x30bA76b5E9E29d42a91ec72a1B7e25219E6C542b",
+      generator: "0x4973Ce4711287EFDBDc391DCA8789c80Bb08506D",
       wether: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       sfactory: "0xD2fc6F5cFAbd74E0db78BE3449C6cf1059f863DF",
-      sgenerator: "0xb4E054B3f923795dbC7D4D62c60a60dbC822c7bb",
+      sgenerator: "0x3A74D9aAb66792AEA555ACaEF70D6bb9fEe430D3",
     },
   },
   97: {
